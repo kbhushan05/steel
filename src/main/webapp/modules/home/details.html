@@ -1,0 +1,24 @@
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order Id</th>
+        <th>Supplier Name</th>
+        <th>PO No</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="order in orders">
+        <td>{{order.orderId}}</td>
+        <td>{{order.supplierName}}</td>
+        <td>{{order.poNumber}}</td>
+        <td>{{order.status}}</td>
+        <td>
+           <button class="btn btn-primary" ng-click="view(order)">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

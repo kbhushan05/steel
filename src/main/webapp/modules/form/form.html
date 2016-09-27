@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="row myform">
+    <div class="col-md-12">
+      <form name="myform" role="form" novalidate>
+      <fieldset ng-disabled="data.status == 'SUBMITTED' || data.status == 'APPROVED'">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><label>Order Id</label></td>
+              <td><input required type="text" name="orderID" id="orderID" ng-model="data.orderId" class="form-control" disabled/></td>
+              <td><label>PO Number</label></td>
+              <td><input required type="text" name="poNumber" id="poNumber" ng-model="data.poNumber" class="form-control" /></td>
+              <td><label>Supplier</label></td>
+              <td><input required type="text" name="supplierId" id="supplierId" ng-model="data.supplierId" class="form-control" disabled/></td>
+            </tr>
+
+            <tr>
+              <td><label>Steel Heat Number</label></td>
+              <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  /></td>
+              <td><label>Already Available Steel Tonnage</label></td>
+              <td><input required type="text" name="aaST" id="aaST" ng-model="alreadyAvailableSteelTonage" class="form-control" /></td>
+              <td><label>New Steel To Buy</label></td>
+              <td><input required type="text" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" /></td>
+            </tr>
+
+            <tr>
+              <td><label>Steel Tonnage</label></td>
+              <td><input required type="text" name="st" id="st" class="form-control" ng-model="data.steelTonage" /></td>
+              <td><label>Ref. Standard</label></td>
+              <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard"/></td>
+              <td><label>Forger Supplier Code</label></td>
+              <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode"/></td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Part Details</div></label></td>
+            </tr>
+            <tr>
+
+              <td><label>Part Number</label></td>
+              <td><label>Status</label></td>
+              <td><label>Part Weight</label></td>
+              <td><label>Cut Weight</label></td>
+              <td><label>Number Of Parts</label></td>
+
+
+            </tr>
+            <tr ng-repeat="row in data.partDetails">
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
+             <td><input required type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'"/></td>
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.weight"/></td>
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight"/></td>
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts"/></td>
+
+           </td>
+         </tr>
+       </tbody>
+     </table>
+     <table class="table">
+      <tbody>
+        <tr>
+          <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Documents</div></label></td>
+        </tr>
+        <tr>
+          <td><label>Requirement</label></td>
+          <td><label>Status</label></td>
+          <td><label>Attchment</label></td>
+          <td><label>Remark</label></td>
+        </td>
+        </tr>
+			<tr ng-repeat="row in data.checkList">
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.name" disabled/></td>
+             <td><input required type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'"/></td>
+             <td><input required type="file" name="refStd" id="refStd" ng-model="row.attachmentName"/></td>
+             <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark"/></td>
+		
+           </td>
+         </tr>
+		
+        </tbody>
+    </table>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Comment</div></label></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="form-group">
+              <textarea class="form-control" rows="5" id="comment"></textarea>
+            </div>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+    </fieldset>
+    <button type="button" class="btn btn-primary" ng-click="save()" ng-hide="data.status == 'SAVED' || data.status == 'SUBMITTED' || data.status == 'APPROVED'">Save</button>
+    <button type="button" class="btn btn-primary" ng-click="update()" ng-hide="data.status == 'NEW'">Update</button>
+    <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
+    <button type="button" class="btn btn-danger" ng-click="approve()">Approve</button>
+    <button type="button" class="btn btn-danger" ng-click="reject()">Reject</button>
+  </form>
+</div>
+</div>
+</div>

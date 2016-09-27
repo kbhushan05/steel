@@ -1,0 +1,55 @@
+{
+	"orderId": 12345,
+	"supplierId": "1-Bhushan",
+	"poNumber": 0,
+	"steelMill": null,
+	"steelHeatNumber": 0,
+	"alreadyAvailableSteelTonage": 0,
+	"newSteelToBuy": 0,
+	"steelTonage": 0,
+	"refStandard": null,
+	"forgerSupplierCode": null,
+	"checkList": [
+		{
+			"requirement": "Authentic Steel Mill T.C.",
+			"status": "UNCHECKED",
+			"remark": null,
+			"attachment": null,
+			"attachmentName": null
+		},
+		{
+			"requirement": "Steel from our approved CIL source",
+			"status": "UNCHECKED",
+			"remark": null,
+			"attachment": null,
+			"attachmentName": null
+		},
+		{
+			"requirement": " Chemical composition",
+			"status": "UNCHECKED",
+			"remark": null,
+			"attachment": null,
+			"attachmentName": null
+		}
+	],
+	"partDetails": [
+		{
+			"number": 1132,
+			"weight": 0,
+			"cutWeight": 0,
+			"noOfParts": 1
+		},
+		{
+			"number": 1130,
+			"weight": 0,
+			"cutWeight": 0,
+			"noOfParts": 1
+		},
+		{
+			"number": 1134,
+			"weight": 0,
+			"cutWeight": 0,
+			"noOfParts": 1
+		}
+	]
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="vi-app">
+<head>
+<meta charset="UTF-8">
+<title>-------</title>
+<link rel="stylesheet" href="libs/bs/css/bootstrap.min.css"/>
+
+
+<style>
+.maxHeight
+{
+    max-height: 100%;
+}
+body,html{
+	height: 100%;
+}
+</style>
+</head>
+<!-- <button class="btn btn-default navbar-btn">new form</button> -->
+<body>
+			<div class="maxHeight" ui-view></div>
+</body>
+
+</html>
+<script  src="libs/angular.min.js"></script></script>
+<script  src="libs/angular-ui-router.min.js"></script>
+<script  src="libs/angular-cookies.min.js"></script>
+
+<script  src="app.js"></script>
+<script  src="config.js"></script>
+<script  src="modules/auth/auth.js"></script>
+<script  src="modules/home/home.js"></script>
+<script  src="modules/form/form.js"></script>
+<script  src="modules/home/details.js"></script>
+

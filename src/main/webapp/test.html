@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html ng-app="vi-app">
+<head>
+	<meta charset="UTF-8">
+	<title>-------</title>
+	<link rel="stylesheet" href="libs/bs/css/bootstrap.min.css"/>
+
+
+	<style>
+		.maxHeight
+		{
+			max-height: 100%;
+		}
+		body,html{
+			height: 100%;
+		}
+	</style>
+</head>
+<!-- <button class="btn btn-default navbar-btn">new form</button> -->
+<body>
+<div class="container">
+		<div class="row myform">
+			<div class="col-md-12">
+				<form name="myform" role="form" novalidate>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td><label>Order Id</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" disabled/></td>
+								<td><label>PO Number</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" disabled/></td>
+								<td><label>Supplier</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control"/></td>
+							</tr>
+
+							<tr>
+								<td><label>Steel Heat Number</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Already Available Steel Tonnage</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>New Steel To Buy</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+							</tr>
+
+							<tr>
+								<td><label>Steel Tonnage</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Ref. Standard</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Forger Supplier Code</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Part Details</div></label></td>
+							</tr>
+							<tr>
+								<td><label>Part Number</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Part Weight</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Cut Weight</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><label>Number Of Parts</label></td>
+								<td><input required type="text" name="state" id="state" class="form-control" /></td>
+								<td><button type="button" class="btn btn-success">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>	
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table">
+					<tbody>
+						<tr>
+							<td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Documents</div></label></td>
+						</tr>
+						<tr>
+							<td><label>Requirement</label></td>
+							<td><label>Status</label></td>
+							<td><label>Attchment</label></td>
+							<td><label>Remark</label></td>
+						</td>
+
+						<tr>
+							<td>1. Authentic Steel mill T.C</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>2. Steel from our approved CIL source</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>3. Chemical composition</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>4. RCS DIA- MM</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>5. Steel making route:(EAF-LRF-VD-CC/INGOT-EMS)</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>6. Reduction Ratio</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>7. Inclusion rating</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>8. Grain size ( ASTM 5-8)</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>9. Macroetching</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>10. Step down test</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>11. Decarb Layer</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>12. Jominy values</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>13. Surfacehardness of steel (should not exceed 241 BHN)</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>14. Ultrasonic Inspection TEST</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+
+						<tr>
+							<td>15. Magnetic Particle Inspection</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>16. Gas content in ppm N2=90ppm, O2=20ppm,H2=2ppm</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>17. Blue Fracture Test reports</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>18. HT PROCESS</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>19. Hardness</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+						<tr>
+							<td>20. MECHANICAL PROPERTIES</td>
+							<td>
+								<input type="checkbox" value="">
+							</td>
+							<td> <input type="file"> </td>
+							<td><input required type="text" class="form-control" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table">
+					<tbody>
+						<tr>
+							<td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Comment</div></label></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="form-group">
+									<textarea class="form-control" rows="5" id="comment"></textarea>
+								</div>
+							</td>
+
+						</tr>
+					</tbody>
+				</table>
+				<button type="button" class="btn btn-primary">Save</button>
+				<button type="button" class="btn btn-primary">Request Deviation</button>
+				<button type="button" class="btn btn-danger">Reset</button>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>
