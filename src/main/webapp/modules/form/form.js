@@ -28,7 +28,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 
 	$scope.save = function(){
        var det = angular.copy($scope.data);
-        $http.post('http://localhost:8080/steel/api/orders/', det, config)
+        $http.post('api/orders/', det, config)
             .success(function (data, status, headers, config) {
              alert("New request saved");
              $scope.gotoHome();
@@ -42,20 +42,20 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	$scope.submit = function(){
 	       var det = angular.copy($scope.data);
 	       det.status = "SUBMITTED";
-	        $http.post('http://localhost:8080/steel/api/orders/', det, config)
+	        $http.post('api/orders/', det, config)
 	            .success(function (data, status, headers, config) {
 	             alert("New request submitted");
 	             $scope.gotoHome();
 	         })
 	         .error(function (data, status, header, config) {
-	         	alert("fail to save new request");
+	         	alert("fail to submit request");
 	         	$scope.gotoHome();
 	        });
 		}
 
 	$scope.update = function(){
 	  var det = angular.copy($rootScope.formData);
-        $http.put('http://localhost:8080/steel/api/orders/', det, config)
+        $http.put('api/orders/', det, config)
             .success(function (data, status, headers, config) {
             alert("request updated");
             $scope.gotoHome();
@@ -68,7 +68,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 
 	$scope.reject = function(){
 	   var det = angular.copy($rootScope.formData);
-        $http.put('http://localhost:8080/steel/api/orders/'+ det.orderId + '?action=reject', det, config)
+        $http.put('api/orders/'+ det.orderId + '?action=reject', det, config)
             .success(function (data, status, headers, config) {
             alert("request rejected");
             $scope.gotoHome();
@@ -81,7 +81,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 
 	$scope.approve = function(){
 		var det = angular.copy($rootScope.formData);
-        $http.put('http://localhost:8080/steel/api/orders/'+ det.orderId + '?action=approve' ,det, config)
+        $http.put('api/orders/'+ det.orderId + '?action=approve' ,det, config)
             .success(function (data, status, headers, config) {
             alert("request updated");
             $scope.gotoHome();

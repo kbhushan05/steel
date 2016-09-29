@@ -20,7 +20,7 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	$scope.newRequest = function(){
 		$http({
 			method : "GET",
-			url : "http://localhost:8080/steel/api/orders/new"
+			url : "api/orders/new"
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = true;

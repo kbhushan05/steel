@@ -14,7 +14,7 @@ function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state
 	$scope.orders = [];
   $scope.init = function(){
   	$scope.orders = [];
-  	$http.get("http://localhost:8080/steel/api/orders/")
+  	$http.get("api/orders/")
     .then(function(response) {
         $scope.orders = angular.fromJson(response.data);
     }, function(response) {
@@ -25,7 +25,7 @@ function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state
   $scope.view = function(data){
 	  $http({
 			method : "GET",
-			url : "http://localhost:8080/steel/api/orders/"+data.orderId
+			url : "api/orders/"+data.orderId
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = false;
