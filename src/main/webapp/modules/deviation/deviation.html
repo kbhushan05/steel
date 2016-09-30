@@ -1,0 +1,71 @@
+<style type="text/css">
+  .css-form input.ng-invalid.ng-touched {
+    background-color: #FA787E;
+  }
+</style>
+<div class="container">
+  <div class="row deviationFrm">
+    <div class="col-md-12">
+      <form name="deviationFrm" role="form" novalidate class="css-form">
+        <fieldset ng-disabled="data.status == 'SUBMITTED' || data.status == 'APPROVED'">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><label>CIL Deviation Number</label></td>
+                <td><input required type="text"  class="form-control" disabled/></td>
+                <td><label>Requestor Name</label></td>
+                <td><input required type="text" class="form-control" /></td>
+                <td><label>Request Date</label></td>
+                <td><input required type="text" class="form-control" disabled/></td>
+              </tr>
+
+              <tr>
+                <td><label>Part Description</label></td>
+                <td colspan="3"><textarea class="form-control" rows="5" id="partDesc"></textarea></td>
+                <td><label>RM Section</label></td>
+                <td><input required type="text" name="aaST" id="aaST" ng-model="alreadyAvailableSteelTonage" class="form-control" /></td>
+                
+              </tr>
+
+              <tr>
+                <td><label>RM Grade*</label></td>
+                <td><input required type="text" name="st" id="st" class="form-control" ng-model="data.steelTonage" /></td>
+                <td><label>Quantity for Deviation*</label></td>
+                <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard"/></td>
+                <td><label>Delivery Affected</label></td>
+                <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode"/></td>
+              </tr>
+              <tr>
+                <td><label>Description of / Reason for Deviation Request</label></td>
+                <td colspan="5">
+                   <input required type="text" class="form-control" ng-model="data.forgerSupplierCode"/>
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
+          
+       
+       <table class="table">
+        <tbody>
+          <tr>
+            <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Comment</div></label></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="form-group">
+                <textarea class="form-control" rows="5" id="deviationComment"></textarea>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+</fieldset>
+<button  type="button" class="btn btn-primary" ng-disabled="orderFrm.$invalid">Send</button>
+<button  type="button" class="btn btn-primary">Cancel</button>
+
+</form>
+</div>
+</div>
+</div>

@@ -17,6 +17,8 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 		$location.path('/auth');
 	}
 
+	$scope.alerts = [];
+
 	$scope.newRequest = function(){
 		$http({
 			method : "GET",
@@ -30,4 +32,12 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 			alert("Error Generating request");
 		});
 	}
+
+	 $scope.closeAlert = function(index) {
+
+	    //remove the alert from the array to avoid showing previous alerts
+	    $scope.alerts.splice(0); 
+	};
+
+	$scope.$on("add-alert")
 }

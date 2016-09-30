@@ -96,5 +96,9 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
       $state.go('home.details');
 	}
 
+    $scope.onRequestForDeviation = function(){
+        $state.go('home.deviation');
+    }
+
 	$scope.init();
 }

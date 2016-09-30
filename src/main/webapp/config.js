@@ -30,4 +30,11 @@ app.config(function($stateProvider,$urlRouterProvider,$httpProvider)
 			templateUrl: "modules/home/details.html",
 			controller: "frmDetailsCtrl"
 		})
+
+		//state home.request
+		.state('home.deviation', {
+			url: '/deviation',
+			templateUrl: "modules/deviation/deviation.html",
+			controller: "deviationCtrl"
+		})
 });

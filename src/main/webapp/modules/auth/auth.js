@@ -39,6 +39,7 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
         if($scope.user.name == "admin" && $scope.user.password == "admin"){
         	$scope.user.token = "12345";
            var u = angular.copy($scope.user);
+           $rootScope.loggedInUser = u;
            $cookieStore.put('viApp',u);
            $location.path("/home/details");	
         }else{
@@ -51,6 +52,7 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 	$scope.init = function(){
 		var user = $cookieStore.get('viApp');
 		if(user != undefined && user.token != ""){
+			$rootScope.loggedInUser = user;
 			$location.path("/home");
 		}
 	}
