@@ -1,22 +1,23 @@
 package com.demo.steel.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class SteelMill {
-	
+public class SteelHeatNo {
+
 	@Id
-	private String name;
-	@ManyToOne
+	private int heatNo;
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Supplier supplier;
 	
-	public String getName() {
-		return name;
+	public int getHeatNo() {
+		return heatNo;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setHeatNo(int heatNo) {
+		this.heatNo = heatNo;
 	}
 	public Supplier getSupplier() {
 		return supplier;

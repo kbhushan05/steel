@@ -1,4 +1,4 @@
-package com.demo.steel.dao;
+package com.demo.steel.security.dao;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,8 +12,8 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class GenericDao <T, K extends Serializable> {
-	
+public abstract class SecurityGeneric <T, K extends Serializable>{
+
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -62,17 +62,6 @@ public abstract class GenericDao <T, K extends Serializable> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected List<T> getAllEqualTo(String[] columnNames, Object[] values){
-		Session session = getSessionFactory().getCurrentSession();
-		Criteria criteria = session.createCriteria(getClazz());
-		for(int i=0; i < columnNames.length; i++){
-			criteria.add(Restrictions.eq(columnNames[i], values[i]));	
-		}
-		List<T> list = (List<T>)criteria.list();
-		return list;
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<T> getAll(){
 		Session session = getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(getClazz());
@@ -95,5 +84,10 @@ public abstract class GenericDao <T, K extends Serializable> {
 		
 		List<T> list = (List<T>)criteria.list();
 		return list;
+	}
+	
+	public void delete(T t){
+		Session session = getSessionFactory().getCurrentSession();
+		session.delete(t);
 	}
 }

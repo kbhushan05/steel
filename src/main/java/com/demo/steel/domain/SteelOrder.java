@@ -13,12 +13,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SteelOrder {
 	
 	public enum Status{
-		NEW, SAVED, APPROVED, REJECTED, SUBMITTED;
+		NEW, SAVED, APPROVED, REJECTED, SUBMITTED, FHTV_SUMBITTED;
 	}
 	
 	@Id
@@ -33,14 +34,19 @@ public class SteelOrder {
 	private String cilStatus;
 	private String cilRemark;
 	private int poNumber;
+	private String steelMill;
+	private String comments;
+	
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.NEW;
 	
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="order")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="order",orphanRemoval=true)
 	private Set<PartManifacturingDetails> partManifacturingDetails = new HashSet<>();
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="order")
 	private Set<SteelVerificationCheck> verificationCheck = new HashSet<>();
+	@OneToOne
+	private Deviation deviation;
 	
 	public long getId() {
 		return id;
@@ -115,6 +121,24 @@ public class SteelOrder {
 	}
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	public String getSteelMill() {
+		return steelMill;
+	}
+	public void setSteelMill(String steelMill) {
+		this.steelMill = steelMill;
+	}
+	public Deviation getDeviation() {
+		return deviation;
+	}
+	public void setDeviation(Deviation deviation) {
+		this.deviation = deviation;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 }

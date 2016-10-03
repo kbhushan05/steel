@@ -3,6 +3,7 @@ package com.demo.steel.domain;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class PartNoDetails {
@@ -11,6 +12,8 @@ public class PartNoDetails {
 	private int partNo;
 	@ManyToOne
 	private Supplier supplier;
+	@OneToOne
+	private SteelHeatNo steelHeatNo;
 	
 	public int getPartNo() {
 		return partNo;

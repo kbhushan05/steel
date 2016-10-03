@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,10 +71,9 @@ public class SteelOrderService {
 	@Transactional
 	public void submitOrder(SteelOrder order){
 		
-		Set<PartManifacturingDetails> checked = order.getPartManifacturingDetails().stream()
-		.filter(part -> part.getStatus() == com.demo.steel.domain.PartManifacturingDetails.Status.CHECKED)
-		.collect(Collectors.toSet());
-		order.setPartManifacturingDetails(checked);
+		order.getPartManifacturingDetails().removeIf(
+				item -> item.getStatus() != PartManifacturingDetails.Status.CHECKED
+				);
 		order.setStatus(SteelOrder.Status.SUBMITTED);
 		getSteelOrderDao().update(order);
 	}
@@ -166,6 +164,12 @@ public class SteelOrderService {
 
 	public void setVerificationCheckDao(VerificationCheckDao verificationCheckDao) {
 		this.verificationCheckDao = verificationCheckDao;
+	}
+
+	@Transactional
+	public void submitFhtv(SteelOrder order) {
+		order.setStatus(Status.FHTV_SUMBITTED);
+		getSteelOrderDao().update(order);
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.demo.steel.domain.Deviation;
 import com.demo.steel.domain.PartManifacturingDetails;
 import com.demo.steel.domain.PartNoDetails;
 import com.demo.steel.domain.SteelOrder;
@@ -27,8 +28,19 @@ public class DtoDomainConvertor {
 		orderDto.setSupplierEmail(supplier.getEmail());
 		orderDto.setStatus(order.getStatus().name());
 		orderDto.setOrderId(order.getId());
+		orderDto.setSteelMill(order.getSteelMill());
 		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
 		orderDto.setCheckList(getSteelVerificationCheckDto(order));
+		
+		Deviation dev = order.getDeviation();
+		orderDto.setCilDevitionNumber(dev.getCilDevitionNumber());
+		orderDto.setRequesterName(dev.getRequesterName());
+		orderDto.setRequestDate(dev.getRequestDate());
+		orderDto.setAttachmentName(dev.getAttachmentName());
+		orderDto.setRmSection(dev.getRmSection());
+		orderDto.setRmGarde(dev.getRmGarde());
+		orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
+		orderDto.setDelivaryAffected(dev.getDelivaryAffected());
 		
 		return orderDto;
 	}
@@ -37,12 +49,13 @@ public class DtoDomainConvertor {
 		SteelOrder order = new SteelOrder();
 		order.setId(orderDto.getOrderId());
 		order.setDate(orderDto.getDate());
-		
+		order.setSteelMill(orderDto.getSteelMill());
 		Supplier supplier = new Supplier();
 		supplier.setCode(orderDto.getSupplierCode());
 		supplier.setName(orderDto.getSupplierName());
 		supplier.setEmail(orderDto.getSupplierEmail());
 		order.setSupplier(supplier);
+		
 		order.setStatus(Enum.valueOf(SteelOrder.Status.class,orderDto.getStatus()));
 		
 		Set<PartManifacturingDetails> partManifacturingDetailsSet = getPartManifacturingDetailsSet(orderDto,order);
@@ -50,6 +63,8 @@ public class DtoDomainConvertor {
 		
 		Set<SteelVerificationCheck> checks = getSteelOrderveficationCheckSet(orderDto,order);
 		order.setVerificationCheck(checks);
+		
+		order.setDeviation(getDeviation(orderDto));
 		
 		return order;
 	}
@@ -147,4 +162,18 @@ public class DtoDomainConvertor {
 		return checkList;
 	}
 	
+	private Deviation getDeviation(SteelOrderDto orderDto){
+		
+		Deviation dev = new Deviation();
+		dev.setCilDevitionNumber(orderDto.getCilDevitionNumber());
+		dev.setRequesterName(orderDto.getRequesterName());
+		dev.setRequestDate(orderDto.getRequestDate());
+		dev.setAttachmentName(orderDto.getAttachmentName());
+		dev.setRmSection(orderDto.getRmSection());
+		dev.setRmGarde(orderDto.getRmGarde());
+		dev.setQuantityForDeviation(orderDto.getQuantityForDeviation());
+		dev.setDelivaryAffected(orderDto.getDelivaryAffected());
+		
+		return dev;
+	}
 }

@@ -88,5 +88,12 @@ public class RestApiService {
 	public void setMailService(MailNotificationService mailService) {
 		this.mailService = mailService;
 	}
+
+	public SteelOrderDto submitFhtv(SteelOrderDto orderDto) {
+		DtoDomainConvertor convertor = new DtoDomainConvertor();
+		SteelOrder order = convertor.createOrder(orderDto);
+		getSteelOrderService().submitFhtv(order);
+		return null;
+	}
 	
 }

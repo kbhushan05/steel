@@ -31,7 +31,7 @@ public class HibernateConfig {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(c3p0DataSource());
 		sessionFactory.setHibernateProperties(hibernateProperties());
-		sessionFactory.setPackagesToScan("com.demo.steel.domain");
+		sessionFactory.setPackagesToScan("com.demo.steel.domain","com.demo.steel.security.domain");
 		return sessionFactory;
 	}
 	
