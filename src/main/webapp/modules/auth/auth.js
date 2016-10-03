@@ -26,26 +26,22 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 	};
 
 	$scope.login = function() {
-
-		/*$http.post(url, data, config)
-   .then(
-       function(response){
-         // success callback
-       }, 
-       function(response){
-         // failure callback
-       }
-    );*/
-        if($scope.user.name == "admin" && $scope.user.password == "admin"){
-        	$scope.user.token = "12345";
-           var u = angular.copy($scope.user);
-           $rootScope.loggedInUser = u;
-           $cookieStore.put('viApp',u);
-           $location.path("/home/details");	
-        }else{
-        	alert("Invalid Credentials")
-        }
-		
+		var user = {};
+		user.username = $scope.user.username;
+		user.password = $scope.user.password;
+        $http.post("api/auth/login?username=supplier7", angular.toJson(user) , $scope.config)
+	   .then(
+	       function(response){
+	           $scope.user.token = "12345";
+	           var u = angular.copy($scope.user);
+	           $rootScope.loggedInUser = u;
+	           $cookieStore.put('viApp',u);
+	           $location.path("/home/details");	
+	       }, 
+	       function(response){
+	         alert("Invalid Credentials")
+	       }
+	    );
 	};
 
 

@@ -1,6 +1,29 @@
 //from main app we are going to set only ui-routing, rest all functionality will be handled by it's respective module
 app.config(function($stateProvider,$urlRouterProvider,$httpProvider)
 {
+	$httpProvider.interceptors.push(function($q,$rootScope) {
+		return {
+			'request': function(config) {
+				var user = $rootScope.loggedInUser;
+				if(user != undefined && user.token != ""){
+				  config.headers['Bearer'] = user.token;
+				}
+				return config;
+			},
+
+			'requestError': function(rejection) {
+				return $q.reject(rejection);
+			},
+			'response': function(response) {
+				return response;
+			},
+
+			'responseError': function(rejection) {
+				return $q.reject(rejection);
+			}
+		};
+	});
+
 	$urlRouterProvider
 		.otherwise('/auth');
 
