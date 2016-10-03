@@ -37,7 +37,7 @@ public class TokenAuthenticationFilter extends
 	private SessionService sessionService;
 	
 	public TokenAuthenticationFilter() {
-		super("/**");
+		super("/api/**");
 	}
 
 	@Override
