@@ -12,7 +12,7 @@ import com.demo.steel.domain.SteelMill;
 import com.demo.steel.service.SteelMillService;
 
 @RestController
-@RequestMapping("/steelMeels")
+@RequestMapping("/steelmills")
 public class SteelMillController {
 	
 	@Autowired
