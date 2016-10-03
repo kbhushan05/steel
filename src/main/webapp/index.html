@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>-------</title>
 <link rel="stylesheet" href="libs/bs/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="app.css"/>
 
 
 <style>
@@ -19,6 +20,9 @@ body,html{
 <!-- <button class="btn btn-default navbar-btn">new form</button> -->
 <body>
 			<div class="maxHeight" ui-view></div>
+			<div  id="loader-wrapper" ng-show="showLoader">
+			  <div id="loader"></div>
+		    </div>
 </body>
 
 </html>
