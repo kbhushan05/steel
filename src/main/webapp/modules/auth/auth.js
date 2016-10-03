@@ -32,7 +32,7 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
         $http.post("api/auth/login?username=supplier7", angular.toJson(user) , $scope.config)
 	   .then(
 	       function(response){
-	           $scope.user.token = "12345";
+	           $scope.user.token = "Bearer "+ response.data.token;
 	           var u = angular.copy($scope.user);
 	           $rootScope.loggedInUser = u;
 	           $cookieStore.put('viApp',u);

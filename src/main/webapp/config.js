@@ -6,7 +6,7 @@ app.config(function($stateProvider,$urlRouterProvider,$httpProvider)
 			'request': function(config) {
 				var user = $rootScope.loggedInUser;
 				if(user != undefined && user.token != ""){
-				  config.headers['Bearer'] = user.token;
+				  config.headers['Authorization'] = user.token;
 				}
 				return config;
 			},
