@@ -50,7 +50,8 @@ public class TokenAuthenticationFilter extends
 				&& req.getMethod().equalsIgnoreCase(HttpMethod.POST.toString())) {
 			byte[] buffer = new byte[1024];
 			InputStream in = req.getInputStream();
-			if(in.available() <= 0){
+			
+			if(req.getContentLength() < 0){
 				throw new AuthenticationCredentialsNotFoundException(
 						"Authentication credentials not found.");
 			}
