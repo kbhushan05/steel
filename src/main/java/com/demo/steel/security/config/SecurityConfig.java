@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.authorizeRequests().antMatchers("api/**").authenticated().and()
+		.authorizeRequests().antMatchers("api/**").authenticated()
+		.antMatchers("/**").permitAll().and()		
 		.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
 		.addFilterBefore(tokenAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
