@@ -8,17 +8,21 @@ app.config(function($stateProvider,$urlRouterProvider,$httpProvider)
 				if(user != undefined && user.token != ""){
 				  config.headers['Authorization'] = user.token;
 				}
+				$rootScope.showLoader=true;
 				return config;
 			},
 
 			'requestError': function(rejection) {
+				$rootScope.showLoader=false;
 				return $q.reject(rejection);
 			},
 			'response': function(response) {
+				$rootScope.showLoader=false;
 				return response;
 			},
 
 			'responseError': function(rejection) {
+				$rootScope.showLoader=false;
 				return $q.reject(rejection);
 			}
 		};
@@ -56,8 +60,8 @@ app.config(function($stateProvider,$urlRouterProvider,$httpProvider)
 
 		//state home.request
 		.state('home.deviation', {
-			url: '/deviation',
-			templateUrl: "modules/deviation/deviation.html",
-			controller: "deviationCtrl"
+			url: '/records',
+			templateUrl: "modules/records/records.html",
+			controller: "recordsCtrl"
 		})
 });

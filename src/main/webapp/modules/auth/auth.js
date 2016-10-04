@@ -16,7 +16,8 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 		password : "",
 		name : "",
 		user_type : "",
-		token:""
+		token:"",
+		details:{}
 	};
 
 	$scope.config = {
@@ -29,10 +30,11 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 		var user = {};
 		user.username = $scope.user.username;
 		user.password = $scope.user.password;
-        $http.post("api/auth/login?username=supplier7", angular.toJson(user) , $scope.config)
+        $http.post("api/auth/login?username="+$scope.user.username, angular.toJson(user) , $scope.config)
 	   .then(
 	       function(response){
 	           $scope.user.token = "Bearer "+ response.data.token;
+	           $scope.user.details = response.data.user;
 	           var u = angular.copy($scope.user);
 	           $rootScope.loggedInUser = u;
 	           $cookieStore.put('viApp',u);

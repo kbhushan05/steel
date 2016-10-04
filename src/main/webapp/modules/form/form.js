@@ -14,6 +14,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	$scope.parts = [];
 	$scope.part = {};
 	$scope.dataLoaded = false;
+    $scope.requestDeviation = false;
 
 	 var config = {
                 headers : {
@@ -26,11 +27,15 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
       $scope.data = $rootScope.formData;
 	}
 
+    $scope.requestDeviationHandler = function(){
+        $scope.requestDeviation = !$scope.requestDeviation;
+    }
+
 	$scope.save = function(){
        var det = angular.copy($scope.data);
         $http.post('api/orders/', det, config)
             .success(function (data, status, headers, config) {
-             alert("New request saved");
+             
              $scope.gotoHome();
          })
          .error(function (data, status, header, config) {
@@ -44,7 +49,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	       det.status = "SUBMITTED";
 	        $http.post('api/orders/', det, config)
 	            .success(function (data, status, headers, config) {
-	             alert("New request submitted");
+	             
 	             $scope.gotoHome();
 	         })
 	         .error(function (data, status, header, config) {
@@ -57,7 +62,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	  var det = angular.copy($rootScope.formData);
         $http.put('api/orders/', det, config)
             .success(function (data, status, headers, config) {
-            alert("request updated");
+            
             $scope.gotoHome();
          })
          .error(function (data, status, header, config) {
@@ -70,11 +75,11 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	   var det = angular.copy($rootScope.formData);
         $http.put('api/orders/'+ det.orderId + '?action=reject', det, config)
             .success(function (data, status, headers, config) {
-            alert("request rejected");
+            
             $scope.gotoHome();
          })
          .error(function (data, status, header, config) {
-         	alert("fail to update request");
+         	
          	$scope.gotoHome();
         });
 	}
@@ -83,7 +88,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 		var det = angular.copy($rootScope.formData);
         $http.put('api/orders/'+ det.orderId + '?action=approve' ,det, config)
             .success(function (data, status, headers, config) {
-            alert("request updated");
+            
             $scope.gotoHome();
          })
          .error(function (data, status, header, config) {
