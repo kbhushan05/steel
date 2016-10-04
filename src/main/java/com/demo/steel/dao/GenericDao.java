@@ -96,4 +96,10 @@ public abstract class GenericDao <T, K extends Serializable> {
 		List<T> list = (List<T>)criteria.list();
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public T reattachEntity(T t){
+		Session session = getSessionFactory().getCurrentSession();
+		return (T)session.merge(t);
+	}
 }

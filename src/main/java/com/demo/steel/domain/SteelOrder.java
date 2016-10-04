@@ -45,8 +45,9 @@ public class SteelOrder {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="order")
 	private Set<SteelVerificationCheck> verificationCheck = new HashSet<>();
-	@OneToOne
-	private Deviation deviation;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Deviation deviation = new Deviation();
 	
 	public long getId() {
 		return id;
@@ -103,7 +104,7 @@ public class SteelOrder {
 		this.poNumber = poNumber;
 	}
 	public Set<PartManifacturingDetails> getPartManifacturingDetails() {
-		return Collections.unmodifiableSet(partManifacturingDetails);
+		return partManifacturingDetails;
 	}
 	public void setPartManifacturingDetails(
 			Collection<PartManifacturingDetails> partManifacturingDetails) {

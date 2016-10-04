@@ -2,6 +2,7 @@ package com.demo.steel.service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -14,6 +15,7 @@ import com.demo.steel.dao.SteelOrderDao;
 import com.demo.steel.dao.SteelVerificationCheckDao;
 import com.demo.steel.dao.SupplierDao;
 import com.demo.steel.dao.VerificationCheckDao;
+import com.demo.steel.domain.Deviation;
 import com.demo.steel.domain.PartManifacturingDetails;
 import com.demo.steel.domain.PartNoDetails;
 import com.demo.steel.domain.SteelOrder;
@@ -21,11 +23,13 @@ import com.demo.steel.domain.SteelOrder.Status;
 import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
+import com.demo.steel.security.dao.DeviationDao;
 
 @Service
 public class SteelOrderService {
 	
 	private static final Random ORDER_ID_GENERATOR = new Random();
+	private static final Random CIL_NUMBER_GENERATOR = new Random();
 	
 	@Autowired
 	private SupplierDao supplierDao;
@@ -35,6 +39,8 @@ public class SteelOrderService {
 	private SteelOrderDao steelOrderDao;
 	@Autowired
 	private VerificationCheckDao verificationCheckDao;
+	@Autowired
+	private DeviationDao deviationDao;
 	
 	@Transactional
 	public SteelOrder createNewOrder(String supplierName){
@@ -59,6 +65,9 @@ public class SteelOrderService {
 			partManifacturingDetails.add(details);
 		}
 		order.setPartManifacturingDetails(partManifacturingDetails);
+		Deviation dev = new Deviation();
+		dev.setCilDevitionNumber(generateCilNumber());
+		order.setDeviation(dev);
 		return order;
 	}
 	
@@ -70,10 +79,14 @@ public class SteelOrderService {
 	
 	@Transactional
 	public void submitOrder(SteelOrder order){
-		
-		order.getPartManifacturingDetails().removeIf(
-				item -> item.getStatus() != PartManifacturingDetails.Status.CHECKED
-				);
+		order = getSteelOrderDao().reattachEntity(order);
+		Iterator<PartManifacturingDetails> itrs = order.getPartManifacturingDetails().iterator();
+		while(itrs.hasNext()){
+			PartManifacturingDetails details = itrs.next();
+			if(details.getStatus() == PartManifacturingDetails.Status.UNCHECKED){
+				itrs.remove();
+			}
+		}
 		order.setStatus(SteelOrder.Status.SUBMITTED);
 		getSteelOrderDao().update(order);
 	}
@@ -154,6 +167,10 @@ public class SteelOrderService {
 		return id < 0 ? id * -1 : id;
 	}
 	
+	private int generateCilNumber(){
+		int num = CIL_NUMBER_GENERATOR.nextInt();
+		return num < 0 ? num * -1 : num;
+	}
 	private Supplier getSupplier(String name){
 		return getSupplierDao().get(name);
 	}
@@ -164,6 +181,14 @@ public class SteelOrderService {
 
 	public void setVerificationCheckDao(VerificationCheckDao verificationCheckDao) {
 		this.verificationCheckDao = verificationCheckDao;
+	}
+
+	public DeviationDao getDeviationDao() {
+		return deviationDao;
+	}
+
+	public void setDeviationDao(DeviationDao deviationDao) {
+		this.deviationDao = deviationDao;
 	}
 
 	@Transactional

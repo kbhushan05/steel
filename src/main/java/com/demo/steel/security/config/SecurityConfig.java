@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.authorizeRequests().antMatchers("api/**").authenticated()
-		.antMatchers("/**").permitAll().and()		
+		.authorizeRequests().antMatchers("api/**").authenticated().and()
+		//.antMatchers("/**").permitAll().and()
 		.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
 		.addFilterBefore(tokenAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

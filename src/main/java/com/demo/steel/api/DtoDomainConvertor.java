@@ -33,14 +33,17 @@ public class DtoDomainConvertor {
 		orderDto.setCheckList(getSteelVerificationCheckDto(order));
 		
 		Deviation dev = order.getDeviation();
-		orderDto.setCilDevitionNumber(dev.getCilDevitionNumber());
-		orderDto.setRequesterName(dev.getRequesterName());
-		orderDto.setRequestDate(dev.getRequestDate());
-		orderDto.setAttachmentName(dev.getAttachmentName());
-		orderDto.setRmSection(dev.getRmSection());
-		orderDto.setRmGarde(dev.getRmGarde());
-		orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
-		orderDto.setDelivaryAffected(dev.getDelivaryAffected());
+		if(dev != null){
+			orderDto.setCilDevitionNumber(dev.getCilDevitionNumber());
+			orderDto.setRequesterName(dev.getRequesterName());
+			orderDto.setRequestDate(dev.getRequestDate());
+			orderDto.setAttachmentName(dev.getAttachmentName());
+			orderDto.setRmSection(dev.getRmSection());
+			orderDto.setRmGarde(dev.getRmGarde());
+			orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
+			orderDto.setDelivaryAffected(dev.getDelivaryAffected());
+		}
+		
 		
 		return orderDto;
 	}

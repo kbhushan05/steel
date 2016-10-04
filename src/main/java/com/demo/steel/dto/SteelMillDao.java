@@ -14,8 +14,8 @@ public class SteelMillDao extends GenericDao<SteelMill, String>{
 		return SteelMill.class;
 	}
 	
-	public List<SteelMill> getSteelMills(String supplierName){
-		return getAllEqualTo(new String[]{"supplier"}, new Object[]{supplierName});
+	public List<SteelMill> getSteelMills(int supplierCode){
+		return getAllEqualTo(new String[]{"supplier"}, new Object[]{supplierCode});
 	}
 
 }

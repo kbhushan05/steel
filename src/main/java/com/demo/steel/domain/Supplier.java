@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 public class Supplier {
 
 	@Id
-	private int code;
+	private Integer code;
 	private String name;
 	private String email;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.EAGER)

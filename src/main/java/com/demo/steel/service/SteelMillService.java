@@ -1,5 +1,6 @@
 package com.demo.steel.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,9 +23,10 @@ public class SteelMillService {
 	
 	@Transactional
 	public List<SteelMill> getSteelMills(String supplierName){
-		/*Supplier supplier = supplierDao.get(supplierName);
-		return dao.getSteelMills(supplier.getCode());*/
-		return Collections.emptyList();
+		Supplier supplier = supplierDao.get(supplierName);
+		supplier.getSteelMills().size();
+		List<SteelMill> mills = new ArrayList<>(supplier.getSteelMills());
+		return mills;
 	}
 
 	public SupplierDao getSupplierDao() {
