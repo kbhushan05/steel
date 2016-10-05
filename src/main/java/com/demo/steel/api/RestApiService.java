@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.steel.domain.SteelMill;
 import com.demo.steel.domain.SteelOrder;
 import com.demo.steel.dto.SteelOrderDto;
 import com.demo.steel.service.MailNotificationService;
+import com.demo.steel.service.SteelMillService;
 import com.demo.steel.service.SteelOrderService;
 
 @Service
@@ -17,13 +19,28 @@ public class RestApiService {
 	private SteelOrderService steelOrderService;
 	@Autowired
 	private MailNotificationService mailService;
+	@Autowired
+	private SteelMillService steelMillService;
 	
 	public SteelOrderDto createNewOrder(String supplierName){
 		
 		SteelOrder order = getSteelOrderService().createNewOrder(supplierName);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
+		
+		orderDto.setSteelMills(getSteelMills());
 		return orderDto;
+	}
+
+	private String[] getSteelMills() {
+		List<SteelMill> mills = steelMillService.getAll();
+		String[] millsArry = new String[mills.size()];
+		int i =0;
+		for(SteelMill mill : mills){
+			millsArry[i] = mill.getName();
+			i++;
+		}
+		return millsArry;
 	}
 	
 	public void saveOrder(SteelOrderDto orderDto){
@@ -78,6 +95,7 @@ public class RestApiService {
 		SteelOrder order = getSteelOrderService().getOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
+		getSteelMills();
 		return orderDto;
 	}
 
@@ -94,6 +112,20 @@ public class RestApiService {
 		SteelOrder order = convertor.createOrder(orderDto);
 		getSteelOrderService().submitFhtv(order);
 		return null;
+	}
+	
+	public List<SteelOrderDto> getOrdersFromStatus(String status){
+		DtoDomainConvertor convertor = new DtoDomainConvertor();
+		List<SteelOrderDto> dtos = convertor.createDtos(getSteelOrderService().getOrderForStatus(status));
+		return dtos;
+	}
+	
+	public SteelMillService getSteelMillService() {
+		return steelMillService;
+	}
+
+	public void setSteelMillService(SteelMillService steelMillService) {
+		this.steelMillService = steelMillService;
 	}
 	
 }

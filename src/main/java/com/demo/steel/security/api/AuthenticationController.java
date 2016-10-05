@@ -27,7 +27,11 @@ public class AuthenticationController {
 		User user = userService.get(username);
 		user.setPassword("");
 		String token = JwtTokenUtil.generateToken(user);
-		Session session = getSessionService().create(token, user);
+		Session session = getSessionService().getForUser(user);
+		if(session != null){
+			return session;
+		}
+		session = getSessionService().create(token, user);
 		return session;
 	}
 	
@@ -36,8 +40,7 @@ public class AuthenticationController {
 		
 		User user = userService.get(username);
 		user.setPassword("");
-		String token = JwtTokenUtil.generateToken(user);
-		getSessionService().remove(token);
+		getSessionService().remove(user);
 	}
 
 	public UserService getUserService() {

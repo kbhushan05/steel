@@ -1,34 +1,33 @@
 package com.demo.steel.api;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.steel.domain.SteelMill;
-import com.demo.steel.service.SteelMillService;
+import com.demo.steel.dto.SteelMillDto;
 
 @RestController
 @RequestMapping("/steelmills")
 public class SteelMillController {
 	
 	@Autowired
-	private SteelMillService steelMillService;
+	private RestApiService service;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public List<SteelMill> getAll(@RequestParam String supplierName){
-		return getSteelMillService().getSteelMills(supplierName);
+	public List<SteelMillDto> getAll(){
+		return Collections.emptyList();
 	}
 
-	public SteelMillService getSteelMillService() {
-		return steelMillService;
+	public RestApiService getService() {
+		return service;
 	}
 
-	public void setSteelMillService(SteelMillService steelMillService) {
-		this.steelMillService = steelMillService;
+	public void setService(RestApiService service) {
+		this.service = service;
 	}
 	
 }

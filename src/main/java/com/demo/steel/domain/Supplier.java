@@ -1,8 +1,6 @@
 package com.demo.steel.domain;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,10 +18,6 @@ public class Supplier {
 	private String email;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.EAGER)
 	private Set<PartNoDetails> partNos;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.LAZY)
-	private Set<SteelMill> steelMills;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.LAZY)
-	private Set<SteelHeatNo> steelHeatNos;
 	
 	public int getCode() {
 		return code;
@@ -50,12 +44,6 @@ public class Supplier {
 		this.email = email;
 	}
 	
-	public Set<SteelMill> getSteelMills() {
-		return Collections.unmodifiableSet(steelMills);
-	}
-	public void setSteelMills(Collection<SteelMill> steelMills) {
-		this.steelMills = new HashSet<>(steelMills);
-	}
 	public PartNoDetails getPartNoDetails(int partNoId){
 		return getPartNos().stream().filter((part)-> part.getPartNo()==partNoId)
 				.findAny().get();

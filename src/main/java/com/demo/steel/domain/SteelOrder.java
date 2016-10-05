@@ -36,6 +36,12 @@ public class SteelOrder {
 	private int poNumber;
 	private String steelMill;
 	private String comments;
+	private long steelHeatNumber;
+	private float alreadyAvailableSteelTonage;
+	private float newSteelToBuy;
+	private float steelTonage;
+	private String refStandard;
+	private String forgerSupplierCode;
 	
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.NEW;
@@ -140,6 +146,42 @@ public class SteelOrder {
 	}
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+	public long getSteelHeatNumber() {
+		return steelHeatNumber;
+	}
+	public void setSteelHeatNumber(long steelHeatNumber) {
+		this.steelHeatNumber = steelHeatNumber;
+	}
+	public float getAlreadyAvailableSteelTonage() {
+		return alreadyAvailableSteelTonage;
+	}
+	public void setAlreadyAvailableSteelTonage(float alreadyAvailableSteelTonage) {
+		this.alreadyAvailableSteelTonage = alreadyAvailableSteelTonage;
+	}
+	public float getNewSteelToBuy() {
+		return newSteelToBuy;
+	}
+	public void setNewSteelToBuy(float newSteelToBuy) {
+		this.newSteelToBuy = newSteelToBuy;
+	}
+	public float getSteelTonage() {
+		return steelTonage;
+	}
+	public void setSteelTonage(float steelTonage) {
+		this.steelTonage = steelTonage;
+	}
+	public String getRefStandard() {
+		return refStandard;
+	}
+	public void setRefStandard(String refStandard) {
+		this.refStandard = refStandard;
+	}
+	public String getForgerSupplierCode() {
+		return forgerSupplierCode;
+	}
+	public void setForgerSupplierCode(String forgerSupplierCode) {
+		this.forgerSupplierCode = forgerSupplierCode;
 	}
 	
 }

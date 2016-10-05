@@ -35,6 +35,11 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 	       function(response){
 	           $scope.user.token = "Bearer "+ response.data.token;
 	           $scope.user.details = response.data.user;
+	           if(response.data.user.role == 'SUPPLIER'){
+	           		$scope.user.type = 'Supplier';
+	           }else{
+	           		$scope.user.type = 'Admin';
+	           }
 	           var u = angular.copy($scope.user);
 	           $rootScope.loggedInUser = u;
 	           $cookieStore.put('viApp',u);

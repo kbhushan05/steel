@@ -19,4 +19,12 @@ public class SteelOrderDao extends GenericDao<SteelOrder, Long> {
 		return getMinimalPresentation(columns);
 	}
 
+	public List<SteelOrder> getSteelOrderForStatus(SteelOrder.Status status){
+		List<SteelOrder> orders = getAllEqualTo(new String[]{"status"}, new Object[]{status});
+		for(SteelOrder order : orders){
+			order.getPartManifacturingDetails().size();
+			order.getVerificationCheck().size();
+		}
+		return orders;
+	}
 }

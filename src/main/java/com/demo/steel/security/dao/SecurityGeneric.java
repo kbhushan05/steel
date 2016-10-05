@@ -90,4 +90,14 @@ public abstract class SecurityGeneric <T, K extends Serializable>{
 		Session session = getSessionFactory().getCurrentSession();
 		session.delete(t);
 	}
+	@SuppressWarnings("unchecked")
+	protected List<T> getAllEqualTo(String[] columnNames, Object[] values){
+		Session session = getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(getClazz());
+		for(int i=0; i < columnNames.length; i++){
+			criteria.add(Restrictions.eq(columnNames[i], values[i]));	
+		}
+		List<T> list = (List<T>)criteria.list();
+		return list;
+	}
 }

@@ -37,8 +37,16 @@ public class SteelOrderDto {
 	private String description;
 	private String attachmentName;
 	
+	private String[] steelMills;
+	
 	private Set<SteelVerificationCheckDto> checkList = new HashSet<>(20);
 	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>();
+
+	private String cilRemark;
+
+	private String cilStatus;
+
+	private String comment;
 	
 	public void addVerificationCheck(String req, String status, String remark, byte[] attachment, String attachmentName){
 		SteelVerificationCheckDto check = new SteelVerificationCheckDto(req,status,remark,attachment,attachmentName);
@@ -208,6 +216,30 @@ public class SteelOrderDto {
 	}
 	public void setAttachmentName(String attachmentName) {
 		this.attachmentName = attachmentName;
+	}
+	public String getCilRemark() {
+		return cilRemark;
+	}
+	public void setCilRemark(String cilRemark){
+		this.cilRemark = cilRemark;
+	}
+	public String getCilStatus() {
+		return cilStatus;
+	}
+	public void setCilStatus(String cilStatus) {
+		this.cilStatus = cilStatus;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	public String[] getSteelMills() {
+		return steelMills;
+	}
+	public void setSteelMills(String[] steelMills) {
+		this.steelMills = steelMills;
 	}
 	
 }

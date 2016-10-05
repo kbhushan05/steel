@@ -1,5 +1,6 @@
 package com.demo.steel.security.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,7 +12,7 @@ public class Session {
 	@Id
 	@GeneratedValue
 	private int primaryKey;
-	
+	@Column(length=300)
 	private String token;
 	@OneToOne
 	private User user;

@@ -163,13 +163,17 @@ public class SteelOrderService {
 	}
 	
 	private long generateOrderId(){
-		long id= ORDER_ID_GENERATOR.nextLong();
+		int min = 10000;
+		int max = 1000000;
+		long id= ORDER_ID_GENERATOR.nextInt((max-min)+1)+min;
 		return id < 0 ? id * -1 : id;
 	}
 	
 	private int generateCilNumber(){
-		int num = CIL_NUMBER_GENERATOR.nextInt();
-		return num < 0 ? num * -1 : num;
+		int min = 10000;
+		int max = 1000000;
+		int id= CIL_NUMBER_GENERATOR.nextInt((max-min)+1)+min;
+		return id < 0 ? id * -1 : id;
 	}
 	private Supplier getSupplier(String name){
 		return getSupplierDao().get(name);
@@ -197,4 +201,10 @@ public class SteelOrderService {
 		getSteelOrderDao().update(order);
 	}
 	
+	@Transactional
+	public List<SteelOrder> getOrderForStatus(String status){
+		status = status.toUpperCase();
+		Status st = Enum.valueOf(SteelOrder.Status.class, status);
+		return getSteelOrderDao().getSteelOrderForStatus(st);
+	}
 }

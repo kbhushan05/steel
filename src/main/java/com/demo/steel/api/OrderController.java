@@ -72,6 +72,11 @@ public class OrderController {
 			return getService().getOrder(orderId);
 	}
 	
+	@RequestMapping
+	public List<SteelOrderDto> getOrdersFromStatus(@RequestParam String status){
+		return getService().getOrdersFromStatus(status);
+	}
+	
 	public RestApiService getService() {
 		return service;
 	}

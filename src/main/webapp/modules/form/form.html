@@ -23,7 +23,7 @@
                 <td><label>Steel Heat Number</label></td>
                 <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  /></td>
                 <td><label>Already Available Steel Tonnage</label></td>
-                <td><input required type="text" name="aaST" id="aaST" ng-model="alreadyAvailableSteelTonage" class="form-control" /></td>
+                <td><input required type="text" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" /></td>
                 <td><label>New Steel To Buy</label></td>
                 <td><input required type="text" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" /></td>
               </tr>
@@ -40,7 +40,7 @@
                 <td><label>Steel Mill</label></td>
                 <td>
                  <select class="form-control" id="sel1" ng-model="data.steelMill">
-                   <option ng-repeat="option in data.steelMill" value="{{option.id}}">{{option.name}}</option>
+                   <option ng-repeat="option in data.steelMills" value="{{option}}">{{option}}</option>
                  </select>
                </td>
 
@@ -144,7 +144,7 @@
     <tr>
       <td>
         <div class="form-group">
-          <textarea class="form-control" rows="5" id="comment"></textarea>
+          <textarea class="form-control" rows="5" id="comment" ng-model="data.comment"></textarea>
         </div>
       </td>
 

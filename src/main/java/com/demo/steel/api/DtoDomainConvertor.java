@@ -9,12 +9,14 @@ import java.util.Set;
 import com.demo.steel.domain.Deviation;
 import com.demo.steel.domain.PartManifacturingDetails;
 import com.demo.steel.domain.PartNoDetails;
+import com.demo.steel.domain.SteelMill;
 import com.demo.steel.domain.SteelOrder;
 import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.SteelVerificationCheck.Status;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
 import com.demo.steel.dto.PartManifacturingDetailsDto;
+import com.demo.steel.dto.SteelMillDto;
 import com.demo.steel.dto.SteelOrderDto;
 import com.demo.steel.dto.SteelVerificationCheckDto;
 
@@ -22,15 +24,25 @@ public class DtoDomainConvertor {
 	
 	public SteelOrderDto createDto(SteelOrder order) {
 		SteelOrderDto orderDto = new SteelOrderDto();
+		
 		Supplier supplier = order.getSupplier();
 		orderDto.setSupplierCode(supplier.getCode());
 		orderDto.setSupplierName(supplier.getName());
 		orderDto.setSupplierEmail(supplier.getEmail());
+		
 		orderDto.setStatus(order.getStatus().name());
 		orderDto.setOrderId(order.getId());
 		orderDto.setSteelMill(order.getSteelMill());
 		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
 		orderDto.setCheckList(getSteelVerificationCheckDto(order));
+		orderDto.setAlreadyAvailableSteelTonage(order.getAlreadyAvailableSteelTonage());
+		orderDto.setCilRemark(order.getCilRemark());
+		orderDto.setCilStatus(order.getCilStatus());
+		orderDto.setNewSteelToBuy(order.getNewSteelToBuy());
+		orderDto.setSteelTonage(order.getSteelTonage());
+		orderDto.setRefStandard(order.getRefStandard());
+		orderDto.setComment(order.getComments());
+		orderDto.setForgerSupplierCode(order.getForgerSupplierCode());
 		
 		Deviation dev = order.getDeviation();
 		if(dev != null){
@@ -42,6 +54,8 @@ public class DtoDomainConvertor {
 			orderDto.setRmGarde(dev.getRmGarde());
 			orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
 			orderDto.setDelivaryAffected(dev.getDelivaryAffected());
+			orderDto.setDescription(dev.getDescription());
+			orderDto.setPartDescription(dev.getDescription());
 		}
 		
 		
@@ -53,6 +67,15 @@ public class DtoDomainConvertor {
 		order.setId(orderDto.getOrderId());
 		order.setDate(orderDto.getDate());
 		order.setSteelMill(orderDto.getSteelMill());
+		order.setAlreadyAvailableSteelTonage(orderDto.getAlreadyAvailableSteelTonage());
+		order.setCilRemark(orderDto.getCilRemark());
+		order.setCilStatus(orderDto.getCilStatus());
+		order.setNewSteelToBuy(orderDto.getNewSteelToBuy());
+		order.setSteelTonage(orderDto.getSteelTonage());
+		order.setRefStandard(orderDto.getRefStandard());
+		order.setComments(orderDto.getComment());
+		order.setForgerSupplierCode(orderDto.getForgerSupplierCode());
+		
 		Supplier supplier = new Supplier();
 		supplier.setCode(orderDto.getSupplierCode());
 		supplier.setName(orderDto.getSupplierName());
@@ -176,7 +199,23 @@ public class DtoDomainConvertor {
 		dev.setRmGarde(orderDto.getRmGarde());
 		dev.setQuantityForDeviation(orderDto.getQuantityForDeviation());
 		dev.setDelivaryAffected(orderDto.getDelivaryAffected());
+		dev.setDescription(orderDto.getDescription());
+		dev.setPartDescription(orderDto.getPartDescription());
 		
 		return dev;
+	}
+
+	public List<SteelMillDto> createSteelMillDto(List<SteelMill> mills) {
+		List<SteelMillDto> dtos = new ArrayList<>();
+		for(SteelMill mill : mills){
+			dtos.add(createSteelMillDto(mill));
+		}
+		return dtos;
+	}
+	
+	public SteelMillDto createSteelMillDto(SteelMill mill){
+		SteelMillDto dto = new SteelMillDto();
+		dto.setName(mill.getName());
+		return dto;
 	}
 }

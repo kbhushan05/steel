@@ -29,10 +29,19 @@ public class SessionService {
 	public boolean isActive(String token){
 		return dao.getSessionFor(token)== null ? false : true;
 	}
+	@Transactional
+	public Session get(String token){
+		return dao.getSessionFor(token);
+	}
 	
 	@Transactional
-	public void remove(String token){
-		Session s = dao.getSessionFor(token);
+	public Session getForUser(User user){
+		return dao.getSessionForUser(user);
+	}
+	
+	@Transactional
+	public void remove(User user){
+		Session s = dao.getSessionForUser(user);
 		dao.delete(s);
 	}
 

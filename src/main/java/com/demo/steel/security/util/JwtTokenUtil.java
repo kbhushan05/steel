@@ -3,6 +3,7 @@ package com.demo.steel.security.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.Date;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -39,6 +40,8 @@ public class JwtTokenUtil {
     public static String generateToken(User u) {
         Claims claims = Jwts.claims().setSubject(u.getUsername());
         claims.put("role", u.getRole());
+        claims.setId(u.getUsername());
+        claims.setIssuedAt(new Date());
         String token = null;
         
         try {
