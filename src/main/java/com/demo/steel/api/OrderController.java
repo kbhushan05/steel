@@ -93,8 +93,17 @@ public class OrderController {
 		default:
 			break;
 		}
-		
 		return orderDto;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, path="/{orderId}/fht")
+	public SteelOrderDto createNewFhtOrder(@PathVariable long orderId){
+		return getService().getOrder(orderId);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, path="/{orderId}/fht")
+	public SteelOrderDto createNewFhtOrder(@PathVariable long orderId, @RequestBody SteelOrderDto orderdto){
+		return getService().submitFhtv(orderdto);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
