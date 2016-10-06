@@ -1,7 +1,6 @@
 package com.demo.steel.domain;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,7 @@ import javax.persistence.OneToOne;
 public class SteelOrder {
 	
 	public enum Status{
-		NEW, SAVED, APPROVED, REJECTED, SUBMITTED, FHTV_SUMBITTED;
+		NEW, SAVED, APPROVED, REJECTED, SUBMITTED, FHTV_SUBMITTED;
 	}
 	
 	@Id
@@ -117,7 +116,7 @@ public class SteelOrder {
 		this.partManifacturingDetails = new HashSet<>(partManifacturingDetails);
 	}
 	public Set<SteelVerificationCheck> getVerificationCheck() {
-		return Collections.unmodifiableSet(verificationCheck);
+		return verificationCheck;
 	}
 	public void setVerificationCheck(
 			Collection<SteelVerificationCheck> verificationCheck) {

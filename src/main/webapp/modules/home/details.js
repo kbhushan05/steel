@@ -7,14 +7,15 @@ angular.module('vi-app.frmDetails')
 
 // Inject my dependencies
 frmDetailsCtrl.$inject = [ '$scope', '$location', '$rootScope',
-'$http','$cookieStore','$state' ];
+'$http','$cookieStore','$state','userService' ];
 
 
-function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
+function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userService) {
 	$scope.orders = [];
   $scope.init = function(){
   	$scope.orders = [];
-  	$http.get("api/orders/")
+  	var url = userService.getRole() == 'ADMIN' ? "api/orders": "api/orders?supplierName="+userService.getSuppliername();
+  	$http.get(url)
     .then(function(response) {
         $scope.orders = angular.fromJson(response.data);
     }, function(response) {

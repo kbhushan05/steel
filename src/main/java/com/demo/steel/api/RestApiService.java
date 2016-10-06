@@ -31,6 +31,20 @@ public class RestApiService {
 		orderDto.setSteelMills(getSteelMills());
 		return orderDto;
 	}
+	
+	public SteelOrderDto createNewFhtOrder(long orderId){
+		
+		SteelOrder order = getSteelOrderService().createNewFhtOrder(orderId);
+		DtoDomainConvertor conv = new DtoDomainConvertor();
+		SteelOrderDto orderDto = conv.createDto(order);
+		return orderDto;
+	}
+	
+	public void submitFhtOrder(SteelOrderDto orderDto){
+		DtoDomainConvertor conv = new DtoDomainConvertor();
+		SteelOrder order = conv.createOrder(orderDto);
+		getSteelOrderService().submitFhtOrder(order);
+	}
 
 	private String[] getSteelMills() {
 		List<SteelMill> mills = steelMillService.getAll();
@@ -107,13 +121,6 @@ public class RestApiService {
 		this.mailService = mailService;
 	}
 
-	public SteelOrderDto submitFhtv(SteelOrderDto orderDto) {
-		DtoDomainConvertor convertor = new DtoDomainConvertor();
-		SteelOrder order = convertor.createOrder(orderDto);
-		getSteelOrderService().submitFhtv(order);
-		return null;
-	}
-	
 	public List<SteelOrderDto> getOrdersFromStatus(String status){
 		DtoDomainConvertor convertor = new DtoDomainConvertor();
 		List<SteelOrderDto> dtos = convertor.createDtos(getSteelOrderService().getOrderForStatus(status));

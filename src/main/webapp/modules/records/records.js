@@ -26,7 +26,7 @@ function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,us
 
   $scope.view = function(data){
     $rootScope.isFHT = false;
-    var FHUrl = (userService.isSupplier()?"api/orders/"+data.orderId + "/fht":"/pi/orders/"+data.orderId)
+    var FHUrl = (userService.isSupplier()?"api/orders/"+data.orderId + "/fht":"api/orders/"+data.orderId)
 	  $http({
 			method : "GET",
 			url : FHUrl

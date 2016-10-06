@@ -23,6 +23,7 @@ import com.demo.steel.domain.SteelOrder.Status;
 import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
+import com.demo.steel.domain.VerificationCheck.Type;
 import com.demo.steel.security.dao.DeviationDao;
 
 @Service
@@ -45,7 +46,7 @@ public class SteelOrderService {
 	@Transactional
 	public SteelOrder createNewOrder(String supplierName){
 		Supplier supplier = getSupplier(supplierName);
-		List<VerificationCheck> vcs = getVerificationCheckDao().getAll();
+		List<VerificationCheck> vcs = getVerificationCheckDao().get(Type.BASIC);
 		List<SteelVerificationCheck> checkList = new ArrayList<>();
 		for(VerificationCheck vc : vcs){
 			SteelVerificationCheck check = new SteelVerificationCheck();
@@ -72,6 +73,26 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
+	public SteelOrder createNewFhtOrder(long orderId){
+		
+		SteelOrder fhtOrder = getSteelOrderDao().get(orderId);
+		if(fhtOrder.getStatus() != SteelOrder.Status.APPROVED){
+			throw new IllegalArgumentException("Invalid Order state.");
+		}
+		
+		List<VerificationCheck> vcs = getVerificationCheckDao().get(Type.FHT);
+		List<SteelVerificationCheck> checkList = new ArrayList<>();
+		for(VerificationCheck vc : vcs){
+			SteelVerificationCheck check = new SteelVerificationCheck();
+			check.setVerificationCheck(vc);
+			checkList.add(check);
+		}
+		fhtOrder.setVerificationCheck(checkList);
+		fhtOrder.getPartManifacturingDetails().size();
+		return fhtOrder;
+	}
+	
+	@Transactional
 	public void saveOrder(SteelOrder order){
 		order.setStatus(SteelOrder.Status.SAVED);
 		getSteelOrderDao().save(order);
@@ -88,6 +109,15 @@ public class SteelOrderService {
 			}
 		}
 		order.setStatus(SteelOrder.Status.SUBMITTED);
+		getSteelOrderDao().update(order);
+	}
+	
+	@Transactional
+	public void submitFhtOrder(SteelOrder order){
+		if(order.getStatus() != SteelOrder.Status.APPROVED){
+			throw new IllegalArgumentException("Invalid Order state.");
+		}
+		order.setStatus(Status.FHTV_SUBMITTED);
 		getSteelOrderDao().update(order);
 	}
 	
@@ -127,6 +157,15 @@ public class SteelOrderService {
 	@Transactional
 	public SteelOrder getOrder(long orderId) {
 		SteelOrder order = getEagerlyLoadedOrder(orderId);
+		if(order.getStatus() == SteelOrder.Status.FHTV_SUBMITTED){
+			Iterator<SteelVerificationCheck> itr = order.getVerificationCheck().iterator();
+			while(itr.hasNext()){
+				SteelVerificationCheck check = itr.next();
+				if(check.getVerificationCheck().getType() == VerificationCheck.Type.BASIC){
+					itr.remove();
+				}
+			}
+		}
 		return order;
 	}
 
@@ -195,12 +234,6 @@ public class SteelOrderService {
 		this.deviationDao = deviationDao;
 	}
 
-	@Transactional
-	public void submitFhtv(SteelOrder order) {
-		order.setStatus(Status.FHTV_SUMBITTED);
-		getSteelOrderDao().update(order);
-	}
-	
 	@Transactional
 	public List<SteelOrder> getOrderForStatus(String status){
 		status = status.toUpperCase();

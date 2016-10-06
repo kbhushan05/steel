@@ -118,6 +118,7 @@ public class DtoDomainConvertor {
 			dto.setAttachmentName(dto.getAttachmentName());
 			dto.setRemark(check.getRemark());
 			dto.setStatus(check.getStatus().toString());
+			dto.setTestName(check.getVerificationCheck().getTestName());
 			set.add(dto);
 		}
 		

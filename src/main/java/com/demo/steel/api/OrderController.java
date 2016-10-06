@@ -72,9 +72,10 @@ public class OrderController {
 	}
 	
 	private List<SteelOrderDto> filterByStatus(List<SteelOrderDto> list, String status){
-		return list.stream()
-		.filter(dto -> dto.getStatus().equalsIgnoreCase(status))
-		.collect(Collectors.toList());
+		List<SteelOrderDto> ls = list.stream()
+				.filter(dto -> dto.getStatus().equalsIgnoreCase(status))
+				.collect(Collectors.toList());
+		return ls;
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}")
@@ -87,9 +88,6 @@ public class OrderController {
 		case "reject":
 			orderDto = getService().rejectOrder(orderId);
 			break;
-		case "fhtvSubmitted":
-			orderDto = getService().submitFhtv(orderDto);
-			break;
 		default:
 			break;
 		}
@@ -98,12 +96,12 @@ public class OrderController {
 	
 	@RequestMapping(method=RequestMethod.GET, path="/{orderId}/fht")
 	public SteelOrderDto createNewFhtOrder(@PathVariable long orderId){
-		return getService().getOrder(orderId);
+		return getService().createNewFhtOrder(orderId);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, path="/{orderId}/fht")
-	public SteelOrderDto createNewFhtOrder(@PathVariable long orderId, @RequestBody SteelOrderDto orderdto){
-		return getService().submitFhtv(orderdto);
+	public void submitFhtOrder(@PathVariable long orderId, @RequestBody SteelOrderDto orderDto){
+		getService().submitFhtOrder(orderDto);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")

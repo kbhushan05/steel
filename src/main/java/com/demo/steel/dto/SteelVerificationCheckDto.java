@@ -8,6 +8,7 @@ public class SteelVerificationCheckDto{
 	private String remark;
 	private byte[] attachment;
 	private String attachmentName;
+	private String testName;
 	
 	public SteelVerificationCheckDto(){
 		
@@ -69,6 +70,14 @@ public class SteelVerificationCheckDto{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getTestName() {
+		return testName;
+	}
+
+	public void setTestName(String testName) {
+		this.testName = testName;
 	}
 
 }

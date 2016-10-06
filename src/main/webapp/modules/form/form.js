@@ -29,11 +29,11 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
       $scope.isDisabled = false;
       $scope.isAttmentDisable = false;
       var data = $scope.data;
-      if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUMBITTED' ){
+      if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' ){
         $scope.isDisabled = true;
       }
 
-      if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUMBITTED' ){
+      if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' ){
          if($rootScope.isFTH == true){
             $scope.isAttmentDisable = false;
         }else{
@@ -89,6 +89,10 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
 
 	$scope.reject = function(){
 	   var det = angular.copy($rootScope.formData);
+	   if(det.status == 'FHTV_SUBMITTED'){
+		   alert("Flow ends here");
+		   return;
+	   }
         $http.put('api/orders/'+ det.orderId + '?action=reject', det, config)
             .success(function (data, status, headers, config) {
             
@@ -102,6 +106,10 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
 
 	$scope.approve = function(){
 		var det = angular.copy($rootScope.formData);
+		 if(det.status == 'FHTV_SUBMITTED'){
+			   alert("Flow ends here");
+			   return;
+		   }
         $http.put('api/orders/'+ det.orderId + '?action=approve' ,det, config)
             .success(function (data, status, headers, config) {
             
