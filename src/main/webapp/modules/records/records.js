@@ -7,14 +7,16 @@ angular.module('vi-app.records')
 
 // Inject my dependencies
 authCtrl.$inject = [ '$scope', '$location', '$rootScope',
-		'$http','$cookieStore','$state' ];
+		'$http','$cookieStore','$state','userService' ];
 
 
-function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
+function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userService) {
   $scope.orders = [];
   $scope.init = function(){
   	$scope.orders = [];
-  	$http.get("api/orders/")
+    var FHurl = (userService.isSupplier()?"api/orders?supplierName="+ userService.getSuppliername() + "&status=approved":"api/orders?status=fhtv_submitted")
+
+  	$http.get(FHurl)
     .then(function(response) {
         $scope.orders = angular.fromJson(response.data);
     }, function(response) {
@@ -23,16 +25,19 @@ function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
   }
 
   $scope.view = function(data){
+    $rootScope.isFHT = false;
+    var FHUrl = (userService.isSupplier()?"api/orders/"+data.orderId + "/fht":"/pi/orders/"+data.orderId)
 	  $http({
 			method : "GET",
-			url : "api/orders/"+data.orderId
+			url : FHUrl
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = false;
+      $rootScope.isFTH = true;
 			$state.transitionTo('home.request');
 			//$state.go('home.request');
 		}, function myError(response) {
-			alert("Error Generating request");
+			alert("Error loading request details");
 		});
 
   }

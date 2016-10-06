@@ -7,17 +7,18 @@ angular.module('vi-app.home')
 
 // Inject my dependencies
 authCtrl.$inject = [ '$scope', '$location', '$rootScope',
-'$http','$cookieStore','$state' ];
+'$http','$cookieStore','$state' ,'userService'];
 
 
-function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
+function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userService) {
 
 	$scope.logout = function(){
 		$cookieStore.remove('viApp');
 
-		$http.delete("api/auth/logout?username="+$scope.user.details.username, $scope.config)
+		$http.delete("api/auth/logout?username="+userService.getUsername(), $scope.config)
 	   .then(
 	       function(){
+	       	   $cookieStore.remove('vi-app')
 	           $location.path("/");	
 	       }, 
 	       function(){
@@ -31,7 +32,7 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	$scope.newRequest = function(){
 		$http({
 			method : "GET",
-			url : "api/orders/new?supplierName=" + $scope.user.details.supplierName
+			url : "api/orders/new?supplierName=" + userService.getSuppliername()
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = true;
@@ -43,7 +44,14 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state) {
 	}
 
 	$scope.init = function(){
-      $scope.user = $rootScope.loggedInUser;
+        var user = $cookieStore.get('viApp');
+		if(user != undefined && user.token != ""){
+			$rootScope.loggedInUser = user;
+			userService.setUser();
+		}else{
+			$location.path("/auth");
+		}
+		$rootScope.isFTH = false;
 	} 
 
 	$scope.init();

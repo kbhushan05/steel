@@ -64,3 +64,35 @@ app.directive("adminOnly", function($cookieStore,$location) {
     }
 });
 
+app.service('userService', function($cookieStore,$rootScope){
+  this.user = {};
+
+  this.setUser = function(){
+    var user = $cookieStore.get('viApp');
+    if(user != undefined && user.token != ""){
+      $rootScope.loggedInUser = user;
+      this.user = user;
+    }
+  }
+
+  this.getUser = function(){
+     return this.user;
+  }
+
+  this.getRole = function(){
+     return this.user.details.role;
+  }
+  this.isSupplier = function(){
+    return (this.user.details.role == "SUPPLIER"?true:false)
+  }
+  this.isAdmin = function(){
+     return (this.user.details.role == "ADMIN"?true:false)
+  }
+  this.getSuppliername = function(){
+    return this.user.details.supplierName;
+  }
+  this.getUsername = function(){
+    return this.user.details.username;
+  }
+});
+

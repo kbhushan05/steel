@@ -7,39 +7,39 @@
   <div class="row orderFrm">
     <div class="col-md-12">
       <form name="orderFrm" role="form" novalidate class="css-form">
-        <fieldset ng-disabled="data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED'">
+        <fieldset >
           <table class="table">
             <tbody>
               <tr>
                 <td><label>Order Id</label></td>
                 <td><input required type="text" name="orderID" id="orderID" ng-model="data.orderId" class="form-control" disabled/></td>
                 <td><label>PO Number</label></td>
-                <td><input required type="text" name="poNumber" id="poNumber" ng-model="data.poNumber" class="form-control" /></td>
+                <td><input required type="text" name="poNumber" id="poNumber" ng-model="data.poNumber" class="form-control" ng-disabled="isDisabled"/></td>
                 <td><label>Supplier</label></td>
                 <td><input required type="text" name="supplierId" id="supplierId" ng-model="data.supplierId" class="form-control" disabled/></td>
               </tr>
 
               <tr>
                 <td><label>Steel Heat Number</label></td>
-                <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  /></td>
+                <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  ng-disabled="isDisabled" /></td>
                 <td><label>Already Available Steel Tonnage</label></td>
-                <td><input required type="text" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" /></td>
+                <td><input required type="text" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" ng-disabled="isDisabled" /></td>
                 <td><label>New Steel To Buy</label></td>
-                <td><input required type="text" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" /></td>
+                <td><input required type="text" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" ng-disabled="isDisabled"/></td>
               </tr>
 
               <tr>
                 <td><label>Steel Tonnage</label></td>
-                <td><input required type="text" name="st" id="st" class="form-control" ng-model="data.steelTonage" /></td>
+                <td><input required type="text" name="st" id="st" class="form-control" ng-model="data.steelTonage"  ng-disabled="isDisabled" /></td>
                 <td><label>Ref. Standard</label></td>
-                <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard"/></td>
+                <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard" ng-disabled="isDisabled"/></td>
                 <td><label>Forger Supplier Code</label></td>
-                <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode"/></td>
+                <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode" ng-disabled="isDisabled"/></td>
               </tr>
               <tr>
                 <td><label>Steel Mill</label></td>
                 <td>
-                 <select class="form-control" id="sel1" ng-model="data.steelMill">
+                 <select class="form-control" id="sel1" ng-model="data.steelMill" ng-disabled="isDisabled">
                    <option ng-repeat="option in data.steelMills" value="{{option}}">{{option}}</option>
                  </select>
                </td>
@@ -64,10 +64,10 @@
             </tr>
             <tr ng-repeat="row in data.partDetails">
              <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
-             <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.weight"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts"/></td>
+             <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'" ng-disabled="isDisabled"/></td>
+             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="isDisabled"/></td>
+             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="isDisabled"/></td>
+             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts" ng-disabled="isDisabled"/></td>
 
            </td>
          </tr>
@@ -87,9 +87,9 @@
       </tr>
       <tr ng-repeat="row in data.checkList">
        <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.name" disabled/></td>
-       <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'"/></td>
-       <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName"/></td>
-       <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark"/></td>
+       <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
+       <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable"/></td>
+       <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
      </td>
    </tr>
 
@@ -103,33 +103,33 @@
     </tr>
     <tr>
       <td><label>CIL Deviation Number</label></td>
-      <td><input  type="text"  class="form-control" ng-model="data.cilDevitionNumber"/></td>
+      <td><input  type="text"  class="form-control" ng-model="data.cilDevitionNumber" disabled /></td>
       <td><label>Requestor Name</label></td>
-      <td><input  type="text" class="form-control" ng-model="data.requesterName"/></td>
+      <td><input  type="text" class="form-control" ng-model="data.requesterName" ng-disabled="isDisabled"/></td>
       <td><label>Request Date</label></td>
-      <td><input  type="date" class="form-control" ng-model="data.requestDate"/></td>
+      <td><input  type="date" class="form-control" ng-model="data.requestDate" ng-disabled="isDisabled"/></td>
     </tr>
 
     <tr>
       <td><label>Part Description</label></td>
-      <td colspan="3"><textarea class="form-control" rows="5" id="partDesc" ng-model="data.partDescription"></textarea></td>
+      <td colspan="3"><textarea class="form-control" rows="5" id="partDesc" ng-model="data.partDescription" ng-disabled="isDisabled"></textarea></td>
       <td><label>RM Section</label></td>
-      <td><input  type="text" name="aaST" id="aaST" ng-model="data.rmSection" class="form-control" /></td>
+      <td><input  type="text" name="aaST" id="aaST" ng-model="data.rmSection" class="form-control" ng-disabled="isDisabled" /></td>
 
     </tr>
 
     <tr>
       <td><label>RM Grade*</label></td>
-      <td><input  type="text" name="st" id="st" class="form-control" ng-model="data.rmGarde" /></td>
+      <td><input  type="text" name="st" id="st" class="form-control" ng-model="data.rmGarde" ng-disabled="isDisabled" /></td>
       <td><label>Quantity for Deviation*</label></td>
-      <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="data.quantityForDeviation"/></td>
+      <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="data.quantityForDeviation" ng-disabled="isDisabled"/></td>
       <td><label>Delivery Affected</label></td>
-      <td><input  type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.delivaryAffected"/></td>
+      <td><input  type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.delivaryAffected" ng-disabled="isDisabled"/></td>
     </tr>
     <tr>
       <td><label>Description of / Reason for Deviation Request</label></td>
       <td colspan="5">
-       <input  type="text" class="form-control" ng-model="data.description"/>
+       <input  type="text" class="form-control" ng-model="data.description" ng-disabled="isDisabled"/>
      </td>
 
    </tr>
@@ -161,6 +161,8 @@
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="save()" ng-show="data.status == 'NEW'"  ng-disabled="orderFrm.$invalid">Save</button>
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="update()" ng-show="data.status == 'SAVED'" ng-disabled="orderFrm.$invalid">Update</button>
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="submit()" ng-show="data.status == 'NEW' || data.status == 'SAVED'" ng-disabled="orderFrm.$invalid">Submit</button>
+
+<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="ftTreatment()" ng-show="data.status == 'APPROVED'">SUBMIT FHT</button>
 
 <button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="approve()" ng-show="data.status == 'SUBMITTED' " >Approve</button>
 <button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED'" >Reject</button>

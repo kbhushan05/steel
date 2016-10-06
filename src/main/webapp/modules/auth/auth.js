@@ -7,10 +7,10 @@ angular.module('vi-app.auth')
 
 // Inject my dependencies
 authCtrl.$inject = [ '$scope', '$location', '$rootScope',
-		'$http','$cookieStore'];
+		'$http','$cookieStore','userService'];
 
 
-function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
+function authCtrl($scope, $location, $rootScope, $http,$cookieStore,userService) {
 	$scope.user = {
 		user_id : "",
 		password : "",
@@ -43,6 +43,7 @@ function authCtrl($scope, $location, $rootScope, $http,$cookieStore) {
 	           var u = angular.copy($scope.user);
 	           $rootScope.loggedInUser = u;
 	           $cookieStore.put('viApp',u);
+	           userService.user = u;
 	           $location.path("/home/details");	
 	       }, 
 	       function(response){
