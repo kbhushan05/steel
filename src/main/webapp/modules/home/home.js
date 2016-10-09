@@ -36,7 +36,13 @@ function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = true;
-			$state.transitionTo('home.request');
+			
+			if($state.current.name == 'home.request'){
+			  $state.reload();
+			}
+			else{
+				$state.transitionTo('home.request');
+			}
 			//$state.go('home.request');
 		}, function myError(response) {
 			alert("Error Generating request");

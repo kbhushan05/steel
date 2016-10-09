@@ -23,14 +23,14 @@
                 <td><label>Steel Heat Number</label></td>
                 <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  ng-disabled="isDisabled" /></td>
                 <td><label>Already Available Steel Tonnage</label></td>
-                <td><input required type="text" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" ng-disabled="isDisabled" /></td>
+                <td><input required type="number" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" ng-disabled="isDisabled" ng-change="getTotalSteelTonnage()"/></td>
                 <td><label>New Steel To Buy</label></td>
-                <td><input required type="text" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" ng-disabled="isDisabled"/></td>
+                <td><input disabled required type="number" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" ng-disabled="isDisabled" ng-change="getTotalSteelTonnage()"/></td>
               </tr>
 
               <tr>
-                <td><label>Steel Tonnage</label></td>
-                <td><input required type="text" name="st" id="st" class="form-control" ng-model="data.steelTonage"  ng-disabled="isDisabled" /></td>
+                <td><label>Total Steel Tonnage</label></td>
+                <td><input required type="number" name="st" id="st" class="form-control" ng-model="data.steelTonage"  disabled /></td>
                 <td><label>Ref. Standard</label></td>
                 <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard" ng-disabled="isDisabled"/></td>
                 <td><label>Forger Supplier Code</label></td>
@@ -56,8 +56,8 @@
 
               <td><label>Part Number</label></td>
               <td><label>Status</label></td>
-              <td><label>Part Weight</label></td>
-              <td><label>Cut Weight</label></td>
+              <td><label>Part weight (kg)</label></td>
+              <td><label>Cut Weight (Kg)</label></td>
               <td><label>Number Of Parts</label></td>
 
 
@@ -65,10 +65,10 @@
             <tr ng-repeat="row in data.partDetails">
              <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
              <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'" ng-disabled="isDisabled"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="isDisabled"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="isDisabled"/></td>
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts" ng-disabled="isDisabled"/></td>
-
+             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight" min="1" max="data.steelTonage" ng-min="1" ng-max="data.steelTonage" /></td>
+             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight"
+             min="1" max="data.steelTonage"  ng-min="1" ng-max="data.steelTonage"/></td>
+             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts" disabled/></td>
            </td>
          </tr>
        </tbody>
@@ -87,7 +87,7 @@
         </td>
       </tr>
       <tr ng-repeat="row in data.checkList">
-       <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.name" disabled/></td>
+       <td>{{row.name}}</td>
        <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
        <td><input  type="text" name="refStd" id="refStd" ng-model="row.testName" ng-disabled="true" ng-if="data.status == 'APPROVED' || data.status == 'FHTV_SUBMITTED'"/></td>
        <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable"/></td>
@@ -105,7 +105,7 @@
     </tr>
     <tr>
       <td><label>CIL Deviation Number</label></td>
-      <td><input  type="text"  class="form-control" ng-model="data.cilDevitionNumber" disabled /></td>
+      <td><input  type="text"  class="form-control" ng-model="data.cilDevitionNumber" ng-disabled="isCILEditable" /></td>
       <td><label>Requestor Name</label></td>
       <td><input  type="text" class="form-control" ng-model="data.requesterName" ng-disabled="isDisabled"/></td>
       <td><label>Request Date</label></td>
@@ -153,6 +153,39 @@
     </tr>
   </tbody>
 </table>
+<table class="table" ng-show="showCourier">
+  <tbody>
+      <tr>
+      <td><label>Courier Receipt Number</label></td>
+      <td><input  type="text" class="form-control" ng-disabled="showCurrier" ng-model="data.courierReceipt"/></td>
+      <td><label>Courier Company </label></td>
+      <td><input  type="text" class="form-control" ng-model="data.courierCompany"/></td>
+      <td><label>Courier Delivary Date </label></td>
+      <td><input  type="date"  class="form-control" ng-model="data.courierDate"/></td>
+    </tr>
+  </tbody>
+</table>
+<table class="table">
+  <tbody>
+    <tr>
+      <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Comment By CIL</div></label></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group">
+          <textarea ng-disabled="enableCILComments" class="form-control" rows="5" id="commentCIL"></textarea>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group">
+          <input ng-disabled="enableCILComments" type="file" name="cilAttachment" id="cilAttachment" />
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 </fieldset>
 
@@ -160,14 +193,18 @@
 
 
 
-<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="save()" ng-show="data.status == 'NEW'"  ng-disabled="orderFrm.$invalid">Save</button>
-<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="update()" ng-show="data.status == 'SAVED'" ng-disabled="orderFrm.$invalid">Update</button>
-<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="submit()" ng-show="data.status == 'NEW' || data.status == 'SAVED'" ng-disabled="orderFrm.$invalid">Submit</button>
+<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="save()" ng-show="data.status == 'NEW'"  >Save</button>
+<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="update()" ng-show="data.status == 'SAVED'" >Update</button>
+<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="submit()" ng-show="data.status == 'NEW' || data.status == 'SAVED'" >Submit</button>
 
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="ftTreatment()" ng-show="data.status == 'APPROVED'">SUBMIT FHT</button>
 
-<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="approve()" ng-show="data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'" >Approve</button>
-<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'" >Reject</button>
+<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="approve()" ng-show="data.status == 'SUBMITTED'" >Approve</button>
+<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED'" >Reject</button>
+
+<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="reject()" ng-show="data.status == 'FHTV_SUBMITTED'" >FHT Update</button>
+
+ 
 </form>
 </div>
 </div>
