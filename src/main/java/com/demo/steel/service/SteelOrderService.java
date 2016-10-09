@@ -30,7 +30,6 @@ import com.demo.steel.security.dao.DeviationDao;
 public class SteelOrderService {
 	
 	private static final Random ORDER_ID_GENERATOR = new Random();
-	private static final Random CIL_NUMBER_GENERATOR = new Random();
 	
 	@Autowired
 	private SupplierDao supplierDao;
@@ -57,7 +56,7 @@ public class SteelOrderService {
 		SteelOrder order = new SteelOrder();
 		order.setStatus(Status.NEW);
 		order.setSupplier(supplier);
-		order.setId(generateOrderId());
+		order.setId(generateOrderId(supplier));
 		order.setVerificationCheck(checkList);
 		Set<PartManifacturingDetails> partManifacturingDetails = new HashSet<>();
 		for(PartNoDetails part : supplier.getPartNos()){
@@ -67,13 +66,14 @@ public class SteelOrderService {
 		}
 		order.setPartManifacturingDetails(partManifacturingDetails);
 		Deviation dev = new Deviation();
-		dev.setCilDevitionNumber(generateCilNumber());
-		order.setDeviation(dev);
+		List<Deviation> devs = new ArrayList<>();
+		devs.add(dev);
+		order.setDeviation(devs);
 		return order;
 	}
 	
 	@Transactional
-	public SteelOrder createNewFhtOrder(long orderId){
+	public SteelOrder createNewFhtOrder(String orderId){
 		
 		SteelOrder fhtOrder = getSteelOrderDao().get(orderId);
 		if(fhtOrder.getStatus() != SteelOrder.Status.APPROVED){
@@ -89,6 +89,11 @@ public class SteelOrderService {
 		}
 		fhtOrder.setVerificationCheck(checkList);
 		fhtOrder.getPartManifacturingDetails().size();
+		Deviation dev = new Deviation();
+		dev.setType(Deviation.Type.FHTV);
+		List<Deviation> devs = new ArrayList<>();
+		devs.add(dev);
+		fhtOrder.setDeviation(devs);
 		return fhtOrder;
 	}
 	
@@ -122,6 +127,24 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
+	public void approveFhtvOrder(SteelOrder order){
+		if(order.getStatus() != SteelOrder.Status.FHTV_SUBMITTED){
+			throw new IllegalArgumentException("Invalid Order state.");
+		}
+		order.setStatus(Status.FHTV_APPROVED);
+		getSteelOrderDao().update(order);
+	}
+	
+	@Transactional
+	public void rejectFhtvOrder(SteelOrder order){
+		if(order.getStatus() != SteelOrder.Status.FHTV_SUBMITTED){
+			throw new IllegalArgumentException("Invalid Order state.");
+		}
+		order.setStatus(Status.FHTV_REJECTED);
+		getSteelOrderDao().update(order);
+	}
+	
+	@Transactional
 	public void updateOrder(SteelOrder order) {
 		order.setStatus(Status.SAVED);
 		getSteelOrderDao().update(order);
@@ -133,7 +156,7 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
-	public SteelOrder approveOrder(long orderId){
+	public SteelOrder approveOrder(String orderId){
 		SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
 			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
@@ -144,7 +167,7 @@ public class SteelOrderService {
 	}
 
 	@Transactional
-	public SteelOrder rejectOrder(long orderId){
+	public SteelOrder rejectOrder(String orderId){
 		SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
 			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
@@ -155,7 +178,7 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
-	public SteelOrder getOrder(long orderId) {
+	public SteelOrder getOrder(String orderId) {
 		SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() == SteelOrder.Status.FHTV_SUBMITTED){
 			Iterator<SteelVerificationCheck> itr = order.getVerificationCheck().iterator();
@@ -165,14 +188,18 @@ public class SteelOrderService {
 					itr.remove();
 				}
 			}
+			
+			order.getDeviation().removeIf(
+					dev -> dev.getType() == Deviation.Type.BASIC);
 		}
 		return order;
 	}
 
-	private SteelOrder getEagerlyLoadedOrder(long orderId) {
+	private SteelOrder getEagerlyLoadedOrder(String orderId) {
 		SteelOrder order = getSteelOrderDao().get(orderId);
 		order.getPartManifacturingDetails().size();
 		order.getVerificationCheck().size();
+		order.getDeviation().size();
 		return order;
 	}
 
@@ -201,19 +228,14 @@ public class SteelOrderService {
 		this.steelOrderDao = steelOrderDao;
 	}
 	
-	private long generateOrderId(){
+	private String generateOrderId(Supplier supplier){
 		int min = 10000;
 		int max = 1000000;
 		long id= ORDER_ID_GENERATOR.nextInt((max-min)+1)+min;
-		return id < 0 ? id * -1 : id;
+		String strId = String.valueOf(id < 0 ? id * -1 : id);
+		return strId+"-"+supplier.getCode()+"-"+supplier.getName();
 	}
 	
-	private int generateCilNumber(){
-		int min = 10000;
-		int max = 1000000;
-		int id= CIL_NUMBER_GENERATOR.nextInt((max-min)+1)+min;
-		return id < 0 ? id * -1 : id;
-	}
 	private Supplier getSupplier(String name){
 		return getSupplierDao().get(name);
 	}

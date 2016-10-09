@@ -27,12 +27,11 @@ public class RestApiService {
 		SteelOrder order = getSteelOrderService().createNewOrder(supplierName);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
-		
 		orderDto.setSteelMills(getSteelMills());
 		return orderDto;
 	}
 	
-	public SteelOrderDto createNewFhtOrder(long orderId){
+	public SteelOrderDto createNewFhtOrder(String orderId){
 		
 		SteelOrder order = getSteelOrderService().createNewFhtOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
@@ -44,6 +43,18 @@ public class RestApiService {
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().submitFhtOrder(order);
+	}
+	
+	public void approveFhtOrder(SteelOrderDto orderDto){
+		DtoDomainConvertor conv = new DtoDomainConvertor();
+		SteelOrder order = conv.createOrder(orderDto);
+		getSteelOrderService().approveFhtvOrder(order);
+	}
+	
+	public void rejectFhtOrder(SteelOrderDto orderDto){
+		DtoDomainConvertor conv = new DtoDomainConvertor();
+		SteelOrder order = conv.createOrder(orderDto);
+		getSteelOrderService().rejectFhtvOrder(order);
 	}
 
 	private String[] getSteelMills() {
@@ -67,7 +78,7 @@ public class RestApiService {
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().submitOrder(order);
-		getMailService().sendEmail("admin@company.com","Steel Order updates"," Steel Order " + order.getId()+" submitted.");
+		getMailService().sendEmail("admin@company.com","Steel Order updates"," Steel Order " + order.getId()+" submitted by Supplier "+ order.getSupplier().getName());
 	}
 
 	public SteelOrderService getSteelOrderService() {
@@ -90,7 +101,7 @@ public class RestApiService {
 		return conv.createDtos(orders);
 	}
 	
-	public SteelOrderDto approveOrder(long orderId){
+	public SteelOrderDto approveOrder(String orderId){
 		SteelOrder order = getSteelOrderService().approveOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
@@ -98,18 +109,18 @@ public class RestApiService {
 		return orderDto;
 	}
 	
-	public SteelOrderDto rejectOrder(long orderId){
+	public SteelOrderDto rejectOrder(String orderId){
 		SteelOrder order = getSteelOrderService().rejectOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
 		return orderDto;
 	}
 	
-	public SteelOrderDto getOrder(long orderId){
+	public SteelOrderDto getOrder(String orderId){
 		SteelOrder order = getSteelOrderService().getOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
-		getSteelMills();
+		orderDto.setSteelMills(getSteelMills());
 		return orderDto;
 	}
 

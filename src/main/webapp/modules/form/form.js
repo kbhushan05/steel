@@ -30,11 +30,12 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
       $scope.data = $rootScope.formData;
       $scope.isDisabled = false;
       $scope.isAttmentDisable = false;
-      if($scope.data.status == 'NEW'){
+      $scope.isDeviationDisable = true;
+      if($scope.data.status == 'NEW' || $scope.data.status == 'APPROVED'){
         var value = new Date();
         $scope.data.requestDate = value;
     }else{
-        var value = new Date(1452140991000);
+        var value = new Date($scope.data.requestDate);
         $scope.data.requestDate = value;
     }
     var data = $scope.data;
@@ -49,6 +50,9 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
         $scope.isAttmentDisable = true;
     }
 }
+    if(data.status == 'NEW' || data.status == 'SAVED' || data.status == 'APPROVED'){
+    	$scope.isDeviationDisable = false;
+    }
 if(data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'){
     $scope.isCILEditable = false;
 }else{
@@ -127,11 +131,11 @@ $scope.update = function(){
 
 $scope.reject = function(){
     var det = angular.copy($rootScope.formData);
+    var url = 'api/orders/'+ det.orderId + '?action=reject';
     if(det.status == 'FHTV_SUBMITTED'){
-       alert("Flow ends here");
-       return;
-   }
-   $http.put('api/orders/'+ det.orderId + '?action=reject', det, config)
+        url = 'api/orders/'+ det.orderId +'/fht/reject';
+    }
+   $http.put(url, det, config)
    .success(function (data, status, headers, config) {
 
     $scope.gotoHome();
@@ -144,11 +148,11 @@ $scope.reject = function(){
 
 $scope.approve = function(){
   var det = angular.copy($rootScope.formData);
+  var url = 'api/orders/'+ det.orderId + '?action=approve';
   if(det.status == 'FHTV_SUBMITTED'){
-      alert("Flow ends here");
-      return;
+      url = 'api/orders/'+ det.orderId +'/fht/approve';
   }
-  $http.put('api/orders/'+ det.orderId + '?action=approve' ,det, config)
+  $http.put( url,det, config)
   .success(function (data, status, headers, config) {
 
     $scope.gotoHome();

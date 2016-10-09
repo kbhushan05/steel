@@ -14,7 +14,7 @@ function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,us
   $scope.orders = [];
   $scope.init = function(){
   	$scope.orders = [];
-    var FHurl = (userService.isSupplier()?"api/orders?supplierName="+ userService.getSuppliername() + "&status=approved":"api/orders?status=fhtv_submitted")
+    var FHurl = (userService.isSupplier()?"api/orders?supplierName="+ userService.getSuppliername() + "&status=approved,fhtv_submitted,fhtv_approved,fhtv_rejected":"api/orders?status=fhtv_submitted")
 
   	$http.get(FHurl)
     .then(function(response) {
@@ -25,6 +25,10 @@ function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,us
   }
 
   $scope.view = function(data){
+	  if(data.status == 'FHTV_APPROVED' || data.status == 'FHTV_REJECTED'){
+		  alert("flow ends here.")
+		  return;
+	  }
     $rootScope.isFHT = false;
     var FHUrl = (userService.isSupplier()?"api/orders/"+data.orderId + "/fht":"api/orders/"+data.orderId)
 	  $http({

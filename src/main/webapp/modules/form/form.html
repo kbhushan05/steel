@@ -47,6 +47,18 @@
              </tr>
            </tbody>
          </table>
+<table class="table" ng-show="showCourier">
+  <tbody>
+      <tr>
+      <td><label>Courier Receipt Number</label></td>
+      <td><input  type="text" class="form-control" ng-disabled="showCurrier" ng-model="data.courierReceipt"/></td>
+      <td><label>Courier Company </label></td>
+      <td><input  type="text" class="form-control" ng-model="data.courierCompany"/></td>
+      <td><label>Courier Delivary Date </label></td>
+      <td><input  type="date"  class="form-control" ng-model="data.courierDate"/></td>
+    </tr>
+  </tbody>
+</table>
          <table class="table">
           <tbody>
             <tr>
@@ -89,7 +101,7 @@
       <tr ng-repeat="row in data.checkList">
        <td>{{row.name}}</td>
        <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
-       <td><input  type="text" name="refStd" id="refStd" ng-model="row.testName" ng-disabled="true" ng-if="data.status == 'APPROVED' || data.status == 'FHTV_SUBMITTED'"/></td>
+       <td ng-if="data.status == 'APPROVED' || data.status == 'FHTV_SUBMITTED'"><input  type="text" name="refStd" id="refStd" ng-model="row.testName" ng-disabled="true" /></td>
        <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable"/></td>
        <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
      </td>
@@ -107,31 +119,31 @@
       <td><label>CIL Deviation Number</label></td>
       <td><input  type="text"  class="form-control" ng-model="data.cilDevitionNumber" ng-disabled="isCILEditable" /></td>
       <td><label>Requestor Name</label></td>
-      <td><input  type="text" class="form-control" ng-model="data.requesterName" ng-disabled="isDisabled"/></td>
+      <td><input  type="text" class="form-control" ng-model="data.requesterName" ng-disabled="isDeviationDisable"/></td>
       <td><label>Request Date</label></td>
-      <td><input  type="date" class="form-control" ng-model="data.requestDate" ng-disabled="isDisabled"/></td>
+      <td><input  type="date" class="form-control" ng-model="data.requestDate" ng-disabled="isDeviationDisable"/></td>
     </tr>
 
     <tr>
       <td><label>Part Description</label></td>
-      <td colspan="3"><textarea class="form-control" rows="5" id="partDesc" ng-model="data.partDescription" ng-disabled="isDisabled"></textarea></td>
+      <td colspan="3"><textarea class="form-control" rows="5" id="partDesc" ng-model="data.partDescription" ng-disabled="isDeviationDisable"></textarea></td>
       <td><label>RM Section</label></td>
-      <td><input  type="text" name="aaST" id="aaST" ng-model="data.rmSection" class="form-control" ng-disabled="isDisabled" /></td>
+      <td><input  type="text" name="aaST" id="aaST" ng-model="data.rmSection" class="form-control" ng-disabled="isDeviationDisable" /></td>
 
     </tr>
 
     <tr>
       <td><label>RM Grade*</label></td>
-      <td><input  type="text" name="st" id="st" class="form-control" ng-model="data.rmGarde" ng-disabled="isDisabled" /></td>
+      <td><input  type="text" name="st" id="st" class="form-control" ng-model="data.rmGarde" ng-disabled="isDeviationDisable" /></td>
       <td><label>Quantity for Deviation*</label></td>
-      <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="data.quantityForDeviation" ng-disabled="isDisabled"/></td>
+      <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="data.quantityForDeviation" ng-disabled="isDeviationDisable"/></td>
       <td><label>Delivery Affected</label></td>
-      <td><input  type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.delivaryAffected" ng-disabled="isDisabled"/></td>
+      <td><input  type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.delivaryAffected" ng-disabled="isDeviationDisable"/></td>
     </tr>
     <tr>
       <td><label>Description of / Reason for Deviation Request</label></td>
       <td colspan="5">
-       <input  type="text" class="form-control" ng-model="data.description" ng-disabled="isDisabled"/>
+       <input  type="text" class="form-control" ng-model="data.description" ng-disabled="isDeviationDisable"/>
      </td>
 
    </tr>
@@ -153,19 +165,7 @@
     </tr>
   </tbody>
 </table>
-<table class="table" ng-show="showCourier">
-  <tbody>
-      <tr>
-      <td><label>Courier Receipt Number</label></td>
-      <td><input  type="text" class="form-control" ng-disabled="showCurrier" ng-model="data.courierReceipt"/></td>
-      <td><label>Courier Company </label></td>
-      <td><input  type="text" class="form-control" ng-model="data.courierCompany"/></td>
-      <td><label>Courier Delivary Date </label></td>
-      <td><input  type="date"  class="form-control" ng-model="data.courierDate"/></td>
-    </tr>
-  </tbody>
-</table>
-<table class="table">
+<table class="table" ng-if="loggedInUser.type=='Admin'&& data.status == 'SUBMITTED'">
   <tbody>
     <tr>
       <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Comment By CIL</div></label></td>
@@ -199,10 +199,10 @@
 
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="ftTreatment()" ng-show="data.status == 'APPROVED'">SUBMIT FHT</button>
 
-<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="approve()" ng-show="data.status == 'SUBMITTED'" >Approve</button>
-<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED'" >Reject</button>
+<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="approve()" ng-show="data.status == 'SUBMITTED'||data.status == 'FHTV_SUBMITTED'" >Approve</button>
+<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED'|| data.status == 'FHTV_SUBMITTED'" >Reject</button>
 
-<button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="reject()" ng-show="data.status == 'FHTV_SUBMITTED'" >FHT Update</button>
+<!-- <button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="reject()" ng-show="data.status == 'FHTV_SUBMITTED'" >FHT Update</button> -->
 
  
 </form>

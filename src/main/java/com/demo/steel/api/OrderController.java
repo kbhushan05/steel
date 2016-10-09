@@ -1,5 +1,6 @@
 package com.demo.steel.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,12 +47,20 @@ public class OrderController {
 	
 	@RequestMapping(method=RequestMethod.GET,produces="application/json")
 	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String status){
+		String statusArray[] = new String[0];
+		List<SteelOrderDto> statusFilter = new ArrayList<>();
+		if(!StringUtil.isEmpty(status)){
+			statusArray = status.split(",");
+		}
+		
 		List<SteelOrderDto> all = getService().getAll();
 		
 		if(!StringUtil.isEmpty(supplierName)&& ! StringUtil.isEmpty(status)){
 			List<SteelOrderDto> onlySupplier = filterBySupplierName(all, supplierName);
-			List<SteelOrderDto> supplierAndStatus = filterByStatus(onlySupplier, status);
-			return supplierAndStatus;
+			for(String s : statusArray){
+				statusFilter.addAll(filterByStatus(onlySupplier, s));
+			}
+			return statusFilter;
 		}
 		
 		if(!StringUtil.isEmpty(supplierName)){
@@ -59,7 +68,10 @@ public class OrderController {
 		}
 		
 		if(!StringUtil.isEmpty(status)){
-			return filterByStatus(all, status);
+			for(String s : statusArray){
+				statusFilter.addAll(filterByStatus(all, s));
+			}
+			return statusFilter;
 		}
 		
 		return all;
@@ -79,7 +91,7 @@ public class OrderController {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}")
-	public SteelOrderDto executeAction(@PathVariable long orderId, @RequestParam(required =false) String action,@RequestBody SteelOrderDto orderDto){
+	public SteelOrderDto executeAction(@PathVariable String orderId, @RequestParam(required =false) String action,@RequestBody SteelOrderDto orderDto){
 		
 		switch (action) {
 		case "approve":
@@ -95,17 +107,27 @@ public class OrderController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, path="/{orderId}/fht")
-	public SteelOrderDto createNewFhtOrder(@PathVariable long orderId){
+	public SteelOrderDto createNewFhtOrder(@PathVariable String orderId){
 		return getService().createNewFhtOrder(orderId);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, path="/{orderId}/fht")
-	public void submitFhtOrder(@PathVariable long orderId, @RequestBody SteelOrderDto orderDto){
+	public void submitFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
 		getService().submitFhtOrder(orderDto);
 	}
 	
+	@RequestMapping(method=RequestMethod.PUT, path="/{orderId}/fht/approve")
+	public void approveFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
+		getService().approveFhtOrder(orderDto);
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT, path="/{orderId}/fht/reject")
+	public void rejectFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
+		getService().rejectFhtOrder(orderDto);
+	}
+	
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
-	public SteelOrderDto get(@PathVariable long orderId){
+	public SteelOrderDto get(@PathVariable String orderId){
 			return getService().getOrder(orderId);
 	}
 	

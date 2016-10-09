@@ -1,8 +1,10 @@
 package com.demo.steel.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,17 +14,16 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class SteelOrder {
 	
 	public enum Status{
-		NEW, SAVED, APPROVED, REJECTED, SUBMITTED, FHTV_SUBMITTED;
+		NEW, SAVED, APPROVED, REJECTED, SUBMITTED, FHTV_SUBMITTED,FHTV_APPROVED, FHTV_REJECTED;
 	}
 	
 	@Id
-	private long id;
+	private String id;
 	@ManyToOne
 	private SteelMill mill;
 	@ManyToOne
@@ -35,12 +36,15 @@ public class SteelOrder {
 	private int poNumber;
 	private String steelMill;
 	private String comments;
-	private long steelHeatNumber;
+	private String steelHeatNumber;
 	private float alreadyAvailableSteelTonage;
 	private float newSteelToBuy;
 	private float steelTonage;
 	private String refStandard;
 	private String forgerSupplierCode;
+	private String courierCompany;
+	private Date courierDeliveryDate;
+	private String courierReceiptName;
 	
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.NEW;
@@ -51,13 +55,13 @@ public class SteelOrder {
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="order")
 	private Set<SteelVerificationCheck> verificationCheck = new HashSet<>();
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	private Deviation deviation = new Deviation();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
+	private List<Deviation> deviation = new ArrayList<Deviation>();
 	
-	public long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public SteelMill getMill() {
@@ -134,10 +138,10 @@ public class SteelOrder {
 	public void setSteelMill(String steelMill) {
 		this.steelMill = steelMill;
 	}
-	public Deviation getDeviation() {
+	public List<Deviation> getDeviation() {
 		return deviation;
 	}
-	public void setDeviation(Deviation deviation) {
+	public void setDeviation(List<Deviation> deviation) {
 		this.deviation = deviation;
 	}
 	public String getComments() {
@@ -146,10 +150,10 @@ public class SteelOrder {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-	public long getSteelHeatNumber() {
+	public String getSteelHeatNumber() {
 		return steelHeatNumber;
 	}
-	public void setSteelHeatNumber(long steelHeatNumber) {
+	public void setSteelHeatNumber(String steelHeatNumber) {
 		this.steelHeatNumber = steelHeatNumber;
 	}
 	public float getAlreadyAvailableSteelTonage() {
@@ -181,6 +185,24 @@ public class SteelOrder {
 	}
 	public void setForgerSupplierCode(String forgerSupplierCode) {
 		this.forgerSupplierCode = forgerSupplierCode;
+	}
+	public String getCourierCompany() {
+		return courierCompany;
+	}
+	public void setCourierCompany(String courierCompany) {
+		this.courierCompany = courierCompany;
+	}
+	public Date getCourierDeliveryDate() {
+		return courierDeliveryDate;
+	}
+	public void setCourierDeliveryDate(Date courierDeliveryDate) {
+		this.courierDeliveryDate = courierDeliveryDate;
+	}
+	public String getCourierReceiptName() {
+		return courierReceiptName;
+	}
+	public void setCourierReceiptName(String courierReceiptName) {
+		this.courierReceiptName = courierReceiptName;
 	}
 	
 }

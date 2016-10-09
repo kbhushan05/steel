@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EnumType;
+
 import com.demo.steel.domain.Deviation;
 import com.demo.steel.domain.PartManifacturingDetails;
 import com.demo.steel.domain.PartNoDetails;
@@ -30,6 +32,8 @@ public class DtoDomainConvertor {
 		orderDto.setSupplierName(supplier.getName());
 		orderDto.setSupplierEmail(supplier.getEmail());
 		
+		orderDto.setPoNumber(order.getPoNumber());
+		orderDto.setSteelHeatNumber(order.getSteelHeatNumber());
 		orderDto.setStatus(order.getStatus().name());
 		orderDto.setOrderId(order.getId());
 		orderDto.setSteelMill(order.getSteelMill());
@@ -43,27 +47,35 @@ public class DtoDomainConvertor {
 		orderDto.setRefStandard(order.getRefStandard());
 		orderDto.setComment(order.getComments());
 		orderDto.setForgerSupplierCode(order.getForgerSupplierCode());
+		orderDto.setCourierCompany(order.getCourierCompany());
+		orderDto.setCourierReceiptName(order.getCourierReceiptName());
+		orderDto.setCourierDeliveryDate(order.getCourierDeliveryDate());
 		
-		Deviation dev = order.getDeviation();
-		if(dev != null){
-			orderDto.setCilDevitionNumber(dev.getCilDevitionNumber());
-			orderDto.setRequesterName(dev.getRequesterName());
-			orderDto.setRequestDate(dev.getRequestDate());
-			orderDto.setAttachmentName(dev.getAttachmentName());
-			orderDto.setRmSection(dev.getRmSection());
-			orderDto.setRmGarde(dev.getRmGarde());
-			orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
-			orderDto.setDelivaryAffected(dev.getDelivaryAffected());
-			orderDto.setDescription(dev.getDescription());
-			orderDto.setPartDescription(dev.getDescription());
+		if(order.getDeviation() != null && !order.getDeviation().isEmpty()){
+			Deviation dev = order.getDeviation().get(0);
+			if(dev != null){
+				orderDto.setDeviationType(dev.getType().toString());
+				orderDto.setDeviationId(dev.getId());
+				orderDto.setCilDevitionNumber(dev.getCilDevitionNumber());
+				orderDto.setRequesterName(dev.getRequesterName());
+				orderDto.setRequestDate(dev.getRequestDate());
+				orderDto.setAttachmentName(dev.getAttachmentName());
+				orderDto.setRmSection(dev.getRmSection());
+				orderDto.setRmGarde(dev.getRmGarde());
+				orderDto.setQuantityForDeviation(dev.getQuantityForDeviation());
+				orderDto.setDelivaryAffected(dev.getDelivaryAffected());
+				orderDto.setDescription(dev.getDescription());
+				orderDto.setPartDescription(dev.getPartDescription());
+				orderDto.setRequestDate(dev.getRequestDate());
+			}
 		}
-		
 		
 		return orderDto;
 	}
 
 	public SteelOrder createOrder(SteelOrderDto orderDto) {
 		SteelOrder order = new SteelOrder();
+		order.setPoNumber(orderDto.getPoNumber());
 		order.setId(orderDto.getOrderId());
 		order.setDate(orderDto.getDate());
 		order.setSteelMill(orderDto.getSteelMill());
@@ -75,6 +87,10 @@ public class DtoDomainConvertor {
 		order.setRefStandard(orderDto.getRefStandard());
 		order.setComments(orderDto.getComment());
 		order.setForgerSupplierCode(orderDto.getForgerSupplierCode());
+		order.setSteelHeatNumber(orderDto.getSteelHeatNumber());
+		order.setCourierCompany(orderDto.getCourierCompany());
+		order.setCourierReceiptName(orderDto.getCourierReceiptName());
+		order.setCourierDeliveryDate(orderDto.getCourierDeliveryDate());
 		
 		Supplier supplier = new Supplier();
 		supplier.setCode(orderDto.getSupplierCode());
@@ -90,7 +106,11 @@ public class DtoDomainConvertor {
 		Set<SteelVerificationCheck> checks = getSteelOrderveficationCheckSet(orderDto,order);
 		order.setVerificationCheck(checks);
 		
-		order.setDeviation(getDeviation(orderDto));
+		List<Deviation> devs = new ArrayList<>();
+		Deviation dev = getDeviation(orderDto);
+		dev.setOrder(order);
+		devs.add(dev);
+		order.setDeviation(devs);
 		
 		return order;
 	}
@@ -192,6 +212,7 @@ public class DtoDomainConvertor {
 	private Deviation getDeviation(SteelOrderDto orderDto){
 		
 		Deviation dev = new Deviation();
+		dev.setId(orderDto.getDeviationId());
 		dev.setCilDevitionNumber(orderDto.getCilDevitionNumber());
 		dev.setRequesterName(orderDto.getRequesterName());
 		dev.setRequestDate(orderDto.getRequestDate());
@@ -202,7 +223,8 @@ public class DtoDomainConvertor {
 		dev.setDelivaryAffected(orderDto.getDelivaryAffected());
 		dev.setDescription(orderDto.getDescription());
 		dev.setPartDescription(orderDto.getPartDescription());
-		
+		dev.setType(EnumType.valueOf(Deviation.Type.class, orderDto.getDeviationType()));
+		dev.setRequestDate(orderDto.getRequestDate());
 		return dev;
 	}
 

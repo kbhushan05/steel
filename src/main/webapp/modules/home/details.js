@@ -14,7 +14,7 @@ function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state
 	$scope.orders = [];
   $scope.init = function(){
   	$scope.orders = [];
-  	var url = userService.getRole() == 'ADMIN' ? "api/orders": "api/orders?supplierName="+userService.getSuppliername();
+  	var url = userService.getRole() == 'ADMIN' ? "api/orders?status=submitted,fhtv_submitted": "api/orders?supplierName="+userService.getSuppliername();
   	$http.get(url)
     .then(function(response) {
         $scope.orders = angular.fromJson(response.data);

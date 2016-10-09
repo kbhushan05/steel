@@ -8,7 +8,7 @@ public class PartManifacturingDetailsDto {
 		private int number;
 		private float weight;
 		private float cutWeight;
-		private int noOfParts;
+		private float noOfParts;
 		private PartDetailsStatus status = PartDetailsStatus.UNCHECKED;
 		
 		public PartManifacturingDetailsDto(){}
@@ -46,11 +46,11 @@ public class PartManifacturingDetailsDto {
 			this.cutWeight = cutWeight;
 		}
 
-		public int getNoOfParts() {
+		public float getNoOfParts() {
 			return noOfParts;
 		}
 
-		public void setNoOfParts(int noOfParts) {
+		public void setNoOfParts(float noOfParts) {
 			this.noOfParts = noOfParts;
 		}
 

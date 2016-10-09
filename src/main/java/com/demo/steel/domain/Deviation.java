@@ -3,13 +3,22 @@ package com.demo.steel.domain;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Deviation {
 	
+	public enum Type{
+		BASIC,FHTV;
+	}
 	@Id
+	@GeneratedValue
+	private int id;
 	private int cilDevitionNumber;
 	private String requesterName;
 	private Date requestDate;
@@ -20,6 +29,12 @@ public class Deviation {
 	private String delivaryAffected;
 	private String description;
 	private String attachmentName;
+	@Enumerated(EnumType.STRING)
+	private Type type = Type.BASIC;
+	
+	@ManyToOne
+	private SteelOrder order;
+	
 	@Lob
 	private byte[] attachment;
 	
@@ -89,5 +104,22 @@ public class Deviation {
 	public void setAttachment(byte[] attachment) {
 		this.attachment = attachment;
 	}
-
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Type getType() {
+		return type;
+	}
+	public void setType(Type type) {
+		this.type = type;
+	}
+	public SteelOrder getOrder() {
+		return order;
+	}
+	public void setOrder(SteelOrder order) {
+		this.order = order;
+	}
 }

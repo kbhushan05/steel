@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.demo.steel.domain.SteelOrder;
 
 @Repository
-public class SteelOrderDao extends GenericDao<SteelOrder, Long> {
+public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 
 	@Override
 	public Class<SteelOrder> getClazz() {

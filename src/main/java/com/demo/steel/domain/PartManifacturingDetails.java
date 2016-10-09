@@ -26,7 +26,7 @@ public class PartManifacturingDetails {
 	private SteelOrder order;
 	private float partWeight;
 	private float cutWeight;
-	private int partNo;
+	private float partNo;
 	private Status status = Status.UNCHECKED;
 	
 	public int getPrimaryKey() {
@@ -59,10 +59,10 @@ public class PartManifacturingDetails {
 	public void setCutWeight(float cutWeight) {
 		this.cutWeight = cutWeight;
 	}
-	public int getPartNo() {
+	public float getPartNo() {
 		return partNo;
 	}
-	public void setPartNo(int partNo) {
+	public void setPartNo(float partNo) {
 		this.partNo = partNo;
 	}
 	public Status getStatus() {

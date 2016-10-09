@@ -9,14 +9,14 @@ import java.util.Set;
 public class SteelOrderDto {
 	private final String DELIM_SUPPLIER_ID = "-";
 	
-	private long orderId;
+	private String orderId;
 	@SuppressWarnings("unused")
 	private String supplierId;
 	private String supplierName;
 	private int supplierCode;
-	private long poNumber;
+	private int poNumber;
 	private String steelMill;
-	private long steelHeatNumber;
+	private String steelHeatNumber;
 	private float alreadyAvailableSteelTonage;
 	private float newSteelToBuy;
 	private float steelTonage;
@@ -25,7 +25,16 @@ public class SteelOrderDto {
 	private String status;
 	private Date date;
 	private String supplierEmail;
+	private String comment;
+	private String courierCompany;
+	private Date courierDeliveryDate;
+	private String courierReceiptName;
+	
+	private Set<SteelVerificationCheckDto> checkList = new HashSet<>(20);
+	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>();
+
 	//Deviation details
+	private int deviationId;
 	private int cilDevitionNumber;
 	private String requesterName;
 	private Date requestDate;
@@ -36,17 +45,10 @@ public class SteelOrderDto {
 	private String delivaryAffected;
 	private String description;
 	private String attachmentName;
-	
-	private String[] steelMills;
-	
-	private Set<SteelVerificationCheckDto> checkList = new HashSet<>(20);
-	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>();
-
 	private String cilRemark;
-
 	private String cilStatus;
-
-	private String comment;
+	private String deviationType;
+	private String[] steelMills;
 	
 	public void addVerificationCheck(String req, String status, String remark, byte[] attachment, String attachmentName){
 		SteelVerificationCheckDto check = new SteelVerificationCheckDto(req,status,remark,attachment,attachmentName);
@@ -55,10 +57,10 @@ public class SteelOrderDto {
 	public void addPartDetails(int number, float weight, float cutWeight, int noOfParts){
 		partDetails.add(new PartManifacturingDetailsDto(number, weight, cutWeight, noOfParts));
 	}
-	public long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 	public String getSupplierId() {
@@ -67,10 +69,10 @@ public class SteelOrderDto {
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
 	}
-	public long getPoNumber() {
+	public int getPoNumber() {
 		return poNumber;
 	}
-	public void setPoNumber(long poNumber) {
+	public void setPoNumber(int poNumber) {
 		this.poNumber = poNumber;
 	}
 	public String getSteelMill() {
@@ -79,10 +81,10 @@ public class SteelOrderDto {
 	public void setSteelMill(String steelMill) {
 		this.steelMill = steelMill;
 	}
-	public long getSteelHeatNumber() {
+	public String getSteelHeatNumber() {
 		return steelHeatNumber;
 	}
-	public void setSteelHeatNumber(long steelHeatNumber) {
+	public void setSteelHeatNumber(String steelHeatNumber) {
 		this.steelHeatNumber = steelHeatNumber;
 	}
 	public float getAlreadyAvailableSteelTonage() {
@@ -241,5 +243,34 @@ public class SteelOrderDto {
 	public void setSteelMills(String[] steelMills) {
 		this.steelMills = steelMills;
 	}
-	
+	public int getDeviationId() {
+		return deviationId;
+	}
+	public void setDeviationId(int deviationId) {
+		this.deviationId = deviationId;
+	}
+	public String getDeviationType() {
+		return deviationType;
+	}
+	public void setDeviationType(String deviationType) {
+		this.deviationType = deviationType;
+	}
+	public String getCourierCompany() {
+		return courierCompany;
+	}
+	public void setCourierCompany(String courierCompany) {
+		this.courierCompany = courierCompany;
+	}
+	public Date getCourierDeliveryDate() {
+		return courierDeliveryDate;
+	}
+	public void setCourierDeliveryDate(Date courierDeliveryDate) {
+		this.courierDeliveryDate = courierDeliveryDate;
+	}
+	public String getCourierReceiptName() {
+		return courierReceiptName;
+	}
+	public void setCourierReceiptName(String courierReceiptName) {
+		this.courierReceiptName = courierReceiptName;
+	}
 }
