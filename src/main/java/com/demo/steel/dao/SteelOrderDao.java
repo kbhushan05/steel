@@ -15,7 +15,7 @@ public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 	}
 	
 	public List<SteelOrder> getMinimalOrder(){
-		String[] columns = new String[]{"id", "supplier", "date", "status"};
+		String[] columns = new String[]{"id", "supplier", "date", "status","poNumber"};
 		return getMinimalPresentation(columns);
 	}
 

@@ -3,18 +3,19 @@ package com.demo.steel.domain;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
 public class VerificationCheck {
 	
 	public enum Type{
 		BASIC, FHT;
 	}
+	
 	@Id
+	@GeneratedValue
+	private int id;
 	private String name;
 	private String testName;
 	@Enumerated(EnumType.STRING)
@@ -38,4 +39,11 @@ public class VerificationCheck {
 	public void setType(Type type) {
 		this.type = type;
 	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 }

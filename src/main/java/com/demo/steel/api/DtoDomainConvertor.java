@@ -37,8 +37,6 @@ public class DtoDomainConvertor {
 		orderDto.setStatus(order.getStatus().name());
 		orderDto.setOrderId(order.getId());
 		orderDto.setSteelMill(order.getSteelMill());
-		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
-		orderDto.setCheckList(getSteelVerificationCheckDto(order));
 		orderDto.setAlreadyAvailableSteelTonage(order.getAlreadyAvailableSteelTonage());
 		orderDto.setCilRemark(order.getCilRemark());
 		orderDto.setCilStatus(order.getCilStatus());
@@ -50,6 +48,9 @@ public class DtoDomainConvertor {
 		orderDto.setCourierCompany(order.getCourierCompany());
 		orderDto.setCourierReceiptName(order.getCourierReceiptName());
 		orderDto.setCourierDeliveryDate(order.getCourierDeliveryDate());
+
+		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
+		orderDto.setCheckList(getSteelVerificationCheckDto(order));
 		
 		if(order.getDeviation() != null && !order.getDeviation().isEmpty()){
 			Deviation dev = order.getDeviation().get(0);
@@ -139,6 +140,7 @@ public class DtoDomainConvertor {
 			dto.setRemark(check.getRemark());
 			dto.setStatus(check.getStatus().toString());
 			dto.setTestName(check.getVerificationCheck().getTestName());
+			dto.setVerificationCheckId(check.getVerificationCheck().getId());
 			set.add(dto);
 		}
 		
@@ -195,8 +197,11 @@ public class DtoDomainConvertor {
 		for(SteelVerificationCheckDto dto : form.getCheckList()){
 			SteelVerificationCheck check = new SteelVerificationCheck();
 			check.setPrimarykey(dto.getId());
+			
 			VerificationCheck vc = new VerificationCheck();
 			vc.setName(dto.getName());
+			vc.setId(dto.getVerificationCheckId());
+			
 			check.setVerificationCheck(vc);
 			check.setRemark(dto.getRemark());
 			check.setStatus(Enum.valueOf(Status.class, dto.getStatus()));

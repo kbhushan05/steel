@@ -3,6 +3,7 @@ package com.demo.steel.dto;
 public class SteelVerificationCheckDto{
 	
 	private int id;
+	private int verificationCheckId;
 	private String name;
 	private String status;
 	private String remark;
@@ -58,6 +59,14 @@ public class SteelVerificationCheckDto{
 
 	public String getAttachmentName() {
 		return attachmentName;
+	}
+
+	public int getVerificationCheckId() {
+		return verificationCheckId;
+	}
+
+	public void setVerificationCheckId(int verificationCheckId) {
+		this.verificationCheckId = verificationCheckId;
 	}
 
 	public void setAttachmentName(String attachmentName) {
