@@ -53,8 +53,11 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
     if(data.status == 'NEW' || data.status == 'SAVED' || data.status == 'APPROVED'){
     	$scope.isDeviationDisable = false;
     }
-if(data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'){
-    $scope.isCILEditable = false;
+if(userService.getRole == 'ADMIN'){
+   if(data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'){
+     $scope.isCILEditable = false;
+   } 
+    
 }else{
     $scope.isCILEditable = true;
 }
@@ -190,7 +193,7 @@ $scope.validateForm = function(){
       isValid = false;
       message += 'Enter PO Number. \n'
   }
-  if($scope.data.steelHeatNumber == ''){
+  if($scope.data.steelHeatNumber == '' || $scope.data.steelHeatNumber == null){
       isValid = false;
       message += 'Enter Steel Heat Number. \n';
   }
