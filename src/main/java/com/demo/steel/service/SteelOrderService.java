@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.dom4j.IllegalAddException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.steel.dao.SteelHeatNoDao;
 import com.demo.steel.dao.SteelOrderDao;
 import com.demo.steel.dao.SteelVerificationCheckDao;
 import com.demo.steel.dao.SupplierDao;
@@ -18,6 +20,7 @@ import com.demo.steel.dao.VerificationCheckDao;
 import com.demo.steel.domain.Deviation;
 import com.demo.steel.domain.PartManifacturingDetails;
 import com.demo.steel.domain.PartNoDetails;
+import com.demo.steel.domain.SteelHeatNo;
 import com.demo.steel.domain.SteelOrder;
 import com.demo.steel.domain.SteelOrder.Status;
 import com.demo.steel.domain.SteelVerificationCheck;
@@ -41,6 +44,8 @@ public class SteelOrderService {
 	private VerificationCheckDao verificationCheckDao;
 	@Autowired
 	private DeviationDao deviationDao;
+	@Autowired
+	private SteelHeatNoDao steelHeatNoDao;
 	
 	@Transactional
 	public SteelOrder createNewOrder(String supplierName){
@@ -105,6 +110,9 @@ public class SteelOrderService {
 	
 	@Transactional
 	public void submitOrder(SteelOrder order){
+		if(!isValidNewSteelToBuy(order)){
+			throw new IllegalAddException("New steel to buy exceeds limit");
+		}
 		order = getSteelOrderDao().reattachEntity(order);
 		Iterator<PartManifacturingDetails> itrs = order.getPartManifacturingDetails().iterator();
 		while(itrs.hasNext()){
@@ -117,8 +125,20 @@ public class SteelOrderService {
 		getSteelOrderDao().update(order);
 	}
 	
+	private boolean isValidNewSteelToBuy(SteelOrder order){
+		SteelHeatNo steelHeatNo = getSteelHeatNoDao().get(order.getSteelHeatNumber());
+		if(steelHeatNo == null) throw new IllegalArgumentException("Invalid Steel Heat No.");
+		float sumOfTotalTonnage = getSteelOrderDao().getSumOfTotalSteelTonageForHeatNo(steelHeatNo);
+		float diff = steelHeatNo.getTonnage() - sumOfTotalTonnage;
+		return order.getNewSteelToBuy() <= diff && order.getNewSteelToBuy() >= 0? true : false; 
+	}
+	
 	@Transactional
 	public void submitFhtOrder(SteelOrder order){
+		if(!isValidNewSteelToBuy(order)){
+			throw new IllegalAddException("New steel to buy exceeds limit");
+		}
+		
 		if(order.getStatus() != SteelOrder.Status.APPROVED){
 			throw new IllegalArgumentException("Invalid Order state.");
 		}
@@ -254,6 +274,14 @@ public class SteelOrderService {
 
 	public void setDeviationDao(DeviationDao deviationDao) {
 		this.deviationDao = deviationDao;
+	}
+
+	public SteelHeatNoDao getSteelHeatNoDao() {
+		return steelHeatNoDao;
+	}
+
+	public void setSteelHeatNoDao(SteelHeatNoDao steelHeatNoDao) {
+		this.steelHeatNoDao = steelHeatNoDao;
 	}
 
 	@Transactional

@@ -110,8 +110,8 @@ $scope.submit = function(){
 
       $scope.gotoHome();
   })
-    .error(function (data, status, header, config) {
-     alert("fail to submit request");
+    .error(function (data, status, header, config, statusText) {
+     alert("fail to submit request.\n" + data);
      $scope.gotoHome();
  });
 }
