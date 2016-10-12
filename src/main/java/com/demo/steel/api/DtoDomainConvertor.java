@@ -48,6 +48,7 @@ public class DtoDomainConvertor {
 		orderDto.setCourierCompany(order.getCourierCompany());
 		orderDto.setCourierReceiptName(order.getCourierReceiptName());
 		orderDto.setCourierDeliveryDate(order.getCourierDeliveryDate());
+		orderDto.setCilComment(order.getCilComment());
 
 		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
 		orderDto.setCheckList(getSteelVerificationCheckDto(order));
@@ -92,6 +93,7 @@ public class DtoDomainConvertor {
 		order.setCourierCompany(orderDto.getCourierCompany());
 		order.setCourierReceiptName(orderDto.getCourierReceiptName());
 		order.setCourierDeliveryDate(orderDto.getCourierDeliveryDate());
+		order.setCilComment(orderDto.getCilComment());
 		
 		Supplier supplier = new Supplier();
 		supplier.setCode(orderDto.getSupplierCode());

@@ -57,6 +57,7 @@ public class SteelOrder {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
 	private List<Deviation> deviation = new ArrayList<Deviation>();
+	private String cilComment;
 	
 	public String getId() {
 		return id;
@@ -203,6 +204,12 @@ public class SteelOrder {
 	}
 	public void setCourierReceiptName(String courierReceiptName) {
 		this.courierReceiptName = courierReceiptName;
+	}
+	public String getCilComment() {
+		return this.cilComment;
+	}
+	public void setCilComment(String cilComment) {
+		this.cilComment = cilComment;
 	}
 	
 }

@@ -29,6 +29,7 @@ public class SteelOrderDto {
 	private String courierCompany;
 	private Date courierDeliveryDate;
 	private String courierReceiptName;
+	private String cilComment;
 	
 	private Set<SteelVerificationCheckDto> checkList = new HashSet<>(20);
 	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>();
@@ -273,4 +274,11 @@ public class SteelOrderDto {
 	public void setCourierReceiptName(String courierReceiptName) {
 		this.courierReceiptName = courierReceiptName;
 	}
+	public String getCilComment() {
+		return cilComment;
+	}
+	public void setCilComment(String cilComment) {
+		this.cilComment = cilComment;
+	}
+	
 }

@@ -95,10 +95,10 @@ public class OrderController {
 		
 		switch (action) {
 		case "approve":
-			orderDto = getService().approveOrder(orderId);
+			orderDto = getService().approveOrder(orderDto);
 			break;
 		case "reject":
-			orderDto = getService().rejectOrder(orderId);
+			orderDto = getService().rejectOrder(orderDto);
 			break;
 		default:
 			break;

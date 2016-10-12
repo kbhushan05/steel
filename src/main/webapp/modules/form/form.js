@@ -111,7 +111,7 @@ $scope.submit = function(){
       $scope.gotoHome();
   })
     .error(function (data, status, header, config, statusText) {
-     alert("fail to submit request.\n" + data);
+     alert("New steel to buy is invalid or heat number is invalid.\n or SMTP server is not accessible");
      $scope.gotoHome();
  });
 }

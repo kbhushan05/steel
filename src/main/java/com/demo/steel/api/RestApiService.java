@@ -101,19 +101,21 @@ public class RestApiService {
 		return conv.createDtos(orders);
 	}
 	
-	public SteelOrderDto approveOrder(String orderId){
-		SteelOrder order = getSteelOrderService().approveOrder(orderId);
+	public SteelOrderDto approveOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrderDto orderDto = conv.createDto(order);
-		getMailService().sendEmail(order.getSupplier().getEmail(),"Steel Order updates"," Steel Order " + order.getId()+" approved.");
-		return orderDto;
+		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder approvedOrder = getSteelOrderService().approveOrder(order);
+		SteelOrderDto approveOrderDto = conv.createDto(approvedOrder);
+		getMailService().sendEmail(approvedOrder.getSupplier().getEmail(),"Steel Order updates"," Steel Order " + approvedOrder.getId()+" approved.");
+		return approveOrderDto;
 	}
 	
-	public SteelOrderDto rejectOrder(String orderId){
-		SteelOrder order = getSteelOrderService().rejectOrder(orderId);
+	public SteelOrderDto rejectOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrderDto orderDto = conv.createDto(order);
-		return orderDto;
+		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder rejectedOrder = getSteelOrderService().rejectOrder(order);
+		SteelOrderDto rejectedOrderDto = conv.createDto(rejectedOrder);
+		return rejectedOrderDto;
 	}
 	
 	public SteelOrderDto getOrder(String orderId){

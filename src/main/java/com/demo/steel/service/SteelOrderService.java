@@ -81,6 +81,7 @@ public class SteelOrderService {
 	public SteelOrder createNewFhtOrder(String orderId){
 		
 		SteelOrder fhtOrder = getSteelOrderDao().get(orderId);
+		fhtOrder.setComments("");
 		if(fhtOrder.getStatus() != SteelOrder.Status.APPROVED){
 			throw new IllegalArgumentException("Invalid Order state.");
 		}
@@ -176,8 +177,8 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
-	public SteelOrder approveOrder(String orderId){
-		SteelOrder order = getEagerlyLoadedOrder(orderId);
+	public SteelOrder approveOrder(SteelOrder order){
+	//	SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
 			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
 		}
@@ -187,8 +188,8 @@ public class SteelOrderService {
 	}
 
 	@Transactional
-	public SteelOrder rejectOrder(String orderId){
-		SteelOrder order = getEagerlyLoadedOrder(orderId);
+	public SteelOrder rejectOrder(SteelOrder order){
+	//	SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
 			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
 		}
