@@ -99,7 +99,6 @@ public class SteelOrderService {
 		List<Deviation> devs = new ArrayList<>();
 		devs.add(dev);
 		fhtOrder.setDeviation(devs);
-		fhtOrder.setStatus(Status.FHTV_NEW);
 		return fhtOrder;
 	}
 	
@@ -140,7 +139,7 @@ public class SteelOrderService {
 			throw new IllegalAddException("New steel to buy exceeds limit");
 		}*/
 		
-		if(order.getStatus() != SteelOrder.Status.APPROVED){
+		if(order.getStatus() != SteelOrder.Status.FHTV_SUBMITTED){
 			throw new IllegalArgumentException("Invalid Order state.");
 		}
 		order.setStatus(Status.FHTV_SUBMITTED);

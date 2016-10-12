@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.steel.domain.SteelMill;
 import com.demo.steel.domain.SteelOrder;
+import com.demo.steel.domain.SteelOrder.Status;
 import com.demo.steel.dto.SteelOrderDto;
 import com.demo.steel.service.MailNotificationService;
 import com.demo.steel.service.SteelMillService;
@@ -34,6 +35,7 @@ public class RestApiService {
 	public SteelOrderDto createNewFhtOrder(String orderId){
 		
 		SteelOrder order = getSteelOrderService().createNewFhtOrder(orderId);
+		order.setStatus(Status.FHTV_NEW);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
 		return orderDto;
