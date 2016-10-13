@@ -195,9 +195,11 @@ $scope.validateForm = function(){
   var message = '';
   var partWeight = 0;
   angular.forEach($scope.data.partDetails, function(value, key){
-    partWeight += value.noOfParts;
+    if(!isNaN(value.noOfParts)){
+        partWeight += value.weight;
+        partWeight += value.cutWeight;  
+    }
   });
-  partWeight *= 1000;
   var totalSteelAllowed = $scope.data.steelTonage * 1000;
   if(partWeight > totalSteelAllowed){
     message += 'Part weight should not excced Total Steel Tonnage. \n'
@@ -237,8 +239,9 @@ $scope.validateForm = function(){
 
   if(message.length > 5){
     alert(message);
+    return false;
   }
-  return isValid;
+  return true;
 }
 
 $scope.init();
