@@ -25,6 +25,7 @@ import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
 import com.demo.steel.domain.VerificationCheck.Type;
+import com.demo.steel.dto.PartManifacturingDetailsDto.PartDetailsStatus;
 import com.demo.steel.security.dao.DeviationDao;
 
 @Service
@@ -79,8 +80,6 @@ public class SteelOrderService {
 	public SteelOrder createNewFhtOrder(String orderId){
 		
 		SteelOrder fhtOrder = getSteelOrderDao().get(orderId);
-		fhtOrder.setComments("");
-		fhtOrder.setCilComment("");
 		if(fhtOrder.getStatus() != SteelOrder.Status.APPROVED){
 			throw new IllegalArgumentException("Invalid Order state.");
 		}
@@ -94,6 +93,9 @@ public class SteelOrderService {
 		}
 		fhtOrder.setVerificationCheck(checkList);
 		fhtOrder.getPartManifacturingDetails().size();
+		fhtOrder.getPartManifacturingDetails().removeIf(
+				part -> part.getStatus() == PartManifacturingDetails.Status.UNCHECKED
+				);
 		Deviation dev = new Deviation();
 		dev.setType(Deviation.Type.FHTV);
 		List<Deviation> devs = new ArrayList<>();
@@ -139,7 +141,7 @@ public class SteelOrderService {
 			throw new IllegalAddException("New steel to buy exceeds limit");
 		}*/
 		
-		if(order.getStatus() != SteelOrder.Status.FHTV_SUBMITTED){
+		if(order.getStatus() != SteelOrder.Status.FHTV_NEW){
 			throw new IllegalArgumentException("Invalid Order state.");
 		}
 		order.setStatus(Status.FHTV_SUBMITTED);
@@ -200,7 +202,7 @@ public class SteelOrderService {
 	@Transactional
 	public SteelOrder getOrder(String orderId) {
 		SteelOrder order = getEagerlyLoadedOrder(orderId);
-		if(order.getStatus() == SteelOrder.Status.FHTV_SUBMITTED){
+		if(order.getStatus() == SteelOrder.Status.FHTV_SUBMITTED || order.getStatus() == SteelOrder.Status.FHTV_APPROVED || order.getStatus() == SteelOrder.Status.FHTV_REJECTED){
 			Iterator<SteelVerificationCheck> itr = order.getVerificationCheck().iterator();
 			while(itr.hasNext()){
 				SteelVerificationCheck check = itr.next();

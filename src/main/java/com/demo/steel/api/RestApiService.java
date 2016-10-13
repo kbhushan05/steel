@@ -36,6 +36,8 @@ public class RestApiService {
 		
 		SteelOrder order = getSteelOrderService().createNewFhtOrder(orderId);
 		order.setStatus(Status.FHTV_NEW);
+		order.setComments("");
+		order.setCilComment("");
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrderDto orderDto = conv.createDto(order);
 		return orderDto;

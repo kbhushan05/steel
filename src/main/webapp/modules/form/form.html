@@ -47,15 +47,15 @@
              </tr>
            </tbody>
          </table>
-         <table class="table" ng-show="showCourier">
+         <table class="table" ng-show="showCourier" ng-disabled="disableCourier">
           <tbody>
             <tr>
               <td><label>Courier Receipt Number</label></td>
-              <td><input  type="text" class="form-control" ng-disabled="showCurrier" ng-model="data.courierReceipt"/></td>
+              <td><input  type="text" class="form-control" ng-disabled="disableCourier" ng-model="data.courierReceipt"/></td>
               <td><label>Courier Company </label></td>
-              <td><input  type="text" class="form-control" ng-model="data.courierCompany"/></td>
+              <td><input  type="text" class="form-control" ng-model="data.courierCompany" ng-disabled="disableCourier"/></td>
               <td><label>Courier Delivary Date </label></td>
-              <td><input  type="date"  class="form-control" ng-model="data.courierDate"/></td>
+              <td><input  type="date"  class="form-control" ng-model="data.courierDate" ng-disabled="disableCourier"/></td>
             </tr>
           </tbody>
         </table>
@@ -93,7 +93,7 @@
           <tr>
             <td><label>Requirement</label></td>
             <td><label>Status</label></td>
-            <td ng-if="data.status == 'APPROVED' || data.status == 'FHTV_SUBMITTED'"><label>Test</label></td>
+            <td ng-if="showCourier"><label>Test</label></td>
             <td><label>Attchment</label></td>
             <td><label>Remark</label></td>
           </td>
@@ -101,7 +101,7 @@
         <tr ng-repeat="row in data.checkList">
          <td>{{row.name}}</td>
          <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
-         <td ng-if="data.status == 'APPROVED' || data.status == 'FHTV_SUBMITTED'"><input  type="text" name="refStd" id="refStd" ng-model="row.testName" ng-disabled="true" /></td>
+         <td ng-if="showCourier">{{row.testName}}</td>
          <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable"/></td>
          <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
        </td>

@@ -19,6 +19,7 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
   $scope.isCILEditable = true;
   $scope.enableCILComments = true;
   $scope.showCourier = false;
+  $scope.disableCourier = false;
   var config = {
     headers : {
       'Content-Type': 'application/json;'
@@ -39,11 +40,11 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
       $scope.data.requestDate = value;
     }
     var data = $scope.data;
-    if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' ){
+    if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' || data.status == 'FHTV_APPROVED' || data.status == 'FHTV_REJECTED'){
       $scope.isDisabled = true;
     }
 
-    if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' ){
+    if(data.status == 'REJECTED' || data.status == 'APPROVED' || data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED' || data.status == 'FHTV_APPROVED' || data.status == 'FHTV_REJECTED'){
      if($rootScope.isFTH == true){
       $scope.isAttmentDisable = false;
     }else{
@@ -72,9 +73,14 @@ if(userService.getRole() == 'ADMIN'){
    $scope.enableCILComments = false;
  }
 }
-if(data.status == 'FHTV_NEW'){
+if(data.status == 'FHTV_NEW' || data.status == 'FHTV_SUBMITTED' || data.status == 'FHTV_APPROVED' || data.status == 'FHTV_REJECTED' ){
   $scope.showCourier = true;
 }
+
+if(data.status != 'FHTV_NEW'){
+	  $scope.disableCourier = true;
+}
+
 $scope.getTotalSteelTonnage();    
 }
 
@@ -116,7 +122,7 @@ $scope.submit = function(){
     $scope.gotoHome();
   })
   .error(function (data, status, header, config, statusText) {
-   alert("New steel to buy is invalid or heat number is invalid.\n or SMTP server is not accessible");
+   alert("Email server is not accessible");
    $scope.gotoHome();
  });
 }
@@ -206,11 +212,11 @@ $scope.validateForm = function(){
   }  
 
   if($scope.data.poNumber == ''){
-    isValid = false;
+ //   isValid = false;
     message += 'Enter PO Number. \n'
   }
   if($scope.data.steelHeatNumber == '' || $scope.data.steelHeatNumber == null){
-    isValid = false;
+  //  isValid = false;
     message += 'Enter Steel Heat Number. \n';
   }
   /*removed as per request*/
