@@ -50,9 +50,16 @@ function formCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userS
         $scope.isAttmentDisable = true;
     }
 }
-    if(data.status == 'NEW' || data.status == 'SAVED' || data.status == 'APPROVED'){
-    	$scope.isDeviationDisable = false;
+    if(userService.getRole == 'SUPPLIER'){
+        if(data.status == 'NEW' || data.status == 'SAVED'){
+           $scope.isDeviationDisable = false;
+        }else if(data.status == 'FHTV_NEW'){
+           $scope.isDeviationDisable = false;
+        }else{
+           $scope.isDeviationDisable = true;
+        }
     }
+    
 if(userService.getRole == 'ADMIN'){
    if(data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED'){
      $scope.isCILEditable = false;
@@ -197,10 +204,11 @@ $scope.validateForm = function(){
       isValid = false;
       message += 'Enter Steel Heat Number. \n';
   }
-  if($scope.data.alreadyAvailableSteelTonage == ''){
+  /*removed as per request*/
+  /*if($scope.data.alreadyAvailableSteelTonage == ''){
       isValid = false;
       message += 'Enter Available Steel. \n';
-  }
+  }*/
   if($scope.data.newSteelToBuy == ''){
       isValid = false;
       message += 'Enter new steel to buy. \n';

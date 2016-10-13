@@ -23,7 +23,7 @@
                 <td><label>Steel Heat Number</label></td>
                 <td><input required type="text" name="steelHeatNumber" id="steelHeatNumber" ng-model="data.steelHeatNumber" class="form-control"  ng-disabled="isDisabled" /></td>
                 <td><label>Already Available Steel Tonnage</label></td>
-                <td><input required type="number" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" ng-disabled="isDisabled" ng-change="getTotalSteelTonnage()"/></td>
+                <td><input type="number" name="aaST" id="aaST" ng-model="data.alreadyAvailableSteelTonage" class="form-control" ng-disabled="isDisabled" ng-change="getTotalSteelTonnage()"/></td>
                 <td><label>New Steel To Buy</label></td>
                 <td><input disabled required type="number" name="nsBuy" id="nsBuy" ng-model="data.newSteelToBuy" class="form-control" ng-disabled="isDisabled" ng-change="getTotalSteelTonnage()"/></td>
               </tr>
@@ -197,7 +197,7 @@
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="update()" ng-show="data.status == 'SAVED'" >Update</button>
 <button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="submit()" ng-show="data.status == 'NEW' || data.status == 'SAVED'" >Submit</button>
 
-<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="ftTreatment()" ng-show="data.status == 'APPROVED'">SUBMIT FHT</button>
+<button ng-if="loggedInUser.type=='Supplier'" type="button" class="btn btn-primary" ng-click="ftTreatment()" ng-show="data.status == 'FHTV_NEW' ">SUBMIT FHT</button>
 
 <button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-primary" ng-click="approve()" ng-show="data.status == 'SUBMITTED'||data.status == 'FHTV_SUBMITTED'" >Approve</button>
 <button ng-if="loggedInUser.type=='Admin'" type="button" class="btn btn-danger" ng-click="reject()" ng-show="data.status == 'SUBMITTED'|| data.status == 'FHTV_SUBMITTED'" >Reject</button>
