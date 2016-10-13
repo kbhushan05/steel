@@ -12,6 +12,7 @@ frmDetailsCtrl.$inject = [ '$scope', '$location', '$rootScope',
 
 function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userService) {
 	$scope.orders = [];
+  $rootScope.state = "Home";
   $scope.init = function(){
   	$scope.orders = [];
   	var url = userService.getRole() == 'ADMIN' ? "api/orders?status=submitted,fhtv_submitted,approved,fhtv_approved,fhtv_rejected": "api/orders?supplierName="+userService.getSuppliername();
@@ -30,6 +31,7 @@ function frmDetailsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state
 		}).then(function mySucces(response) {
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = false;
+      $rootScope.state = "Home";
 			$state.transitionTo('home.request');
 			//$state.go('home.request');
 		}, function myError(response) {

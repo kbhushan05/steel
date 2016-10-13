@@ -38,6 +38,7 @@ function recordsCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,us
 			$rootScope.formData = angular.fromJson(response.data);
 			$rootScope.fromEnable = false;
       $rootScope.isFTH = true;
+      $rootScope.state == "FTH";
 			$state.transitionTo('home.request');
 			//$state.go('home.request');
 		}, function myError(response) {
