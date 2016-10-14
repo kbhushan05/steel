@@ -82,7 +82,7 @@ public class RestApiService {
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().submitOrder(order);
-		getMailService().sendEmail("admin@company.com","Steel Order updates"," Steel Order " + order.getId()+" submitted by Supplier "+ order.getSupplier().getName());
+		getMailService().sendEmail("admncil@gmail.com","Steel Order updates"," Steel Order " + order.getId()+" submitted by Supplier "+ order.getSupplier().getName());
 	}
 
 	public SteelOrderService getSteelOrderService() {
