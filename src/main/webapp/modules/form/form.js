@@ -38,6 +38,14 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
             var value = new Date($scope.data.requestDate);
             $scope.data.requestDate = value;
         }
+        if($scope.data.status=="FHTV_NEW"){
+            var courierDate = new Date();
+            $scope.data.courierDate = courierDate;
+        }
+        if($scope.data.status == 'FHTV_SUBMITTED' || $scope.data.status == 'FHTV_APPROVED' || $scope.data.status == 'FHTV_REJECTED'){
+            var courierDate = new Date($scope.data.courierDate);
+            $scope.data.courierDate = courierDate;
+        }
         $scope.getTotalSteelTonnage();
     }
 
@@ -265,8 +273,11 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
                  $scope.isDeviationDisable = true;
                }
 
-               if(status == 'FHTV_NEW' || status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' ){
+               if(status == 'FHTV_NEW' ){
                   $scope.showCourier = true;
+                  $scope.isAttmentDisable = false;
+                }
+                if(status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' || status=="REJECTED"){
                   $scope.isAttmentDisable = true;
                 }
 
