@@ -40,11 +40,12 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         }
         if($scope.data.status=="FHTV_NEW"){
             var courierDate = new Date();
-            $scope.data.courierDate = courierDate;
+            $scope.data.courierDeliveryDate = courierDate;
+            $scope.data.steelMills =[$scope.data.steelMill];
         }
         if($scope.data.status == 'FHTV_SUBMITTED' || $scope.data.status == 'FHTV_APPROVED' || $scope.data.status == 'FHTV_REJECTED'){
-            var courierDate = new Date($scope.data.courierDate);
-            $scope.data.courierDate = courierDate;
+            var courierDate = new Date($scope.data.courierDeliveryDate);
+            $scope.data.courierDeliveryDate = courierDate;
         }
         $scope.getTotalSteelTonnage();
     }
@@ -254,11 +255,11 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
               if(status == 'SUBMITTED' || status == 'FHTV_SUBMITTED'){
                  $scope.isCILEditable = false;
                  $scope.enableCILComments = false;
+                 $scope.isAttmentDisable = true;
                }
                if(status == 'FHTV_NEW' || status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' ){
                   $scope.showCourier = true;
-                }
-              
+                }         
         }
 
         if(type=="SUPPLIER")
@@ -280,8 +281,6 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
                 if(status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' || status=="REJECTED"){
                   $scope.isAttmentDisable = true;
                 }
-
-
         }
 
        
