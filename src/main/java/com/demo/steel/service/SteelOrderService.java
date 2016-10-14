@@ -105,13 +105,15 @@ public class SteelOrderService {
 	}
 	
 	@Transactional
-	public void saveOrder(SteelOrder order){
+	public SteelOrder saveOrder(SteelOrder order){
 		order.setStatus(SteelOrder.Status.SAVED);
-		getSteelOrderDao().save(order);
+		String key = getSteelOrderDao().save(order);
+		order.setId(key);
+		return order;
 	}
 	
 	@Transactional
-	public void submitOrder(SteelOrder order){
+	public SteelOrder submitOrder(SteelOrder order){
 		/*if(!isValidNewSteelToBuy(order)){
 			throw new IllegalAddException("New steel to buy exceeds limit");
 		}*/
@@ -124,7 +126,7 @@ public class SteelOrderService {
 			}
 		}
 		order.setStatus(SteelOrder.Status.SUBMITTED);
-		getSteelOrderDao().update(order);
+		return getSteelOrderDao().update(order);
 	}
 	
 /*	private boolean isValidNewSteelToBuy(SteelOrder order){

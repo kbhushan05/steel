@@ -72,17 +72,19 @@ public class RestApiService {
 		return millsArry;
 	}
 	
-	public void saveOrder(SteelOrderDto orderDto){
+	public SteelOrderDto saveOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
-		getSteelOrderService().saveOrder(order);
+		SteelOrder savedOrder = getSteelOrderService().saveOrder(order);
+		return conv.createDto(savedOrder);
 	}
 	
-	public void submitOrder(SteelOrderDto orderDto){
+	public SteelOrderDto submitOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
-		getSteelOrderService().submitOrder(order);
+		SteelOrder submittedOrder = getSteelOrderService().submitOrder(order);
 		getMailService().sendEmail("admncil@gmail.com","Steel Order updates"," Steel Order " + order.getId()+" submitted by Supplier "+ order.getSupplier().getName());
+		return conv.createDto(submittedOrder);
 	}
 
 	public SteelOrderService getSteelOrderService() {

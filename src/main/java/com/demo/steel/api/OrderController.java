@@ -25,11 +25,11 @@ public class OrderController {
 	
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void saveOrder(@RequestBody(required = true)SteelOrderDto orderDto){
+	public SteelOrderDto saveOrder(@RequestBody(required = true)SteelOrderDto orderDto){
 		if(orderDto.getStatus().equals("SUBMITTED")){
-			getService().submitOrder(orderDto);
+			return getService().submitOrder(orderDto);
 		}else{
-			getService().saveOrder(orderDto);
+			return getService().saveOrder(orderDto);
 		}
 	}
 	

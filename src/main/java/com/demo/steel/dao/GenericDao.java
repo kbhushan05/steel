@@ -31,9 +31,10 @@ public abstract class GenericDao <T, K extends Serializable> {
 		return k;
 	}
 
-	public void update(T t){
+	public T update(T t){
 		Session session = getSessionFactory().getCurrentSession();
 		session.saveOrUpdate(t);
+		return t;
 	}
 	
 	public boolean isExists(K key){
