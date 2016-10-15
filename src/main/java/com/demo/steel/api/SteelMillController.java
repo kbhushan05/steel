@@ -15,18 +15,18 @@ import com.demo.steel.dto.SteelMillDto;
 public class SteelMillController {
 	
 	@Autowired
-	private RestApiService service;
+	private SteelOrderApiService service;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public List<SteelMillDto> getAll(){
 		return Collections.emptyList();
 	}
 
-	public RestApiService getService() {
+	public SteelOrderApiService getService() {
 		return service;
 	}
 
-	public void setService(RestApiService service) {
+	public void setService(SteelOrderApiService service) {
 		this.service = service;
 	}
 	

@@ -21,7 +21,7 @@ import com.demo.steel.util.StringUtil;
 @RequestMapping("/orders")
 public class OrderController {
 	@Autowired
-	private RestApiService service;
+	private SteelOrderApiService service;
 	
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -131,11 +131,11 @@ public class OrderController {
 			return getService().getOrder(orderId);
 	}
 	
-	public RestApiService getService() {
+	public SteelOrderApiService getService() {
 		return service;
 	}
 
-	public void setService(RestApiService service) {
+	public void setService(SteelOrderApiService service) {
 		this.service = service;
 	}
 

@@ -25,6 +25,7 @@ public class SteelVerificationCheck{
 	private String filename;
 	@Lob
 	private byte[] file;
+	private String mimeType;
 	@ManyToOne
 	private SteelOrder order;
 	@ManyToOne
@@ -72,5 +73,10 @@ public class SteelVerificationCheck{
 	public void setVerificationCheck(VerificationCheck verificationCheck) {
 		this.verificationCheck = verificationCheck;
 	}
-	
+	public String getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
 }

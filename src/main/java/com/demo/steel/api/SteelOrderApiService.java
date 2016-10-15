@@ -14,7 +14,7 @@ import com.demo.steel.service.SteelMillService;
 import com.demo.steel.service.SteelOrderService;
 
 @Service
-public class RestApiService {
+public class SteelOrderApiService {
 
 	@Autowired
 	private SteelOrderService steelOrderService;
