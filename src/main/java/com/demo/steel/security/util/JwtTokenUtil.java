@@ -5,6 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
 
+import javax.xml.bind.DatatypeConverter;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,7 +20,8 @@ public class JwtTokenUtil {
 
     public static User parseToken(String token) {
         try {
-        	byte[] bytes = Base64.getDecoder().decode(token);
+        	byte[] bytes = DatatypeConverter.parseBase64Binary(token);
+        	//byte[] bytes = Base64.getDecoder().decode(token);
         	String actualToken = new String(bytes,"utf-8");
             
         	Claims body = Jwts.parser()
@@ -49,7 +52,8 @@ public class JwtTokenUtil {
 			        .setClaims(claims)
 			        .signWith(SignatureAlgorithm.HS512, secret)
 			        .compact();
-			token = Base64.getEncoder().encodeToString(actualToken.getBytes("utf-8"));
+			token = DatatypeConverter.printBase64Binary(actualToken.getBytes("utf-8"));
+		//	token = Base64.getEncoder().encodeToString(actualToken.getBytes("utf-8"));
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
