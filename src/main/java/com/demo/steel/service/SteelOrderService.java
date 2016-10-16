@@ -94,9 +94,14 @@ public class SteelOrderService {
 		}
 		fhtOrder.setVerificationCheck(checkList);
 		fhtOrder.getPartManifacturingDetails().size();
-		fhtOrder.getPartManifacturingDetails().removeIf(
-				part -> part.getStatus() == PartManifacturingDetails.Status.UNCHECKED
-				);
+		Iterator <PartManifacturingDetails> itr = fhtOrder.getPartManifacturingDetails().iterator();
+		while(itr.hasNext()){
+			PartManifacturingDetails part = itr.next();
+			if(part.getStatus() == PartManifacturingDetails.Status.UNCHECKED){
+				itr.remove();
+			}
+		}
+		
 		Deviation dev = new Deviation();
 		dev.setRequestDate(new Date());
 		dev.setType(Deviation.Type.FHTV);
@@ -223,8 +228,13 @@ public class SteelOrderService {
 				}
 			}
 			
-			order.getDeviation().removeIf(
-					dev -> dev.getType() == Deviation.Type.BASIC);
+			Iterator<Deviation> itrD = order.getDeviation().iterator();
+			while(itrD.hasNext()){
+				Deviation dev = itrD.next();
+				if(dev.getType() == Deviation.Type.BASIC){
+					itrD.remove();
+				}
+			}
 		}
 		return order;
 	}

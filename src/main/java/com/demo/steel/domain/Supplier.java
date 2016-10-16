@@ -44,8 +44,4 @@ public class Supplier {
 		this.email = email;
 	}
 	
-	public PartNoDetails getPartNoDetails(int partNoId){
-		return getPartNos().stream().filter((part)-> part.getPartNo()==partNoId)
-				.findAny().get();
-	}
 }

@@ -2,7 +2,6 @@ package com.demo.steel.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,16 +77,23 @@ public class OrderController {
 	}
 	
 	private List<SteelOrderDto> filterBySupplierName(List<SteelOrderDto> list, String supplierName){
-		return list.stream()
-		.filter(dto -> dto.getSupplierName().equals(supplierName))
-		.collect(Collectors.toList());
+		List<SteelOrderDto> filtered = new ArrayList<>();
+		for(SteelOrderDto dto : list){
+			if(dto.getSupplierName().equals(supplierName)){
+				filtered.add(dto);
+			}
+		}
+		return filtered;
 	}
 	
 	private List<SteelOrderDto> filterByStatus(List<SteelOrderDto> list, String status){
-		List<SteelOrderDto> ls = list.stream()
-				.filter(dto -> dto.getStatus().equalsIgnoreCase(status))
-				.collect(Collectors.toList());
-		return ls;
+		List<SteelOrderDto> filtered = new ArrayList<>();
+		for(SteelOrderDto dto : list){
+			if(dto.getStatus().equalsIgnoreCase(status)){
+				filtered.add(dto);
+			}
+		}
+		return filtered;
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}")

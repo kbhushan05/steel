@@ -1,7 +1,6 @@
 package com.demo.steel.security.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class DaoUserDetailsService implements UserDetailsService {
 			throws UsernameNotFoundException {
 		User appUser = userService.get(username);
 		if(appUser == null){
-			return new org.springframework.security.core.userdetails.User("","",Collections.emptyList());
+			return new org.springframework.security.core.userdetails.User("","",new ArrayList<GrantedAuthority>());
 		}
 		GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
 				appUser.getRole());
