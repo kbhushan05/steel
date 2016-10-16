@@ -1,6 +1,7 @@
 package com.demo.steel.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -97,6 +98,7 @@ public class SteelOrderService {
 				part -> part.getStatus() == PartManifacturingDetails.Status.UNCHECKED
 				);
 		Deviation dev = new Deviation();
+		dev.setRequestDate(new Date());
 		dev.setType(Deviation.Type.FHTV);
 		List<Deviation> devs = new ArrayList<>();
 		devs.add(dev);
@@ -139,12 +141,20 @@ public class SteelOrderService {
 	
 	@Transactional
 	public void submitFhtOrder(SteelOrder order){
+		order = getSteelOrderDao().reattachEntity(order);
 		/*if(!isValidNewSteelToBuy(order)){
 			throw new IllegalAddException("New steel to buy exceeds limit");
 		}*/
 		
 		if(order.getStatus() != SteelOrder.Status.FHTV_NEW){
 			throw new IllegalArgumentException("Invalid Order state.");
+		}
+		Iterator<PartManifacturingDetails> itrs = order.getPartManifacturingDetails().iterator();
+		while(itrs.hasNext()){
+			PartManifacturingDetails details = itrs.next();
+			if(details.getStatus() == PartManifacturingDetails.Status.UNCHECKED){
+				itrs.remove();
+			}
 		}
 		order.setStatus(Status.FHTV_SUBMITTED);
 		getSteelOrderDao().update(order);

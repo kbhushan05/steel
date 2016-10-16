@@ -47,18 +47,21 @@ public class SteelOrderApiService {
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().submitFhtOrder(order);
+		getMailService().sendEmail("admncil@gmail.com","Steel FHT Order updates"," Steel Order " + order.getId()+" submitted FHT by Supplier "+ order.getSupplier().getName());
 	}
 	
 	public void approveFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().approveFhtvOrder(order);
+		getMailService().sendEmail(order.getSupplier().getEmail(),"Steel FHT Order updates"," Steel Order " + order.getId()+" FH Treatement approved.");
 	}
 	
 	public void rejectFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
 		getSteelOrderService().rejectFhtvOrder(order);
+		getMailService().sendEmail(order.getSupplier().getEmail(),"Steel FHT Order updates"," Steel Order " + order.getId()+" FH Treatment rejected.");
 	}
 
 	private String[] getSteelMills() {
