@@ -1,16 +1,15 @@
 package com.demo.steel.security.util;
 
 
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-import java.util.Date;
-
-import javax.xml.bind.DatatypeConverter;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
+import javax.xml.bind.DatatypeConverter;
 
 import com.demo.steel.security.domain.User;
 

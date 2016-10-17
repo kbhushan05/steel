@@ -65,7 +65,7 @@ public class SteelOrderDto {
 		this.orderId = orderId;
 	}
 	public String getSupplierId() {
-		return String.join(DELIM_SUPPLIER_ID, String.valueOf(getSupplierCode()), getSupplierName());
+		return String.valueOf(getSupplierCode())+DELIM_SUPPLIER_ID+getSupplierName();
 	}
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
