@@ -3,17 +3,39 @@
 
 angular.module('vi-app.form')
 
-.controller('formCtrl', formCtrl);
+.controller('formCtrl', formCtrl)
+.controller('partController',partController);
 
 // Inject my dependencies
 authCtrl.$inject = ['$scope', '$location', '$rootScope',
-    '$http', '$cookieStore', '$state', 'userService'
+    '$http', '$cookieStore', '$state', 'userService','fileUpload','$uibModal'
 ];
 
+partController.$inject = ['$scope','$rootScope','$uibModalInstance','data'];
 
-function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, userService) {
-    $scope.parts = [];
-    $scope.part = {};
+function partController($scope,$rootScope,$uibModalInstance,data){
+        var ctrl = this;
+        $scope.data = data;
+
+        $scope.add = function () {
+            $rootScope.parts = [];
+            angular.forEach($scope.data.partDetails, function(value, key){
+                if(value.status=='CHECKED'){
+                    var part = angular.copy(value);
+                    $rootScope.parts.push(part);
+                }
+            });
+            $uibModalInstance.close(angular.copy($rootScope.parts));
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+}
+
+
+function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, userService,fileUpload,$uibModal) {
+    
     $scope.dataLoaded = false;
     $scope.requestDeviation = false;
     $scope.isAttmentDisable = false;
@@ -21,6 +43,9 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
     $scope.enableCILComments = true;
     $scope.showCourier = false;
     $scope.disableCourier = false;
+    $scope.uploadFiles = [];
+    $scope.parts = [];
+    
     var config = {
         headers: {
             'Content-Type': 'application/json;'
@@ -28,7 +53,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
     }
 
     $scope.init = function() {
-        $scope.parts = {};
+        
         $scope.data = $rootScope.formData;
         setVisibility(userService.getRole(), $scope.data.status);
         if ($scope.data.status == 'NEW' || $scope.data.status == 'APPROVED') {
@@ -47,9 +72,37 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
             var courierDate = new Date($scope.data.courierDeliveryDate);
             $scope.data.courierDeliveryDate = courierDate;
         }
+        if($scope.data.status == 'NEW' || $scope.data.status=='SAVED'){
+           $scope.parts = [];
+        }else{
+            $scope.parts = $scope.data.partDetails;
+        }
+        
+
         $scope.getTotalSteelTonnage();
     }
-
+    $scope.showPopUp = function () 
+        {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'modules/form/parts.html',
+                controller: 'partController',
+                controllerAs: 'ctrl',
+                resolve: {
+                    data: function () {
+                        return $scope.data;
+                    }
+                }
+            });
+            
+            modalInstance.result.then(function (selectedItem) {
+                $scope.parts = selectedItem;
+                $scope.$apply();
+              }, function () {
+                //
+              });
+            
+    
+        };
     $scope.requestDeviationHandler = function() {
         $scope.requestDeviation = !$scope.requestDeviation;
     }
@@ -58,7 +111,13 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         $scope.data.steelTonage = $scope.data.alreadyAvailableSteelTonage + $scope.data.newSteelToBuy;
     }
 
-
+    function setUploadFiles(){
+        angular.forEach($scope.data.checkList, function(value, key){
+            if(value.status == "CHECKED"){
+                $scope.uploadFiles.push($scope.data.checkList[key]);
+            }
+        });
+    }
 
     $scope.save = function() {
         if (!$scope.validateForm()) {
@@ -67,12 +126,14 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         var det = angular.copy($scope.data);
         $http.post('api/orders/', det, config)
             .success(function(data, status, headers, config) {
-
-                $scope.gotoHome();
+                setUploadFiles();
+                uploadFiles();
             })
             .error(function(data, status, header, config) {
                 alert("fail to save new request");
-                $scope.gotoHome();
+                setUploadFiles();
+                uploadFiles();
+
             });
     }
 
@@ -97,15 +158,17 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         if (!$scope.validateForm()) {
             return;
         }
+
         var det = angular.copy($rootScope.formData);
         $http.put('api/orders/', det, config)
             .success(function(data, status, headers, config) {
-
-                $scope.gotoHome();
+                setUploadFiles();
+                uploadFiles();
             })
             .error(function(data, status, header, config) {
                 alert("fail to update request");
-                $scope.gotoHome();
+                setUploadFiles();
+                uploadFiles();
             });
     }
 
@@ -286,5 +349,17 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
        
     }
 
+    function uploadFiles(){
+
+       if($scope.uploadFiles.length <= 0){
+         return;
+       }
+       var object = $scope.uploadFiles.pop();
+       var uploadUrl = "api/verificationchecks/"+object.id+"/report";
+       fileUpload.uploadFileToUrl(object.attachmentName, uploadUrl);
+    }
+
     $scope.init();
 }
+
+
