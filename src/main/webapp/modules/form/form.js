@@ -16,21 +16,48 @@ partController.$inject = ['$scope','$rootScope','$uibModalInstance','data'];
 function partController($scope,$rootScope,$uibModalInstance,data){
         var ctrl = this;
         $scope.data = data;
-
+        $scope.partsToShow = [];
+        $scope.pages = [];
         $scope.add = function () {
-            $rootScope.parts = [];
-            angular.forEach($scope.data.partDetails, function(value, key){
-                if(value.status=='CHECKED'){
-                    var part = angular.copy(value);
-                    $rootScope.parts.push(part);
+            var parts = [];
+            for(var index=0;index<$scope.data.partDetails.length;index++)
+            {
+                if($scope.data.partDetails[index].status == 'CHECKED'){
+                    parts.push(angular.copy($scope.data.partDetails[index]));
                 }
-            });
-            $uibModalInstance.close(angular.copy($rootScope.parts));
+            }
+            $rootScope.$broadcast('partAdded', parts);
+            $uibModalInstance.close();
         };
+
+
+        $scope.setPageToShow = function(index,pageSize){
+          $scope.partsToShow = [];
+          var start = index;
+          var endIndex = index;
+          var totalLength = $scope.data.partDetails.length;
+          var limit = index+pageSize;
+          while(endIndex < totalLength && endIndex < limit ){
+            $scope.partsToShow.push($scope.data.partDetails[endIndex]);
+            endIndex++;
+          }
+        }
+
+        $scope.setPages = function(){
+            var index = 1;
+            $scope.pages = [];
+            for(index = 0;index < $scope.data.partDetails.length;){
+                $scope.pages.push(index);
+                index = index + 4;
+            }
+            $scope.setPageToShow(0,4);
+        }
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
+
+        $scope.setPages();
 }
 
 
@@ -52,8 +79,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         }
     }
 
-    $scope.init = function() {
-        
+    $scope.init = function() {   
         $scope.data = $rootScope.formData;
         setVisibility(userService.getRole(), $scope.data.status);
         if ($scope.data.status == 'NEW' || $scope.data.status == 'APPROVED') {
@@ -72,15 +98,22 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
             var courierDate = new Date($scope.data.courierDeliveryDate);
             $scope.data.courierDeliveryDate = courierDate;
         }
-        if($scope.data.status == 'NEW' || $scope.data.status=='SAVED'){
+        if($scope.data.status == 'NEW'){
            $scope.parts = [];
         }else{
-            $scope.parts = $scope.data.partDetails;
+            angular.forEach($scope.data.partDetails, function(value, key){
+                if(value.status=='CHECKED'){
+                   $scope.parts.push(value);
+                }
+            });
         }
         
 
         $scope.getTotalSteelTonnage();
     }
+    $rootScope.$on('partAdded', function(event, args) {
+         $scope.parts = args;
+      });
     $scope.showPopUp = function () 
         {
             var modalInstance = $uibModal.open({
@@ -93,15 +126,6 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
                     }
                 }
             });
-            
-            modalInstance.result.then(function (selectedItem) {
-                $scope.parts = selectedItem;
-                $scope.$apply();
-              }, function () {
-                //
-              });
-            
-    
         };
     $scope.requestDeviationHandler = function() {
         $scope.requestDeviation = !$scope.requestDeviation;
@@ -123,6 +147,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         if (!$scope.validateForm()) {
             return;
         }
+        $scope.data.partDetails = $scope.parts;
         var det = angular.copy($scope.data);
         $http.post('api/orders/', det, config)
             .success(function(data, status, headers, config) {
@@ -141,6 +166,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         if (!$scope.validateForm()) {
             return;
         }
+        $scope.data.partDetails = $scope.parts;
         var det = angular.copy($scope.data);
         det.status = "SUBMITTED";
         $http.post('api/orders/', det, config)
@@ -158,8 +184,8 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         if (!$scope.validateForm()) {
             return;
         }
-
-        var det = angular.copy($rootScope.formData);
+        $scope.data.partDetails = $scope.parts;
+        var det = angular.copy($scope.data);
         $http.put('api/orders/', det, config)
             .success(function(data, status, headers, config) {
                 setUploadFiles();
@@ -285,7 +311,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
       $scope.enableCILComments = true;
       $scope.showCourier = false;
       $scope.disableCourier = false;
-      
+      $scope.allowPartAdd = false;
       if(status == 'NEW' || status == 'APPROVED'){
          var value = new Date();
          $scope.data.requestDate = value;
@@ -322,7 +348,8 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
                }
                if(status == 'FHTV_NEW' || status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' ){
                   $scope.showCourier = true;
-                }         
+                }
+                $scope.allowPartAdd = false;         
         }
 
         if(type=="SUPPLIER")
@@ -344,6 +371,12 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
                 if(status == 'FHTV_SUBMITTED' || status == 'FHTV_APPROVED' || status == 'FHTV_REJECTED' || status=="REJECTED"){
                   $scope.isAttmentDisable = true;
                 }
+
+                if(status=='NEW' || status=='SAVED' || status == 'FHTV_NEW'){
+                    $scope.allowPartAdd = true;
+                }else{
+                    $scope.allowPartAdd = false;
+                }
         }
 
        
@@ -351,12 +384,13 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
 
     function uploadFiles(){
 
-       if($scope.uploadFiles.length <= 0){
+      /* if($scope.uploadFiles.length <= 0){
          return;
        }
        var object = $scope.uploadFiles.pop();
        var uploadUrl = "api/verificationchecks/"+object.id+"/report";
-       fileUpload.uploadFileToUrl(object.attachmentName, uploadUrl);
+       fileUpload.uploadFileToUrl(object.attachmentName, uploadUrl);*/
+       $scope.gotoHome();
     }
 
     $scope.init();

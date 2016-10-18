@@ -63,56 +63,58 @@
           <tbody>
             <tr>
               <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Part Details</div></label>
-               <button ng-click="showPopUp()">Add Part</button>
-              </td>
-            </tr>
-            <tr>
-
-              <td><label>Part Number</label></td>
-              <td><label>Status</label></td>
-              <td><label>Part weight (kg)</label></td>
-              <td><label>Cut Weight (Kg)</label></td>
-              <td><label>Number Of Parts</label></td>
-
-
-            </tr>
-            <tr ng-repeat="row in parts">
-             <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
-             <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'" ng-disabled="isDisabled"/></td>
-             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight" min="1" max="data.steelTonage*1000" ng-min="1" ng-max="data.steelTonage*1000" /></td>
-             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight"
-               min="1" max="data.steelTonage * 1000"  ng-min="1" ng-max="data.steelTonage * 1000"/></td>
-               <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts" ng-disabled="isDisabled"/></td>
+              <button ng-click="showPopUp()" class="btn btn-primary" 
+               ng-show="allowPartAdd">
+               Add Parts</button>
              </td>
            </tr>
-         </tbody>
-       </table>
-       <table class="table">
-        <tbody>
-          <tr>
-            <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Documents</div></label></td>
-          </tr>
-          <tr>
-            <td><label>Requirement</label></td>
+           <tr>
+
+            <td><label>Part Number</label></td>
             <td><label>Status</label></td>
-            <td ng-if="showCourier"><label>Test</label></td>
-            <td><label>Attchment</label></td>
-            <td><label>Remark</label></td>
-          </td>
+            <td><label>Part weight (kg)</label></td>
+            <td><label>Cut Weight (Kg)</label></td>
+            <td><label>Number Of Parts</label></td>
+
+
+          </tr>
+          <tr ng-repeat="row in parts">
+           <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
+           <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'" ng-disabled="isDisabled"/></td>
+           <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight" min="1" max="data.steelTonage*1000" ng-min="1" ng-max="data.steelTonage*1000" /></td>
+           <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="isDisabled" ng-change="row.noOfParts=row.weight/row.cutWeight"
+             min="1" max="data.steelTonage * 1000"  ng-min="1" ng-max="data.steelTonage * 1000"/></td>
+             <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.noOfParts" ng-disabled="isDisabled"/></td>
+           </td>
+         </tr>
+       </tbody>
+     </table>
+     <table class="table">
+      <tbody>
+        <tr>
+          <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Documents</div></label></td>
         </tr>
-        <tr ng-repeat="row in data.checkList">
-         <td>{{row.name}}</td>
-         <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
-         <td ng-if="showCourier">{{row.testName}}</td>
-         <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable" file-model="row.attachmentName"/></td>
-         <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
-       </td>
-     </tr>
+        <tr>
+          <td><label>Requirement</label></td>
+          <td><label>Status</label></td>
+          <td ng-if="showCourier"><label>Test</label></td>
+          <td><label>Attchment</label></td>
+          <td><label>Remark</label></td>
+        </td>
+      </tr>
+      <tr ng-repeat="row in data.checkList">
+       <td>{{row.name}}</td>
+       <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
+       <td ng-if="showCourier">{{row.testName}}</td>
+       <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable" file-model="row.attachmentName"/></td>
+       <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
+     </td>
+   </tr>
 
-   </tbody>
- </table>
+ </tbody>
+</table>
 
- <table class="table">
+<table class="table">
   <tbody>
     <tr>
       <td colspan="9" style="padding:0px;"><label style="width:100%;padding:0px;"><div style="width:100%;" class="well well-sm">Deviation</div></label></td>

@@ -1,33 +1,30 @@
 
 <div class="panel panel-default">
-  <div class="panel-heading">part Details</div>
+  <div class="panel-heading">Part Details</div>
   <div class="panel-body">
-
+    
     <form name="partForm" role="form" novalidate class="css-form">
      <fieldset >
-       <label>Total Steeltonnage is : {{ data.steelTonage * 1000 }} Kg</label>
+       <div ng-hide="">
+         <ul class="pagination" ng-repeat="pageIndex in pages">
+            <li ng-click="setPageToShow(pageIndex,4)"><a>{{pageIndex}}</a></li>
+          </ul>
+       </div>
 
        <table class="table">
         <tbody>
           <tr>
             <td><label>Part Number</label></td>
-            <td><label>Status</label></td>
-            <td><label>Part weight (kg)</label></td>
-            <td><label>Cut Weight (Kg)</label></td>
-            <td><label>Number Of Parts</label></td>
+            <td><label>Select</label></td>
           </tr>
-          <tr ng-repeat="row in data.partDetails">
+          <tr ng-repeat="row in partsToShow">
            <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.number" disabled/></td>
            <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'" ng-false-value="'UNCHECKED'"/></td>
-           <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.weight" ng-disabled="row.status=='UNCHECKED'" ng-change="row.noOfParts=row.weight/row.cutWeight" min="1" max="data.steelTonage*1000" ng-min="1" ng-max="data.steelTonage*1000" /></td>
-           <td><input  type="number" name="refStd" id="refStd" class="form-control" ng-model="row.cutWeight" ng-disabled="row.status=='UNCHECKED'" ng-change="row.noOfParts=row.weight/row.cutWeight"
-             min="1" max="data.steelTonage * 1000"  ng-min="1" ng-max="data.steelTonage * 1000"/></td>
-             <td><input  type="number" class="form-control" ng-model="row.noOfParts" ng-disabled="row.status=='UNCHECKED'"/></td>
-           </td>
          </tr>
        </tbody>
      </table>
    </fieldset>
+   
    <button class="btn btn-success" ng-click="add()">Ok</button>
    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
  </form>
