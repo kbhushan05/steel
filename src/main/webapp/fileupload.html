@@ -38,14 +38,16 @@
                $http.post(uploadUrl, fd, {
                   transformRequest: angular.identity,
                   headers:{'Content-Type': undefined,
-                  		  	'Authorization' : 'Bearer ZXlKaGJHY2lPaUpJVXpVeE1pSjkuZXlKemRXSWlPaUp6ZFhCd2JHbGxjamNpTENKeWIyeGxJam9pVTFWUVVFeEpSVklpTENKcWRHa2lPaUp6ZFhCd2JHbGxjamNpTENKcFlYUWlPakUwTnpZek5EVTROelI5LlhPSHpyVGZTeTFGN2N5NlJfcWZfaWU4UU1vY3NfRFRsV2tUdlp3OEVoSXNjUDdYdWhyLUVFTFFJaTFKZjVQbU5kQWFoVDZFSjJucnNPSTYxR1lhMEZn'
-                  			}                   
+                  		  	'Authorization' : 'Bearer ZXlKaGJHY2lPaUpJVXpVeE1pSjkuZXlKemRXSWlPaUp6ZFhCd2JHbGxjamNpTENKeWIyeGxJam9pVTFWUVVFeEpSVklpTENKcWRHa2lPaUp6ZFhCd2JHbGxjamNpTENKcFlYUWlPakUwTnpZM09ERXdOamw5LllQd2tYdFVfR193SHl3X2lWWTRFNmVsNUplLUF1elMyRWpOWDMyVzFhMEhkN3ZST0E1RGNYclR6eHUxZUxibkdHRGNnSTdleU9sTmNDN3A4cWVIYi13'
+                  		}                   
                })
             
                .success(function(){
+                    $rootScope.$broadcast('uploadFile', "");
                })
             
                .error(function(){
+                     $rootScope.$broadcast('uploadFile', "");
                });
             }
          }]);
@@ -57,7 +59,7 @@
                console.log('file is ' );
                console.dir(file);
                
-               var uploadUrl = "/steel/api/verificationchecks/250/report";
+               var uploadUrl = "/steel/api/verificationchecks/124/report";
                fileUpload.uploadFileToUrl(file, uploadUrl);
             };
          }]);

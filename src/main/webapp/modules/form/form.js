@@ -33,6 +33,9 @@ function partController($scope,$rootScope,$uibModalInstance,data){
 
         $scope.setPageToShow = function(index,pageSize){
           $scope.partsToShow = [];
+          if(index==1){
+            index = 0;
+          }
           var start = index;
           var endIndex = index;
           var totalLength = $scope.data.partDetails.length;
@@ -47,10 +50,15 @@ function partController($scope,$rootScope,$uibModalInstance,data){
             var index = 1;
             $scope.pages = [];
             for(index = 0;index < $scope.data.partDetails.length;){
-                $scope.pages.push(index);
-                index = index + 4;
+                
+                if( index == 0 )
+                    $scope.pages.push(index + 1);
+                else
+                    $scope.pages.push(index);
+
+                index = index + 5;
             }
-            $scope.setPageToShow(0,4);
+            $scope.setPageToShow(0,5);
         }
 
         $scope.cancel = function () {
@@ -81,6 +89,7 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
 
     $scope.init = function() {   
         $scope.data = $rootScope.formData;
+        $scope.uploadFiles = [];
         setVisibility(userService.getRole(), $scope.data.status);
         if ($scope.data.status == 'NEW' || $scope.data.status == 'APPROVED') {
             var value = new Date();
@@ -135,9 +144,10 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         $scope.data.steelTonage = $scope.data.alreadyAvailableSteelTonage + $scope.data.newSteelToBuy;
     }
 
-    function setUploadFiles(){
+    function setUploadFiles(newData){
         angular.forEach($scope.data.checkList, function(value, key){
             if(value.status == "CHECKED"){
+                $scope.data.checkList[key].id = newData.checkList[key].id;
                 $scope.uploadFiles.push($scope.data.checkList[key]);
             }
         });
@@ -151,13 +161,12 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         var det = angular.copy($scope.data);
         $http.post('api/orders/', det, config)
             .success(function(data, status, headers, config) {
-                setUploadFiles();
+                setUploadFiles(data);
                 uploadFiles();
             })
             .error(function(data, status, header, config) {
                 alert("fail to save new request");
-                setUploadFiles();
-                uploadFiles();
+               
 
             });
     }
@@ -171,8 +180,8 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         det.status = "SUBMITTED";
         $http.post('api/orders/', det, config)
             .success(function(data, status, headers, config) {
-
-                $scope.gotoHome();
+                setUploadFiles(data);
+                uploadFiles();
             })
             .error(function(data, status, header, config, statusText) {
                 alert("Email server is not accessible");
@@ -188,13 +197,11 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         var det = angular.copy($scope.data);
         $http.put('api/orders/', det, config)
             .success(function(data, status, headers, config) {
-                setUploadFiles();
+                setUploadFiles(data);
                 uploadFiles();
             })
             .error(function(data, status, header, config) {
                 alert("fail to update request");
-                setUploadFiles();
-                uploadFiles();
             });
     }
 
@@ -206,11 +213,9 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         }
         $http.put(url, det, config)
             .success(function(data, status, headers, config) {
-
                 $scope.gotoHome();
             })
             .error(function(data, status, header, config) {
-
                 $scope.gotoHome();
             });
     }
@@ -223,7 +228,6 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         }
         $http.put(url, det, config)
             .success(function(data, status, headers, config) {
-
                 $scope.gotoHome();
             })
             .error(function(data, status, header, config) {
@@ -233,7 +237,8 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
     }
 
     $scope.ftTreatment = function() {
-        var det = angular.copy($rootScope.formData);
+        $scope.data.partDetails = $scope.parts;
+        var det = angular.copy($scope.data);
         $http.post('api/orders/' + det.orderId + '/fht', det, config)
             .success(function(data, status, headers, config) {
                 $scope.gotoHome();
@@ -382,16 +387,33 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
        
     }
 
-    function uploadFiles(){
-
-      /* if($scope.uploadFiles.length <= 0){
-         return;
-       }
-       var object = $scope.uploadFiles.pop();
-       var uploadUrl = "api/verificationchecks/"+object.id+"/report";
-       fileUpload.uploadFileToUrl(object.attachmentName, uploadUrl);*/
-       $scope.gotoHome();
+    $scope.downloadFile =  function(id){
+        var url = "api/verificationchecks/"+id+"/report";
+        $http.get(url)
+        .then(function(response) {
+            
+        }, function(response) {
+            
+        });
     }
+
+    function uploadFiles(){
+      $rootScope.$broadcast('uploadFile', "");
+    }
+
+    $rootScope.$on('uploadFile', function(event, args) {
+         if($scope.uploadFiles.length <= 0){
+           $scope.gotoHome();
+           return;
+        }
+        var object = $scope.uploadFiles.pop();
+        if(angular.isUndefined(object.file)){
+            $rootScope.$broadcast('uploadFile', "");
+            return;
+        }
+        var uploadUrl = "api/verificationchecks/"+object.id+"/report";
+        fileUpload.uploadFileToUrl(object.file, uploadUrl);
+      });
 
     $scope.init();
 }

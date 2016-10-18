@@ -14,7 +14,7 @@
    };
 }]);
 
-app.service('fileUpload', ['$http', function ($http) {
+app.service('fileUpload', ['$http','$rootScope', function ($http,$rootScope) {
    this.uploadFileToUrl = function(file, uploadUrl){
       var fd = new FormData();
       fd.append('mFile', file);
@@ -25,8 +25,10 @@ app.service('fileUpload', ['$http', function ($http) {
       }                   
     })
       .success(function(){
+         $rootScope.$broadcast('uploadFile', "");
       })
       .error(function(){
+        $rootScope.$broadcast('uploadFile', "");
       });
    }
 }]);

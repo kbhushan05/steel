@@ -102,14 +102,23 @@
           <td><label>Remark</label></td>
         </td>
       </tr>
-      <tr ng-repeat="row in data.checkList">
+      <tr ng-repeat="row in data.checkList" ng-if="loggedInUser.type=='Supplier'">
        <td>{{row.name}}</td>
        <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
        <td ng-if="showCourier">{{row.testName}}</td>
-       <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable" file-model="row.attachmentName"/></td>
-       <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
-     </td>
-   </tr>
+        <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable" file-model="row.file"/></td>
+        <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
+        </td>
+      </tr>
+      <tr ng-repeat="row in data.checkList" ng-if="loggedInUser.type=='Admin'">
+       <td>{{row.name}}</td>
+       <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
+       <td ng-if="showCourier">{{row.testName}}</td>
+        <td><button ng-click="downloadFile(row.id)" ng-if="row.status=='CHECKED'" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download File</button></td>
+        <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
+        </td>
+      </tr>
+
 
  </tbody>
 </table>
