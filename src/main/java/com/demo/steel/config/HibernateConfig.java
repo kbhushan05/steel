@@ -39,10 +39,17 @@ public class HibernateConfig {
 	public DataSource driverManagerDataSource(){
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getRequiredProperty("jdbc.url"));
+        dataSource.setUrl(getUrl());
         dataSource.setUsername(env.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
         return dataSource;
+	}
+	
+	public String getUrl(){
+		String url = "jdbc:mysql://";
+		String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
+		String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
+		return url + host + ":" + port + "/steel";
 	}
 	
 	@Bean
@@ -50,7 +57,7 @@ public class HibernateConfig {
 		ComboPooledDataSource dataSource = new ComboPooledDataSource();
 		try {
 			dataSource.setDriverClass(env.getRequiredProperty("jdbc.driverClassName"));
-			dataSource.setJdbcUrl(env.getRequiredProperty("jdbc.url"));
+			dataSource.setJdbcUrl(getUrl());
 			dataSource.setUser(env.getRequiredProperty("jdbc.username"));
 			dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
 		} catch (IllegalStateException e) {
@@ -73,7 +80,7 @@ public class HibernateConfig {
         prop.put("hibernate.c3p0.timeout", env.getRequiredProperty("hibernate.c3p0.timeout"));
         prop.put("hibernate.c3p0.max_statements", env.getRequiredProperty("hibernate.c3p0.max_statements"));
         prop.put("hibernate.connection.driver_class", env.getRequiredProperty("jdbc.driverClassName"));
-        prop.put("hibernate.connection.url", env.getRequiredProperty("jdbc.url"));
+        prop.put("hibernate.connection.url", getUrl());
         prop.put("hibernate.connection.username", env.getRequiredProperty("jdbc.username"));
         prop.put("hibernate.connection.password", env.getRequiredProperty("jdbc.password"));
         return prop;
