@@ -15,7 +15,7 @@ public class AppConfig {
 	public CommonsMultipartResolver multipartResolver() {
 	    CommonsMultipartResolver resolver=new CommonsMultipartResolver();
 	    resolver.setDefaultEncoding("utf-8");
-	    resolver.setMaxInMemorySize(5000);
+	    resolver.setMaxInMemorySize(500000);
 	    return resolver;
 	}
 }

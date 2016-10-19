@@ -1,12 +1,14 @@
 package com.demo.steel.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SteelVerificationCheck{
@@ -23,13 +25,14 @@ public class SteelVerificationCheck{
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.UNCHECKED;
 	private String filename;
-	@Lob
-	private byte[] file;
 	private String mimeType;
 	@ManyToOne
 	private SteelOrder order;
 	@ManyToOne
 	private VerificationCheck verificationCheck;
+	
+	@OneToOne(mappedBy="steelVerificationCheck",fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	private Report report;
 	
 	public String getRemark() {
 		return remark;
@@ -42,12 +45,6 @@ public class SteelVerificationCheck{
 	}
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-	public byte[] getFile() {
-		return file;
-	}
-	public void setFile(byte[] file) {
-		this.file = file;
 	}
 	public String getFilename() {
 		return filename;
@@ -79,4 +76,11 @@ public class SteelVerificationCheck{
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
+	public Report getReport() {
+		return report;
+	}
+	public void setReport(Report report) {
+		this.report = report;
+	}
+	
 }

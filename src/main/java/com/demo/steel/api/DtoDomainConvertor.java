@@ -137,8 +137,8 @@ public class DtoDomainConvertor {
 			SteelVerificationCheckDto dto = new SteelVerificationCheckDto();
 			dto.setId(check.getPrimarykey());
 			dto.setName(check.getVerificationCheck().getName());
-			dto.setAttachment(check.getFile());
-			dto.setAttachmentName(dto.getAttachmentName());
+			dto.setAttachmentName(check.getFilename());
+			dto.setMimeType(check.getMimeType());
 			dto.setRemark(check.getRemark());
 			dto.setStatus(check.getStatus().toString());
 			dto.setTestName(check.getVerificationCheck().getTestName());
@@ -207,8 +207,8 @@ public class DtoDomainConvertor {
 			check.setVerificationCheck(vc);
 			check.setRemark(dto.getRemark());
 			check.setStatus(Enum.valueOf(Status.class, dto.getStatus()));
-			check.setFile(dto.getAttachment());
 			check.setFilename(dto.getAttachmentName());
+			check.setMimeType(dto.getMimeType());
 			check.setOrder(order);
 			checkList.add(check);
 		}

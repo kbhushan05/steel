@@ -145,10 +145,15 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
     }
 
     function setUploadFiles(newData){
-        angular.forEach($scope.data.checkList, function(value, key){
+        angular.forEach($scope.data.checkList, function(value){
             if(value.status == "CHECKED"){
-                $scope.data.checkList[key].id = newData.checkList[key].id;
-                $scope.uploadFiles.push($scope.data.checkList[key]);
+            	angular.forEach(newData.checkList, function(newValue){
+            		if(value.verificationCheckId == newValue.verificationCheckId){
+            			value.id = newValue.id;
+                        $scope.uploadFiles.push(value);
+            		}
+            	});
+                
             }
         });
     }
@@ -241,6 +246,8 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         var det = angular.copy($scope.data);
         $http.post('api/orders/' + det.orderId + '/fht', det, config)
             .success(function(data, status, headers, config) {
+            	setUploadFiles(data);
+                uploadFiles();
                 $scope.gotoHome();
             })
             .error(function(data, status, header, config) {
@@ -389,11 +396,18 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
 
     $scope.downloadFile =  function(id){
         var url = "api/verificationchecks/"+id+"/report";
-        $http.get(url)
-        .then(function(response) {
-            
-        }, function(response) {
-            
+        $http.get(url).
+        success(function(data, status, headers, config) {
+            var blob = new Blob([data], {type: headers('Content-Type')});
+            var filenameHeader = headers('Content-Disposition');
+            var filenameRegex = /attachment;\s*filename=(.*)/;
+            var match = filenameRegex.exec(filenameHeader);
+            saveAs(blob,match[1]);
+          
+        })
+        .error(function(data, status, headers, config) {
+          alert("cannot save file.");
+          
         });
     }
 

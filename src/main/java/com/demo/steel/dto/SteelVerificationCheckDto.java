@@ -10,6 +10,7 @@ public class SteelVerificationCheckDto{
 	private byte[] attachment;
 	private String attachmentName;
 	private String testName;
+	private String mimeType;
 	
 	public SteelVerificationCheckDto(){
 		
@@ -89,4 +90,11 @@ public class SteelVerificationCheckDto{
 		this.testName = testName;
 	}
 
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
 }

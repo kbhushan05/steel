@@ -118,8 +118,8 @@ public class OrderController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, path="/{orderId}/fht")
-	public void submitFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
-		getService().submitFhtOrder(orderDto);
+	public SteelOrderDto submitFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
+		return getService().submitFhtOrder(orderDto);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, path="/{orderId}/fht/approve")

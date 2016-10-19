@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,6 +33,7 @@ public class SteelOrder {
 	private float totalTonage;
 	private String remark;
 	private String cilStatus;
+	@Column(length=1000)
 	private String cilRemark;
 	private int poNumber;
 	private String steelMill;
@@ -57,6 +59,8 @@ public class SteelOrder {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
 	private List<Deviation> deviation = new ArrayList<Deviation>();
+	
+	@Column(length=1000)
 	private String cilComment;
 	
 	public String getId() {

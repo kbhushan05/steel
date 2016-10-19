@@ -43,11 +43,13 @@ public class SteelOrderApiService {
 		return orderDto;
 	}
 	
-	public void submitFhtOrder(SteelOrderDto orderDto){
+	public SteelOrderDto submitFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
 		SteelOrder order = conv.createOrder(orderDto);
-		getSteelOrderService().submitFhtOrder(order);
+		SteelOrder submitted = getSteelOrderService().submitFhtOrder(order);
+		SteelOrderDto dto = conv.createDto(submitted);
 		getMailService().sendEmail("admncil@gmail.com","Steel FHT Order updates"," Steel Order " + order.getId()+" submitted FHT by Supplier "+ order.getSupplier().getName());
+		return dto;
 	}
 	
 	public void approveFhtOrder(SteelOrderDto orderDto){

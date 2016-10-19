@@ -26,7 +26,6 @@ import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
 import com.demo.steel.domain.VerificationCheck.Type;
-import com.demo.steel.dto.PartManifacturingDetailsDto.PartDetailsStatus;
 import com.demo.steel.security.dao.DeviationDao;
 
 @Service
@@ -145,7 +144,7 @@ public class SteelOrderService {
 	}*/
 	
 	@Transactional
-	public void submitFhtOrder(SteelOrder order){
+	public SteelOrder submitFhtOrder(SteelOrder order){
 		order = getSteelOrderDao().reattachEntity(order);
 		/*if(!isValidNewSteelToBuy(order)){
 			throw new IllegalAddException("New steel to buy exceeds limit");
@@ -162,7 +161,7 @@ public class SteelOrderService {
 			}
 		}
 		order.setStatus(Status.FHTV_SUBMITTED);
-		getSteelOrderDao().update(order);
+		return getSteelOrderDao().update(order);
 	}
 	
 	@Transactional
