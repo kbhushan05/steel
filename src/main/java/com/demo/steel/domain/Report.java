@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
-@Entity
+@Entity(name="report")
 public class Report {
 
 	@Id

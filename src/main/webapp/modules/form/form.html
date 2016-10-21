@@ -106,7 +106,7 @@
        <td>{{row.name}}</td>
        <td><input  type="checkbox" name="refStd" id="refStd" class="form-control" ng-model="row.status" ng-true-value="'CHECKED'"  ng-false-value="'UNCHECKED'" ng-disabled="isAttmentDisable"/></td>
        <td ng-if="showCourier">{{row.testName}}</td>
-        <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable" file-model="row.file"/></td>
+        <td><input  type="file" name="refStd" id="refStd" ng-model="row.attachmentName" ng-disabled="isAttmentDisable || row.status=='UNCHECKED'" file-model="row.file"/></td>
         <td><input  type="text" name="refStd" id="refStd" class="form-control" ng-model="row.remark" ng-disabled="isAttmentDisable"/></td>
         </td>
       </tr>

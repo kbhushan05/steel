@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-@Entity
+@Entity(name="steelverificationcheck")
 public class SteelVerificationCheck{
 	
 	public enum Status{

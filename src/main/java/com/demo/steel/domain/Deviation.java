@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name="deviation")
 public class Deviation {
 	
 	public enum Type{
