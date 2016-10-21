@@ -14,9 +14,10 @@
         <td>{{order.orderId}}</td>
         <td>{{order.supplierName}}</td>
         <td>{{order.poNumber}}</td>
-        <td>{{order.status}}</td>
+        <td>  <div class="btn btn-static" ng-style="{{getStatusColor(order.status)}}"><span ng-class="getStatusclass(order.status)"> </span> &nbsp &nbsp {{order.status}}</div>
+            </td>
         <td>
-           <button class="btn btn-primary" ng-click="view(order)">View</button>
+           <button class="btn btn-primary" ng-click="view(order)"><span class="glyphicon glyphicon-pencil"></span></button>
         </td>
       </tr>
     </tbody>

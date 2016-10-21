@@ -12,6 +12,11 @@ authCtrl.$inject = [ '$scope', '$location', '$rootScope',
 
 function homeCtrl($scope, $location, $rootScope, $http,$cookieStore,$state,userService) {
 
+	$scope.isActive = function (viewLocation) {
+       var active = (viewLocation === $location.path());
+       return active;
+    };
+
 	$scope.logout = function(){
 		$cookieStore.remove('viApp');
 

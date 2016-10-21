@@ -1,17 +1,17 @@
 <div class="maxHeight" style="padding:0px;">
  <div class="row" style="padding:0px;">
    <div class="col-sm-12">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           
         </div>
         <ul class="nav navbar-nav">
          <ul class="nav navbar-nav">
-           <li><a href="#/home/details">Home</a></li>
+           <li  ng-class="{ active: isActive('/home/details') }" ><a href="#/home/details">Home</a></li>
            <!-- href="#/home/revFrms" -->
-           <li restricted><a ng-click="newRequest()">New Request</a></li>
-           <li><a href="#/home/records">FH Treatment</a></li>
+           <li restricted ng-class="{ active: isActive('/home/revFrms') }"><a ng-click="newRequest()">New Request</a></li>
+           <li ng-class="{ active: isActive('/home/records') }" ><a href="#/home/records">FH Treatment</a></li>
          </ul> 
        </ul>
        <ul class="nav navbar-nav navbar-right">
