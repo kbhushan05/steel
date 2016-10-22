@@ -14,7 +14,7 @@
                 <td><label>Order Id</label></td>
                 <td><input required type="text" name="orderID" id="orderID" ng-model="data.orderId" class="form-control" disabled/></td>
                 <td><label>PO Number</label></td>
-                <td><input required type="text" name="poNumber" id="poNumber" ng-model="data.poNumber" class="form-control" ng-disabled="isDisabled"/></td>
+                <td><input required type="text" name="poNumber" id="poNumber" ng-model="data.poNumber" class="form-control" ng-disabled="isDisabled || data.status == 'FHTV_NEW'"/></td>
                 <td><label>Supplier</label></td>
                 <td><input required type="text" name="supplierId" id="supplierId" ng-model="data.supplierId" class="form-control" disabled/></td>
               </tr>
@@ -32,9 +32,9 @@
                 <td><label>Total Steel Tonnage</label></td>
                 <td><input required type="number" name="st" id="st" class="form-control" ng-model="data.steelTonage"  disabled /></td>
                 <td><label>Ref. Standard</label></td>
-                <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard" ng-disabled="isDisabled"/></td>
+                <td><input required type="text" name="refStd" id="refStd" class="form-control" ng-model="data.refStandard" ng-disabled="isDisabled || data.status == 'FHTV_NEW'"/></td>
                 <td><label>Forger Supplier Code</label></td>
-                <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode" ng-disabled="isDisabled"/></td>
+                <td><input required type="text" name="forSupCode" id="forSupCode" class="form-control" ng-model="data.forgerSupplierCode" ng-disabled="isDisabled || data.status == 'FHTV_NEW'"/></td>
               </tr>
               <tr>
                 <td><label>Steel Mill</label></td>
@@ -193,7 +193,8 @@
     <tr>
       <td>
         <div class="form-group">
-          <input ng-disabled="enableCILComments" type="file" name="cilAttachment" id="cilAttachment" />
+          <input ng-disabled="enableCILComments" ng-model="data.cilComment" type="file" name="cilAttachment" id="cilAttachment" file-model="data.file" ng-show="loggedInUser.type=='Admin' && (data.status == 'SUBMITTED' || data.status == 'FHTV_SUBMITTED')"/>
+          <button ng-click="downloadApproval(data.orderId)" ng-show="loggedInUser.type=='Supplier' && (data.status == 'APPROVED' || data.status == 'FHTV_APPROVED' || data.status == 'REJECTED' || data.status == 'FHTV_REJECTED')" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download File</button></td>
         </div>
       </td>
     </tr>

@@ -5,8 +5,9 @@
          var model = $parse(attrs.fileModel);
          var modelSetter = model.assign;
 
-         element.bind('change', function(){
+         element.bind('change', function(event){
             scope.$apply(function(){
+               scope.fileToBeUploaded = event.target.files[0];
                modelSetter(scope, element[0].files[0]);
             });
          });

@@ -103,4 +103,10 @@ public abstract class GenericDao <T, K extends Serializable> {
 		Session session = getSessionFactory().getCurrentSession();
 		return (T)session.merge(t);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public T load(K key){
+		Session session = getSessionFactory().getCurrentSession();
+		return (T)session.load(getClazz(), key);
+	}
 }

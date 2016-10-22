@@ -6,7 +6,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.demo.steel.domain.SteelHeatNo;
@@ -45,4 +44,5 @@ public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 		float result = (float)((double)criteria.uniqueResult());
 		return result;
 	}
+	
 }

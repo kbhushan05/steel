@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import com.demo.steel.domain.SteelMill;
 import com.demo.steel.domain.SteelOrder;
 import com.demo.steel.domain.SteelOrder.Status;
+import com.demo.steel.domain.SteelOrderApproval;
 import com.demo.steel.dto.SteelOrderDto;
 import com.demo.steel.service.MailNotificationService;
 import com.demo.steel.service.SteelMillService;
+import com.demo.steel.service.SteelOrderApprovalService;
 import com.demo.steel.service.SteelOrderService;
 
 @Service
@@ -22,6 +24,8 @@ public class SteelOrderApiService {
 	private MailNotificationService mailService;
 	@Autowired
 	private SteelMillService steelMillService;
+	@Autowired
+	private SteelOrderApprovalService steelOrderApprovalService;
 	
 	public SteelOrderDto createNewOrder(String supplierName){
 		
@@ -137,6 +141,13 @@ public class SteelOrderApiService {
 		return orderDto;
 	}
 
+	public void uploadReport(String orderId, String filename, String mimeType, byte[] data){
+		steelOrderApprovalService.uploadReport(orderId, filename, data, mimeType);
+	}
+	
+	public SteelOrderApproval download(String orderId){
+		return steelOrderApprovalService.downloadReport(orderId);
+	}
 	public MailNotificationService getMailService() {
 		return mailService;
 	}

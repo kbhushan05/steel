@@ -12,9 +12,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity(name="steelorder")
 public class SteelOrder {
@@ -59,6 +61,9 @@ public class SteelOrder {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
 	private List<Deviation> deviation = new ArrayList<Deviation>();
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	private SteelOrderApproval steelOrderApproval;
 	
 	@Column(length=1000)
 	private String cilComment;
@@ -214,6 +219,12 @@ public class SteelOrder {
 	}
 	public void setCilComment(String cilComment) {
 		this.cilComment = cilComment;
+	}
+	public SteelOrderApproval getSteelOrderApproval() {
+		return steelOrderApproval;
+	}
+	public void setSteelOrderApproval(SteelOrderApproval steelOrderApproval) {
+		this.steelOrderApproval = steelOrderApproval;
 	}
 	
 }

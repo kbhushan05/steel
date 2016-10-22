@@ -233,6 +233,9 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         }
         $http.put(url, det, config)
             .success(function(data, status, headers, config) {
+                if(det.file){
+                    uploadApproval($scope.fileToBeUploaded, det.orderId);
+                }
                 $scope.gotoHome();
             })
             .error(function(data, status, header, config) {
@@ -406,7 +409,24 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
           
         })
         .error(function(data, status, headers, config) {
-          alert("cannot save file.");
+          alert("cannot download file.");
+          
+        });
+    }
+
+    $scope.downloadApproval =  function(id){
+        var url = "api/orders/"+id+"/report";
+        $http.get(url).
+        success(function(data, status, headers, config) {
+            var blob = new Blob([data], {type: headers('Content-Type')});
+            var filenameHeader = headers('Content-Disposition');
+            var filenameRegex = /attachment;\s*filename=(.*)/;
+            var match = filenameRegex.exec(filenameHeader);
+            saveAs(blob,match[1]);
+          
+        })
+        .error(function(data, status, headers, config) {
+          alert("cannot download file.");
           
         });
     }
@@ -428,6 +448,11 @@ function formCtrl($scope, $location, $rootScope, $http, $cookieStore, $state, us
         var uploadUrl = "api/verificationchecks/"+object.id+"/report";
         fileUpload.uploadFileToUrl(object.file, uploadUrl);
       });
+
+    function uploadApproval(file, id){
+        var uploadUrl = "api/orders/"+id+"/report";
+        fileUpload.uploadFileToUrl(file, uploadUrl);
+    }
 
     $scope.init();
 }
