@@ -2,6 +2,8 @@ package com.demo.steel.api;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import com.demo.steel.service.SteelOrderService;
 @Service
 public class SteelOrderApiService {
 
+	private static final Logger logger = LoggerFactory.getLogger(SteelOrderApiService.class);
+	
 	@Autowired
 	private SteelOrderService steelOrderService;
 	@Autowired
@@ -31,8 +35,9 @@ public class SteelOrderApiService {
 		
 		SteelOrder order = getSteelOrderService().createNewOrder(supplierName);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrderDto orderDto = conv.createDto(order);
+		SteelOrderDto orderDto = conv.convertFrom(order);
 		orderDto.setSteelMills(getSteelMills());
+		logger.debug("new order workflow successful.");
 		return orderDto;
 	}
 	
@@ -43,31 +48,35 @@ public class SteelOrderApiService {
 		order.setComments("");
 		order.setCilComment("");
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrderDto orderDto = conv.createDto(order);
+		SteelOrderDto orderDto = conv.convertFrom(order);
+		logger.debug("new FHT order workflow successful.");
 		return orderDto;
 	}
 	
 	public SteelOrderDto submitFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		SteelOrder submitted = getSteelOrderService().submitFhtOrder(order);
-		SteelOrderDto dto = conv.createDto(submitted);
+		SteelOrderDto dto = conv.convertFrom(submitted);
 		getMailService().sendEmail("admncil@gmail.com","Steel FHT Order updates"," Steel Order " + order.getId()+" submitted FHT by Supplier "+ order.getSupplier().getName());
+		logger.debug("submit order workflow successful.");
 		return dto;
 	}
 	
 	public void approveFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		getSteelOrderService().approveFhtvOrder(order);
 		getMailService().sendEmail(order.getSupplier().getEmail(),"Steel FHT Order updates"," Steel Order " + order.getId()+" FH Treatement approved.");
+		logger.debug("approve FHT order workflow successful.");
 	}
 	
 	public void rejectFhtOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		getSteelOrderService().rejectFhtvOrder(order);
 		getMailService().sendEmail(order.getSupplier().getEmail(),"Steel FHT Order updates"," Steel Order " + order.getId()+" FH Treatment rejected.");
+		logger.debug("reject order workflow successful.");
 	}
 
 	private String[] getSteelMills() {
@@ -83,17 +92,21 @@ public class SteelOrderApiService {
 	
 	public SteelOrderDto saveOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		SteelOrder savedOrder = getSteelOrderService().saveOrder(order);
-		return conv.createDto(savedOrder);
+		SteelOrderDto dto = conv.convertFrom(savedOrder);
+		logger.debug("save order workflow successful.");
+		return dto;
 	}
 	
 	public SteelOrderDto submitOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		SteelOrder submittedOrder = getSteelOrderService().submitOrder(order);
 		getMailService().sendEmail("admncil@gmail.com","Steel Order updates"," Steel Order " + order.getId()+" submitted by Supplier "+ order.getSupplier().getName());
-		return conv.createDto(submittedOrder);
+		SteelOrderDto dto = conv.convertFrom(submittedOrder);
+		logger.debug("submit order workflow successful.");
+		return dto;
 	}
 
 	public SteelOrderService getSteelOrderService() {
@@ -106,38 +119,42 @@ public class SteelOrderApiService {
 
 	public void updateOrder(SteelOrderDto orderDto) {
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		getSteelOrderService().updateOrder(order);
+		logger.debug("update order workflow successful.");
 	}
 
 	public List<SteelOrderDto> getAll() {
 		List<SteelOrder> orders = getSteelOrderService().getAll();
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		return conv.createDtos(orders);
+		return conv.convertSteelOrders(orders);
 	}
 	
 	public SteelOrderDto approveOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		SteelOrder approvedOrder = getSteelOrderService().approveOrder(order);
-		SteelOrderDto approveOrderDto = conv.createDto(approvedOrder);
+		SteelOrderDto approveOrderDto = conv.convertFrom(approvedOrder);
 		getMailService().sendEmail(approvedOrder.getSupplier().getEmail(),"Steel Order updates"," Steel Order " + approvedOrder.getId()+" approved.");
+		logger.debug("approve order workflow successful.");
 		return approveOrderDto;
 	}
 	
 	public SteelOrderDto rejectOrder(SteelOrderDto orderDto){
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrder order = conv.createOrder(orderDto);
+		SteelOrder order = conv.convertFrom(orderDto);
 		SteelOrder rejectedOrder = getSteelOrderService().rejectOrder(order);
-		SteelOrderDto rejectedOrderDto = conv.createDto(rejectedOrder);
+		SteelOrderDto rejectedOrderDto = conv.convertFrom(rejectedOrder);
+		logger.debug("reject order workflow successful.");
 		return rejectedOrderDto;
 	}
 	
 	public SteelOrderDto getOrder(String orderId){
 		SteelOrder order = getSteelOrderService().getOrder(orderId);
 		DtoDomainConvertor conv = new DtoDomainConvertor();
-		SteelOrderDto orderDto = conv.createDto(order);
+		SteelOrderDto orderDto = conv.convertFrom(order);
 		orderDto.setSteelMills(getSteelMills());
+		logger.debug("read order workflow successful.");
 		return orderDto;
 	}
 
@@ -158,7 +175,8 @@ public class SteelOrderApiService {
 
 	public List<SteelOrderDto> getOrdersFromStatus(String status){
 		DtoDomainConvertor convertor = new DtoDomainConvertor();
-		List<SteelOrderDto> dtos = convertor.createDtos(getSteelOrderService().getOrderForStatus(status));
+		List<SteelOrderDto> dtos = convertor.convertSteelOrders(getSteelOrderService().getOrderForStatus(status));
+		logger.debug("read all orders workflow successful.");
 		return dtos;
 	}
 	

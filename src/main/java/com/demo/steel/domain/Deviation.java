@@ -1,5 +1,6 @@
 package com.demo.steel.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -122,4 +123,17 @@ public class Deviation {
 	public void setOrder(SteelOrder order) {
 		this.order = order;
 	}
+	@Override
+	public String toString() {
+		return "Deviation [id=" + id + ", cilDevitionNumber="
+				+ cilDevitionNumber + ", requesterName=" + requesterName
+				+ ", requestDate=" + requestDate + ", partDescription="
+				+ partDescription + ", rmSection=" + rmSection + ", rmGarde="
+				+ rmGarde + ", quantityForDeviation=" + quantityForDeviation
+				+ ", delivaryAffected=" + delivaryAffected + ", description="
+				+ description + ", attachmentName=" + attachmentName
+				+ ", type=" + type + ", order=" + order + ", attachment="
+				+ Arrays.toString(attachment) + "]";
+	}
+	
 }

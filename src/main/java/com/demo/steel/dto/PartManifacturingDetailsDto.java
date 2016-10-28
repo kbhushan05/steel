@@ -69,5 +69,12 @@ public class PartManifacturingDetailsDto {
 		public void setPartId(int partId) {
 			this.partId = partId;
 		}
-		
+
+		@Override
+		public String toString() {
+			return "PartManifacturingDetailsDto [partId=" + partId
+					+ ", number=" + number + ", weight=" + weight
+					+ ", cutWeight=" + cutWeight + ", noOfParts=" + noOfParts
+					+ ", status=" + status + "]";
+		}
 }

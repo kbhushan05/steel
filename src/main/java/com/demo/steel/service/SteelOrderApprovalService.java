@@ -1,5 +1,7 @@
 package com.demo.steel.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,8 @@ import com.demo.steel.domain.SteelOrderApproval;
 @Service
 public class SteelOrderApprovalService {
 
+	private static final Logger logger = LoggerFactory.getLogger(SteelOrderApprovalService.class);
+	
 	@Autowired
 	private SteelOrderDao steelOrderDao;
 	@Autowired
@@ -20,6 +24,7 @@ public class SteelOrderApprovalService {
 	@Transactional
 	public void uploadReport(String orderId, String filename ,byte[] bytes, String mimeType){
 		SteelOrder order = steelOrderDao.load(orderId);
+		logger.debug("creating approval report.");
 		SteelOrderApproval approval = new SteelOrderApproval();
 		approval.setData(bytes);
 		approval.setFilename(filename);
@@ -29,7 +34,7 @@ public class SteelOrderApprovalService {
 		
 		order.setSteelOrderApproval(approval);
 		steelOrderDao.update(order);
-		
+		logger.debug("approval report uploaded successfully.");
 	}
 
 	@Transactional

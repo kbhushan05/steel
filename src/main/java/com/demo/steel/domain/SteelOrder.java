@@ -226,5 +226,20 @@ public class SteelOrder {
 	public void setSteelOrderApproval(SteelOrderApproval steelOrderApproval) {
 		this.steelOrderApproval = steelOrderApproval;
 	}
-	
+	@Override
+	public String toString() {
+		return "SteelOrder [id=" + id + ", mill=" + mill + ", date=" + date
+				+ ", totalTonage=" + totalTonage + ", remark=" + remark
+				+ ", cilStatus=" + cilStatus + ", cilRemark=" + cilRemark
+				+ ", poNumber=" + poNumber + ", steelMill=" + steelMill
+				+ ", comments=" + comments + ", steelHeatNumber="
+				+ steelHeatNumber + ", alreadyAvailableSteelTonage="
+				+ alreadyAvailableSteelTonage + ", newSteelToBuy="
+				+ newSteelToBuy + ", steelTonage=" + steelTonage
+				+ ", refStandard=" + refStandard + ", forgerSupplierCode="
+				+ forgerSupplierCode + ", courierCompany=" + courierCompany
+				+ ", courierDeliveryDate=" + courierDeliveryDate
+				+ ", courierReceiptName=" + courierReceiptName + ", status="
+				+ status + ", cilComment=" + cilComment + "]";
+	}
 }

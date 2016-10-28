@@ -71,5 +71,12 @@ public class PartManifacturingDetails {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "PartManifacturingDetails [primaryKey=" + primaryKey
+				+ ", partDetails=" + partDetails + ", order=" + order
+				+ ", partWeight=" + partWeight + ", cutWeight=" + cutWeight
+				+ ", partNo=" + partNo + ", status=" + status + "]";
+	}
 	
 }

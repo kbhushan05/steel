@@ -2,6 +2,8 @@ package com.demo.steel.security.service;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +14,20 @@ import com.demo.steel.security.domain.User;
 @Service
 public class SessionService {
 
+	private static final Logger logger = LoggerFactory.getLogger(SessionService.class);
+	
 	@Autowired
 	private SessionDao dao;
 	
 	@Transactional
 	public Session create(String token, User user){
+		logger.debug("creating session for user "+ user);
 		Session session = new Session();
 		session.setToken(token);
 		session.setUser(user);
 		int pk = dao.save(session);
 		session.setPrimaryKey(pk);
+		logger.debug("Session created successfully.");
 		return session;
 	}
 	

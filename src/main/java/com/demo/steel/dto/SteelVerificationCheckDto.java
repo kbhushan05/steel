@@ -1,5 +1,7 @@
 package com.demo.steel.dto;
 
+import java.util.Arrays;
+
 public class SteelVerificationCheckDto{
 	
 	private int id;
@@ -97,4 +99,15 @@ public class SteelVerificationCheckDto{
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
+
+	@Override
+	public String toString() {
+		return "SteelVerificationCheckDto [id=" + id + ", verificationCheckId="
+				+ verificationCheckId + ", name=" + name + ", status=" + status
+				+ ", remark=" + remark + ", attachment="
+				+ Arrays.toString(attachment) + ", attachmentName="
+				+ attachmentName + ", testName=" + testName + ", mimeType="
+				+ mimeType + "]";
+	}
+	
 }

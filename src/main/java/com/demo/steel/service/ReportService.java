@@ -1,6 +1,8 @@
 package com.demo.steel.service;
 
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import com.demo.steel.domain.SteelVerificationCheck;
 @Service
 public class ReportService {
 
+	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
+	
 	@Autowired
 	private SteelVerificationCheckDao steelVerificationDao;
 	@Autowired
@@ -25,11 +29,13 @@ public class ReportService {
 		verificationCheck.setMimeType(mimeType);
 		steelVerificationDao.update(verificationCheck);
 		
+		logger.debug("creating Report object.");
 		Report report = new Report();
 		report.setData(bytes);
 		report.setSteelVerificationCheck(verificationCheck);
 		
 		reportDao.save(report);
+		logger.debug("Report saved successfully.");
 	}
 
 	@Transactional
@@ -38,6 +44,7 @@ public class ReportService {
 		Report report = reportDao.getReport(verificationCheck);
 		Hibernate.initialize(report.getData());
 		verificationCheck.setReport(report);
+		logger.debug("found report successfully.");
 		return verificationCheck;
 	}
 }

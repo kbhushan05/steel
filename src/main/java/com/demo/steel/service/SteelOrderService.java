@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.steel.dao.DeviationDao;
 import com.demo.steel.dao.SteelHeatNoDao;
 import com.demo.steel.dao.SteelOrderDao;
 import com.demo.steel.dao.SteelVerificationCheckDao;
@@ -26,10 +29,11 @@ import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.domain.Supplier;
 import com.demo.steel.domain.VerificationCheck;
 import com.demo.steel.domain.VerificationCheck.Type;
-import com.demo.steel.security.dao.DeviationDao;
 
 @Service
 public class SteelOrderService {
+	
+	private final static Logger logger = LoggerFactory.getLogger(SteelOrderService.class);
 	
 	private static final Random ORDER_ID_GENERATOR = new Random();
 	
@@ -48,37 +52,49 @@ public class SteelOrderService {
 	
 	@Transactional
 	public SteelOrder createNewOrder(String supplierName){
+		logger.debug("creating new order for supplier "+ supplierName);
+		SteelOrder order = new SteelOrder();
+		order.setStatus(Status.NEW);
+		
 		Supplier supplier = getSupplier(supplierName);
+		if(supplier == null){
+			logger.debug("No supplier found for name "+ supplierName);
+			throw new IllegalArgumentException(supplierName + " supplier does not exists.");
+		}
+		order.setSupplier(supplier);
+		order.setId(generateOrderId(supplier));
+		
+		
 		List<VerificationCheck> vcs = getVerificationCheckDao().get(Type.BASIC);
+		logger.debug(vcs.size()+" verification checks of type BASIC found for supplier.");
 		List<SteelVerificationCheck> checkList = new ArrayList<>();
 		for(VerificationCheck vc : vcs){
 			SteelVerificationCheck check = new SteelVerificationCheck();
 			check.setVerificationCheck(vc);
 			checkList.add(check);
 		}
-		
-		SteelOrder order = new SteelOrder();
-		order.setStatus(Status.NEW);
-		order.setSupplier(supplier);
-		order.setId(generateOrderId(supplier));
 		order.setVerificationCheck(checkList);
+		
 		Set<PartManifacturingDetails> partManifacturingDetails = new HashSet<>();
+		logger.debug(supplier.getPartNos().size()+" parts found for the supplier.");
 		for(PartNoDetails part : supplier.getPartNos()){
 			PartManifacturingDetails details = new PartManifacturingDetails();
 			details.setPartDetails(part);
 			partManifacturingDetails.add(details);
 		}
 		order.setPartManifacturingDetails(partManifacturingDetails);
+		
 		Deviation dev = new Deviation();
 		List<Deviation> devs = new ArrayList<>();
 		devs.add(dev);
 		order.setDeviation(devs);
+		
 		return order;
 	}
 	
 	@Transactional
 	public SteelOrder createNewFhtOrder(String orderId){
-		
+		logger.debug("creating new FHT order from order "+ orderId);
 		SteelOrder fhtOrder = getSteelOrderDao().get(orderId);
 		if(fhtOrder.getStatus() != SteelOrder.Status.APPROVED){
 			throw new IllegalArgumentException("Invalid Order state.");
@@ -115,6 +131,7 @@ public class SteelOrderService {
 		order.setStatus(SteelOrder.Status.SAVED);
 		String key = getSteelOrderDao().save(order);
 		order.setId(key);
+		logger.debug(key +" order saved successfully.");
 		return order;
 	}
 	
@@ -125,13 +142,17 @@ public class SteelOrderService {
 		}*/
 		order = getSteelOrderDao().reattachEntity(order);
 		Iterator<PartManifacturingDetails> itrs = order.getPartManifacturingDetails().iterator();
+		int count = 0;
 		while(itrs.hasNext()){
 			PartManifacturingDetails details = itrs.next();
 			if(details.getStatus() == PartManifacturingDetails.Status.UNCHECKED){
+				count++;
 				itrs.remove();
 			}
 		}
+		logger.debug("removed "+ count+" unchecked PartManifacturingDetails of BASIC.");
 		order.setStatus(SteelOrder.Status.SUBMITTED);
+		logger.debug(order.getId() +" order submitted successfully.");
 		return getSteelOrderDao().update(order);
 	}
 	
@@ -151,26 +172,31 @@ public class SteelOrderService {
 		}*/
 		
 		if(order.getStatus() != SteelOrder.Status.FHTV_NEW){
-			throw new IllegalArgumentException("Invalid Order state.");
+			throw new IllegalStateException("invalid state "+order.getStatus()+" for order "+order.getId());
 		}
 		Iterator<PartManifacturingDetails> itrs = order.getPartManifacturingDetails().iterator();
+		int count = 0;
 		while(itrs.hasNext()){
 			PartManifacturingDetails details = itrs.next();
 			if(details.getStatus() == PartManifacturingDetails.Status.UNCHECKED){
+				count++;
 				itrs.remove();
 			}
 		}
+		logger.debug("removed "+ count+" unchecked PartManifacturingDetails of Type FHT.");
 		order.setStatus(Status.FHTV_SUBMITTED);
+		logger.debug( order.getId()+" order submitted successfully for FHT.");
 		return getSteelOrderDao().update(order);
 	}
 	
 	@Transactional
 	public void approveFhtvOrder(SteelOrder order){
 		if(order.getStatus() != SteelOrder.Status.FHTV_SUBMITTED){
-			throw new IllegalArgumentException("Invalid Order state.");
+			throw new IllegalStateException("invalid state "+order.getStatus()+" for order "+order.getId());
 		}
 		order.setStatus(Status.FHTV_APPROVED);
 		getSteelOrderDao().update(order);
+		logger.debug( order.getId()+" order approved for FHT.");
 	}
 	
 	@Transactional
@@ -180,6 +206,7 @@ public class SteelOrderService {
 		}
 		order.setStatus(Status.FHTV_REJECTED);
 		getSteelOrderDao().update(order);
+		logger.debug( order.getId()+" order rejected for FHT.");
 	}
 	
 	@Transactional
@@ -197,7 +224,7 @@ public class SteelOrderService {
 	public SteelOrder approveOrder(SteelOrder order){
 	//	SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
-			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
+			throw new IllegalStateException("invalid state "+order.getStatus()+" for order "+order.getId());
 		}
 		order.setStatus(Status.APPROVED);
 		getSteelOrderDao().update(order);
@@ -208,7 +235,7 @@ public class SteelOrderService {
 	public SteelOrder rejectOrder(SteelOrder order){
 	//	SteelOrder order = getEagerlyLoadedOrder(orderId);
 		if(order.getStatus() != Status.SUBMITTED){
-			throw new IllegalStateException("Illegal state for Order " + order.getStatus());
+			throw new IllegalStateException("invalid state "+order.getStatus()+" for order "+order.getId());
 		}
 		order.setStatus(Status.REJECTED);
 		getSteelOrderDao().update(order);

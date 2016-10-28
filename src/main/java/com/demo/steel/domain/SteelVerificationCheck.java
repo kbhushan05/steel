@@ -82,5 +82,11 @@ public class SteelVerificationCheck{
 	public void setReport(Report report) {
 		this.report = report;
 	}
-	
+	@Override
+	public String toString() {
+		return "SteelVerificationCheck [primarykey=" + primarykey + ", remark="
+				+ remark + ", status=" + status + ", filename=" + filename
+				+ ", mimeType=" + mimeType + "]";
+	}
+		
 }

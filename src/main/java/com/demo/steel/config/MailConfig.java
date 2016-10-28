@@ -2,6 +2,8 @@ package com.demo.steel.config;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 @PropertySource(value = { "classpath:smtp.properties" })
 public class MailConfig {
+	private static final Logger logger = LoggerFactory.getLogger(MailConfig.class);
+			
 	@Autowired
 	private Environment env;
 	
@@ -28,6 +32,7 @@ public class MailConfig {
 		javaMail.setPassword(env.getRequiredProperty("mail.password"));
 		
 		javaMail.setJavaMailProperties(getJavaMailProperties());
+		logger.debug("Created JavaMailSender with smtp://"+javaMail.getHost()+":"+javaMail.getPort());
 		
 		return javaMail;
 	}

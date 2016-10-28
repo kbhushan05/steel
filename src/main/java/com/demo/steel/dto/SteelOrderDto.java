@@ -1,5 +1,6 @@
 package com.demo.steel.dto;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -10,7 +11,6 @@ public class SteelOrderDto {
 	private final String DELIM_SUPPLIER_ID = "-";
 	
 	private String orderId;
-	@SuppressWarnings("unused")
 	private String supplierId;
 	private String supplierName;
 	private int supplierCode;
@@ -279,6 +279,35 @@ public class SteelOrderDto {
 	}
 	public void setCilComment(String cilComment) {
 		this.cilComment = cilComment;
+	}
+	@Override
+	public String toString() {
+		return "SteelOrderDto [DELIM_SUPPLIER_ID=" + DELIM_SUPPLIER_ID
+				+ ", orderId=" + orderId + ", supplierId=" + supplierId
+				+ ", supplierName=" + supplierName + ", supplierCode="
+				+ supplierCode + ", poNumber=" + poNumber + ", steelMill="
+				+ steelMill + ", steelHeatNumber=" + steelHeatNumber
+				+ ", alreadyAvailableSteelTonage="
+				+ alreadyAvailableSteelTonage + ", newSteelToBuy="
+				+ newSteelToBuy + ", steelTonage=" + steelTonage
+				+ ", refStandard=" + refStandard + ", forgerSupplierCode="
+				+ forgerSupplierCode + ", status=" + status + ", date=" + date
+				+ ", supplierEmail=" + supplierEmail + ", comment=" + comment
+				+ ", courierCompany=" + courierCompany
+				+ ", courierDeliveryDate=" + courierDeliveryDate
+				+ ", courierReceiptName=" + courierReceiptName
+				+ ", cilComment=" + cilComment + ", checkList=" + checkList
+				+ ", partDetails=" + partDetails + ", deviationId="
+				+ deviationId + ", cilDevitionNumber=" + cilDevitionNumber
+				+ ", requesterName=" + requesterName + ", requestDate="
+				+ requestDate + ", partDescription=" + partDescription
+				+ ", rmSection=" + rmSection + ", rmGarde=" + rmGarde
+				+ ", quantityForDeviation=" + quantityForDeviation
+				+ ", delivaryAffected=" + delivaryAffected + ", description="
+				+ description + ", attachmentName=" + attachmentName
+				+ ", cilRemark=" + cilRemark + ", cilStatus=" + cilStatus
+				+ ", deviationType=" + deviationType + ", steelMills="
+				+ Arrays.toString(steelMills) + "]";
 	}
 	
 }

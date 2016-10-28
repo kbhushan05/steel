@@ -45,5 +45,10 @@ public class VerificationCheck {
 	public void setId(int id) {
 		this.id = id;
 	}
+	@Override
+	public String toString() {
+		return "VerificationCheck [id=" + id + ", name=" + name + ", testName="
+				+ testName + ", type=" + type + "]";
+	}
 	
 }

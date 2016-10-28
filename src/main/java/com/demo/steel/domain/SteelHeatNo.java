@@ -22,5 +22,9 @@ public class SteelHeatNo {
 	public void setTonnage(float tonnage) {
 		this.tonnage = tonnage;
 	}
+	@Override
+	public String toString() {
+		return "SteelHeatNo [heatNo=" + heatNo + ", tonnage=" + tonnage + "]";
+	}
 	
 }

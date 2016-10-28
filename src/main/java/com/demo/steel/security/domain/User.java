@@ -36,5 +36,9 @@ public class User {
 	public void setSupplierName(String supplierName) {
 		this.supplierName = supplierName;
 	}
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", password=*****" + ", role=" + role + ", supplierName=" + supplierName + "]";
+	}
 	
 }

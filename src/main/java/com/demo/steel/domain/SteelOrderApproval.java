@@ -45,5 +45,10 @@ public class SteelOrderApproval {
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
+	@Override
+	public String toString() {
+		return "SteelOrderApproval [id=" + id + ", filename=" + filename
+				+ ", mimeType=" + mimeType + "]";
+	}
 	
 }

@@ -24,5 +24,9 @@ public class PartNoDetails {
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
+	@Override
+	public String toString() {
+		return "PartNoDetails [partNo=" + partNo + "]";
+	}
 	
 }

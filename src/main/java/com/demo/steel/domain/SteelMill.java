@@ -22,5 +22,9 @@ public class SteelMill {
 	public void setId(int id) {
 		this.id = id;
 	}
+	@Override
+	public String toString() {
+		return "SteelMill [name=" + name + ", id=" + id + "]";
+	}
 	
 }

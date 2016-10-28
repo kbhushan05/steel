@@ -24,5 +24,10 @@ public class SteelMillDto {
 	public void setSupplierCode(int supplierCode) {
 		this.supplierCode = supplierCode;
 	}
+	@Override
+	public String toString() {
+		return "SteelMillDto [name=" + name + ", supplierName=" + supplierName
+				+ ", supplierCode=" + supplierCode + "]";
+	}
 	
 }

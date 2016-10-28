@@ -1,8 +1,7 @@
-package com.demo.steel.security.dao;
+package com.demo.steel.dao;
 
 import org.springframework.stereotype.Repository;
 
-import com.demo.steel.dao.GenericDao;
 import com.demo.steel.domain.Deviation;
 
 @Repository
