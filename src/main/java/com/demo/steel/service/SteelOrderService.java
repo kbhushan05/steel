@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.steel.api.ErrorCode;
+import com.demo.steel.api.InvalidInputException;
 import com.demo.steel.dao.DeviationDao;
 import com.demo.steel.dao.SteelHeatNoDao;
 import com.demo.steel.dao.SteelOrderDao;
@@ -59,7 +61,8 @@ public class SteelOrderService {
 		Supplier supplier = getSupplier(supplierName);
 		if(supplier == null){
 			logger.debug("No supplier found for name "+ supplierName);
-			throw new IllegalArgumentException(supplierName + " supplier does not exists.");
+			InvalidInputException ex =  new InvalidInputException(ErrorCode.SUPPLIER_NOT_FOUND,"Supplier "+supplierName+" does not exists.");
+			throw ex;
 		}
 		order.setSupplier(supplier);
 		order.setId(generateOrderId(supplier));
