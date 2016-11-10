@@ -26,13 +26,14 @@ public class ReportService {
 	public void uploadReport(int verificationCheckId, String filename ,byte[] bytes, String mimeType){
 		SteelVerificationCheck verificationCheck = steelVerificationDao.get(verificationCheckId);
 		verificationCheck.setFilename(filename);
-		verificationCheck.setMimeType(mimeType);
 		steelVerificationDao.update(verificationCheck);
 		
 		logger.debug("creating Report object.");
 		Report report = new Report();
+		report.setFilename(filename);
+		report.setMimeType(mimeType);
 		report.setData(bytes);
-		report.setSteelVerificationCheck(verificationCheck);
+		report.setSteelVerificationCheckId(verificationCheck.getId());
 		
 		reportDao.save(report);
 		logger.debug("Report saved successfully.");

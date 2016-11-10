@@ -1,11 +1,9 @@
 package com.demo.steel.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 
 @Entity(name="report")
 public class Report {
@@ -13,8 +11,9 @@ public class Report {
 	@Id
 	@GeneratedValue
 	private int id;
-	@OneToOne(fetch=FetchType.LAZY)
-	private SteelVerificationCheck steelVerificationCheck;
+	private int steelVerificationCheckId;
+	private String filename;
+	private String mimeType;
 	
 	@Lob
 	private byte[] data;
@@ -31,12 +30,23 @@ public class Report {
 	public void setData(byte[] data) {
 		this.data = data;
 	}
-	public SteelVerificationCheck getSteelVerificationCheck() {
-		return steelVerificationCheck;
+	public int getSteelVerificationCheckId() {
+		return steelVerificationCheckId;
 	}
-	public void setSteelVerificationCheck(
-			SteelVerificationCheck steelVerificationCheck) {
-		this.steelVerificationCheck = steelVerificationCheck;
+	public void setSteelVerificationCheckId(int steelVerificationCheckId) {
+		this.steelVerificationCheckId = steelVerificationCheckId;
+	}
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+	public String getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
 	}
 	
 }

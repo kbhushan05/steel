@@ -1,9 +1,10 @@
 package com.demo.steel.api;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,152 +25,126 @@ import com.demo.steel.util.StringUtil;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+public class SteelOrderController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SteelOrderController.class);
+	
 	@Autowired
 	private SteelOrderApiService service;
 	
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public SteelOrderDto saveOrder(@RequestBody(required = true)SteelOrderDto orderDto){
-		if(orderDto.getStatus().equals("SUBMITTED")){
-			return getService().submitOrder(orderDto);
-		}else{
-			return getService().saveOrder(orderDto);
-		}
+		logger.debug("received request to save order "+ orderDto.getOrderId());
+		SteelOrderDto dto = service.saveOrder(orderDto);
+		logger.debug("response generated successfully.");
+		return dto;
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT,consumes="application/json")
-	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void updateOrder(@RequestBody(required = true)SteelOrderDto orderDto){
-		getService().updateOrder(orderDto);
-	}
-
-	@RequestMapping(method=RequestMethod.GET,produces="application/json",path="/new")
-	@ResponseStatus(code = HttpStatus.OK)
-	public SteelOrderDto createNewOrder(@RequestParam String supplierName){
-		return getService().createNewOrder(supplierName);
-	}
-	
-	@RequestMapping(method=RequestMethod.GET,produces="application/json")
-	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String status){
-		String statusArray[] = new String[0];
-		List<SteelOrderDto> statusFilter = new ArrayList<>();
-		if(!StringUtil.isEmpty(status)){
-			statusArray = status.split(",");
-		}
+	@RequestMapping(method=RequestMethod.GET,consumes="application/json")
+	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String state){
+		logger.debug("received request to all orders for supplier "+ supplierName + " and status "+state);
 		
-		List<SteelOrderDto> all = getService().getAll();
-		
-		if(!StringUtil.isEmpty(supplierName)&& ! StringUtil.isEmpty(status)){
-			List<SteelOrderDto> onlySupplier = filterBySupplierName(all, supplierName);
-			for(String s : statusArray){
-				statusFilter.addAll(filterByStatus(onlySupplier, s));
-			}
-			return statusFilter;
+		if(!StringUtil.isEmpty(supplierName)&& !StringUtil.isEmpty(state)){
+			List<SteelOrderDto> dtos = service.getFilteredBy(supplierName, state);
+			logger.debug("response generated for filter supplier and state.");
+			return dtos;
 		}
 		
 		if(!StringUtil.isEmpty(supplierName)){
-			return filterBySupplierName(all, supplierName);
+			List<SteelOrderDto> dtos = service.getFilteredBySupplierName(supplierName);
+			logger.debug("response generated for filter supplier name.");
+			return dtos;
 		}
 		
-		if(!StringUtil.isEmpty(status)){
-			for(String s : statusArray){
-				statusFilter.addAll(filterByStatus(all, s));
-			}
-			return statusFilter;
+		if(!StringUtil.isEmpty(state)){
+			List<SteelOrderDto> dtos = service.getFilteredByStatus(state);
+			logger.debug("response generated for filter state.");
+			return dtos;
 		}
 		
-		return all;
+		List<SteelOrderDto> dtos = service.getAll();
+		logger.debug("response generated without filter.");
+		return dtos;
 	}
-	
-	private List<SteelOrderDto> filterBySupplierName(List<SteelOrderDto> list, String supplierName){
-		List<SteelOrderDto> filtered = new ArrayList<>();
-		for(SteelOrderDto dto : list){
-			if(dto.getSupplierName().equals(supplierName)){
-				filtered.add(dto);
-			}
-		}
-		return filtered;
+
+	@RequestMapping(method=RequestMethod.PUT,consumes="application/json")
+	@ResponseStatus(code = HttpStatus.OK)
+	public SteelOrderDto updateOrder(@RequestBody(required = true)SteelOrderDto orderDto){
+		logger.debug("received request to update order "+ orderDto.getOrderId());
+		SteelOrderDto dto = service.updateOrder(orderDto);
+		logger.debug("response generated successfully.");
+		return dto;
 	}
-	
-	private List<SteelOrderDto> filterByStatus(List<SteelOrderDto> list, String status){
-		List<SteelOrderDto> filtered = new ArrayList<>();
-		for(SteelOrderDto dto : list){
-			if(dto.getStatus().equalsIgnoreCase(status)){
-				filtered.add(dto);
-			}
-		}
-		return filtered;
-	}
-	
-	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}")
-	public SteelOrderDto executeAction(@PathVariable String orderId, @RequestParam(required =false) String action,@RequestBody SteelOrderDto orderDto){
-		
+
+	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}/{action}")
+	public SteelOrderDto executeAction(@PathVariable String orderId,
+			@PathVariable String action,
+			@RequestBody SteelOrderDto orderDto) {
+		logger.debug("received request to " + action + " order " + orderId);
+		SteelOrderDto dto = null;
 		switch (action) {
+		case "submit":
+			dto = service.submitOrder(orderDto);
+			break;
 		case "approve":
-			orderDto = getService().approveOrder(orderDto);
+			dto = service.approveOrder(orderDto);
 			break;
 		case "reject":
-			orderDto = getService().rejectOrder(orderDto);
+			dto = service.rejectOrder(orderDto);
 			break;
 		default:
-			break;
+			throw new InvalidInputException(ErrorCode.INVALID_ACTION, "This action is not supported.");
 		}
-		return orderDto;
+		logger.debug("response generated successfully for action "+ action);
+		return dto;
 	}
 	
-	@RequestMapping(method=RequestMethod.GET, path="/{orderId}/fht")
+	@RequestMapping(method=RequestMethod.POST,consumes="application/json",path="/new")
+	@ResponseStatus(code = HttpStatus.OK)
+	public SteelOrderDto createNewOrder(@RequestParam String supplierName){
+		logger.debug("received request to create new order.");
+		SteelOrderDto dto = service.createNewOrder(supplierName);
+		logger.debug("response generated successfully.");
+		return dto;
+	}
+
+	@RequestMapping(method=RequestMethod.POST,consumes="application/json",path="/new/{orderId}")
 	public SteelOrderDto createNewFhtOrder(@PathVariable String orderId){
-		return getService().createNewFhtOrder(orderId);
-	}
-	
-	@RequestMapping(method=RequestMethod.POST, path="/{orderId}/fht")
-	public SteelOrderDto submitFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
-		return getService().submitFhtOrder(orderDto);
-	}
-	
-	@RequestMapping(method=RequestMethod.PUT, path="/{orderId}/fht/approve")
-	public void approveFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
-		getService().approveFhtOrder(orderDto);
-	}
-	
-	@RequestMapping(method=RequestMethod.PUT, path="/{orderId}/fht/reject")
-	public void rejectFhtOrder(@PathVariable String orderId, @RequestBody SteelOrderDto orderDto){
-		getService().rejectFhtOrder(orderDto);
+		logger.debug("received request to create FHT order.");
+		SteelOrderDto dto = service.createNewFhtOrder(orderId);
+		logger.debug("response generated successfully.");
+		return dto;
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
 	public SteelOrderDto get(@PathVariable String orderId){
-			return getService().getOrder(orderId);
+		logger.debug("received request to read order "+ orderId);
+		SteelOrderDto dto = service.getOrder(orderId);
+		logger.debug("response generated successfully");
+		return dto;
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, consumes="multipart/form-data", path="/{orderId}/report")
 	public void uploadFile(@PathVariable String orderId, @RequestPart MultipartFile mFile){
+		logger.debug("received request to upload approval.");
 		try {
-			service.uploadReport(orderId, mFile.getOriginalFilename(),mFile.getContentType(),mFile.getBytes());
+			service.uploadApprovalReport(orderId, mFile.getOriginalFilename(),mFile.getContentType(),mFile.getBytes());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new SystemException(ErrorCode.INTERNAL_ERROR,e.getMessage(), e);
 		}
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}/report")
 	public ResponseEntity<byte[]> downloadReport(@PathVariable String orderId) throws IOException{
-		SteelOrderApproval approval = service.download(orderId);
+		SteelOrderApproval approval = service.downloadApprovalReport(orderId);
 		byte[] data = approval.getData();
-		
+		logger.debug("got report data.");
 		return ResponseEntity.ok()
 				.contentLength(data.length)
 				.contentType(MediaType.valueOf(approval.getMimeType()))
 				.header("Content-Disposition", "attachment; filename="+ approval.getFilename())
 				.body(data);
-	}
-	
-	public SteelOrderApiService getService() {
-		return service;
-	}
-
-	public void setService(SteelOrderApiService service) {
-		this.service = service;
 	}
 
 }

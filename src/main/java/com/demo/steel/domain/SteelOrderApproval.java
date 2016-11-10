@@ -17,6 +17,7 @@ public class SteelOrderApproval {
 	@Column(length = 11000000)
 	private byte[] data;
 	
+	private String orderId;
 	private String filename;
 	private String mimeType;
 	
@@ -45,10 +46,17 @@ public class SteelOrderApproval {
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String steelOrderId) {
+		this.orderId = steelOrderId;
+	}
 	@Override
 	public String toString() {
-		return "SteelOrderApproval [id=" + id + ", filename=" + filename
-				+ ", mimeType=" + mimeType + "]";
+		return "SteelOrderApproval [id=" + id + ", steelOrderId="
+				+ orderId + ", filename=" + filename + ", mimeType="
+				+ mimeType + "]";
 	}
 	
 }

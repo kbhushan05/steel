@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.demo.steel.domain.Report;
 import com.demo.steel.domain.SteelVerificationCheck;
 import com.demo.steel.service.ReportService;
 
@@ -34,11 +35,12 @@ public class SteelVerificationCheckController {
 	@RequestMapping(method=RequestMethod.GET,path="/{verificationCheckId}/report")
 	public ResponseEntity<byte[]> downloadFile(@PathVariable int verificationCheckId) throws IOException{
 		SteelVerificationCheck verificationCheck = service.downloadReport(verificationCheckId);
-		byte[] data = verificationCheck.getReport().getData();
+		Report report = verificationCheck.getReport();
+		byte[] data = report.getData();
 		
 		return ResponseEntity.ok()
 				.contentLength(data.length)
-				.contentType(MediaType.valueOf(verificationCheck.getMimeType()))
+				.contentType(MediaType.valueOf(report.getMimeType()))
 				.header("Content-Disposition", "attachment; filename="+ verificationCheck.getFilename())
 				.body(data);
 	}

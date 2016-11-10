@@ -1,14 +1,12 @@
 package com.demo.steel.domain;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,24 +19,18 @@ import javax.persistence.OneToOne;
 @Entity(name="steelorder")
 public class SteelOrder {
 	
-	public enum Status{
-		NEW, SAVED, APPROVED, REJECTED, SUBMITTED,FHTV_NEW,FHTV_SUBMITTED,FHTV_APPROVED, FHTV_REJECTED;
+	public enum State{
+		NEW, SAVED, APPROVED, REJECTED, SUBMITTED;
+	}
+	public enum Type{
+		BASIC, FHT;
 	}
 	
 	@Id
 	private String id;
-	@ManyToOne
-	private SteelMill mill;
-	@ManyToOne
-	private Supplier supplier;
 	private Date date;
-	private float totalTonage;
 	private String remark;
-	private String cilStatus;
-	@Column(length=1000)
-	private String cilRemark;
 	private int poNumber;
-	private String steelMill;
 	private String comments;
 	private String steelHeatNumber;
 	private float alreadyAvailableSteelTonage;
@@ -46,27 +38,32 @@ public class SteelOrder {
 	private float steelTonage;
 	private String refStandard;
 	private String forgerSupplierCode;
-	private String courierCompany;
-	private Date courierDeliveryDate;
-	private String courierReceiptName;
-	
 	@Enumerated(EnumType.STRING)
-	private Status status = Status.NEW;
+	private Type type = Type.BASIC;
+	@Enumerated(EnumType.STRING)
+	private State state = State.NEW;
+	@Embedded
+	private CilDetails cilDetails;
+	@Embedded
+	private CourierDetails courierDetails;
+	
+	@ManyToOne
+	private SteelMill mill;
+	
+	@ManyToOne
+	private Supplier supplier;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="order",orphanRemoval=true)
-	private Set<PartManifacturingDetails> partManifacturingDetails = new HashSet<>();
+	private Set<PartManifacturingDetail> partManifacturingDetails;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="order")
-	private Set<SteelVerificationCheck> verificationCheck = new HashSet<>();
+	private Set<SteelVerificationCheck> verificationChecks;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
-	private List<Deviation> deviation = new ArrayList<Deviation>();
+	@OneToOne(cascade = CascadeType.ALL, mappedBy="order")
+	private Deviation deviation;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	private SteelOrderApproval steelOrderApproval;
-	
-	@Column(length=1000)
-	private String cilComment;
+	@OneToOne(fetch = FetchType.LAZY)
+	private SteelOrder parentOrder;
 	
 	public String getId() {
 		return id;
@@ -92,29 +89,11 @@ public class SteelOrder {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public float getTotalTonage() {
-		return totalTonage;
-	}
-	public void setTotalTonage(float totalTonage) {
-		this.totalTonage = totalTonage;
-	}
 	public String getRemark() {
 		return remark;
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-	public String getCilStatus() {
-		return cilStatus;
-	}
-	public void setCilStatus(String cilStatus) {
-		this.cilStatus = cilStatus;
-	}
-	public String getCilRemark() {
-		return cilRemark;
-	}
-	public void setCilRemark(String cilRemark) {
-		this.cilRemark = cilRemark;
 	}
 	public int getPoNumber() {
 		return poNumber;
@@ -122,36 +101,16 @@ public class SteelOrder {
 	public void setPoNumber(int poNumber) {
 		this.poNumber = poNumber;
 	}
-	public Set<PartManifacturingDetails> getPartManifacturingDetails() {
-		return partManifacturingDetails;
+	public State getState() {
+		return state;
 	}
-	public void setPartManifacturingDetails(
-			Collection<PartManifacturingDetails> partManifacturingDetails) {
-		this.partManifacturingDetails = new HashSet<>(partManifacturingDetails);
+	public void setStatus(State status) {
+		this.state = status;
 	}
-	public Set<SteelVerificationCheck> getVerificationCheck() {
-		return verificationCheck;
-	}
-	public void setVerificationCheck(
-			Collection<SteelVerificationCheck> verificationCheck) {
-		this.verificationCheck = new HashSet<>(verificationCheck);
-	}
-	public Status getStatus() {
-		return status;
-	}
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-	public String getSteelMill() {
-		return steelMill;
-	}
-	public void setSteelMill(String steelMill) {
-		this.steelMill = steelMill;
-	}
-	public List<Deviation> getDeviation() {
+	public Deviation getDeviation() {
 		return deviation;
 	}
-	public void setDeviation(List<Deviation> deviation) {
+	public void setDeviation(Deviation deviation) {
 		this.deviation = deviation;
 	}
 	public String getComments() {
@@ -196,50 +155,64 @@ public class SteelOrder {
 	public void setForgerSupplierCode(String forgerSupplierCode) {
 		this.forgerSupplierCode = forgerSupplierCode;
 	}
-	public String getCourierCompany() {
-		return courierCompany;
+	public CilDetails getCilDetails() {
+		return cilDetails;
 	}
-	public void setCourierCompany(String courierCompany) {
-		this.courierCompany = courierCompany;
+	public void setCilDetails(CilDetails cilDetails) {
+		this.cilDetails = cilDetails;
 	}
-	public Date getCourierDeliveryDate() {
-		return courierDeliveryDate;
+	public CourierDetails getCourierDetails() {
+		return courierDetails;
 	}
-	public void setCourierDeliveryDate(Date courierDeliveryDate) {
-		this.courierDeliveryDate = courierDeliveryDate;
+	public void setCourierDetails(CourierDetails courierDetails) {
+		this.courierDetails = courierDetails;
 	}
-	public String getCourierReceiptName() {
-		return courierReceiptName;
+	public Set<PartManifacturingDetail> getPartManifacturingDetails() {
+		return partManifacturingDetails;
 	}
-	public void setCourierReceiptName(String courierReceiptName) {
-		this.courierReceiptName = courierReceiptName;
+	public void setPartManifacturingDetails(
+			Collection<PartManifacturingDetail> partManifacturingDetails) {
+		this.partManifacturingDetails = new HashSet<>();
+		this.partManifacturingDetails.addAll(partManifacturingDetails);
 	}
-	public String getCilComment() {
-		return this.cilComment;
+	public void setPartManifacturingDetails(Set<PartManifacturingDetail> partManifacturingDetails){
+		this.partManifacturingDetails = new HashSet<>(partManifacturingDetails);
 	}
-	public void setCilComment(String cilComment) {
-		this.cilComment = cilComment;
+	public Set<SteelVerificationCheck> getVerificationChecks() {
+		return verificationChecks;
 	}
-	public SteelOrderApproval getSteelOrderApproval() {
-		return steelOrderApproval;
+	public void setVerificationChecks(
+			Collection<SteelVerificationCheck> verificationChecks) {
+		this.verificationChecks = new HashSet<SteelVerificationCheck>();
+		this.verificationChecks.addAll(verificationChecks);
 	}
-	public void setSteelOrderApproval(SteelOrderApproval steelOrderApproval) {
-		this.steelOrderApproval = steelOrderApproval;
+	public void setVerificationChecks(
+			Set<SteelVerificationCheck> verificationChecks){
+		this.verificationChecks = new HashSet<>(verificationChecks);
+	}
+	public SteelOrder getParentOrder() {
+		return parentOrder;
+	}
+	public void setParentOrder(SteelOrder parentOrder) {
+		this.parentOrder = parentOrder;
+	}
+	public Type getType() {
+		return type;
+	}
+	public void setType(Type type) {
+		this.type = type;
 	}
 	@Override
 	public String toString() {
 		return "SteelOrder [id=" + id + ", mill=" + mill + ", date=" + date
-				+ ", totalTonage=" + totalTonage + ", remark=" + remark
-				+ ", cilStatus=" + cilStatus + ", cilRemark=" + cilRemark
-				+ ", poNumber=" + poNumber + ", steelMill=" + steelMill
-				+ ", comments=" + comments + ", steelHeatNumber="
-				+ steelHeatNumber + ", alreadyAvailableSteelTonage="
+				+ ", remark=" + remark
+				+ ", poNumber=" + poNumber + ", comments=" + comments
+				+ ", steelHeatNumber=" + steelHeatNumber
+				+ ", alreadyAvailableSteelTonage="
 				+ alreadyAvailableSteelTonage + ", newSteelToBuy="
 				+ newSteelToBuy + ", steelTonage=" + steelTonage
 				+ ", refStandard=" + refStandard + ", forgerSupplierCode="
-				+ forgerSupplierCode + ", courierCompany=" + courierCompany
-				+ ", courierDeliveryDate=" + courierDeliveryDate
-				+ ", courierReceiptName=" + courierReceiptName + ", status="
-				+ status + ", cilComment=" + cilComment + "]";
+				+ forgerSupplierCode + ", status=" + state + "]";
 	}
+	
 }

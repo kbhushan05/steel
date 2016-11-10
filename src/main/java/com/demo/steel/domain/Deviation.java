@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 public class Deviation {
 	
 	public enum Type{
-		BASIC,FHTV;
+		BASIC,FHT;
 	}
 	@Id
 	@GeneratedValue

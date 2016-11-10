@@ -12,7 +12,7 @@ import javax.persistence.UniqueConstraint;
 	    uniqueConstraints=
 	        @UniqueConstraint(columnNames={"order_id", "partDetails_partNo"})
 	)
-public class PartManifacturingDetails {
+public class PartManifacturingDetail {
 	
 	public enum Status{
 		CHECKED, UNCHECKED;
@@ -71,6 +71,30 @@ public class PartManifacturingDetails {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj!= null && obj instanceof PartManifacturingDetail){
+			PartManifacturingDetail that = (PartManifacturingDetail) obj;
+			if(this.getPartDetails() == null || that.getPartDetails() == null){
+				return false;
+			}
+			if(this.getPartDetails().getPartNo() == that.getPartDetails().getPartNo()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		if(getPartDetails() == null){
+			super.hashCode();
+		}
+		Integer inte = new Integer(getPartDetails().getPartNo());
+		return inte.hashCode();
+	}
+	
 	@Override
 	public String toString() {
 		return "PartManifacturingDetails [primaryKey=" + primaryKey

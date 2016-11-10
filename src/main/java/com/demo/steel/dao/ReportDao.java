@@ -18,10 +18,8 @@ public class ReportDao extends GenericDao<Report, Integer>{
 	}
 	
 	public Report getReport(SteelVerificationCheck check){
-		logger.debug("fetching report for verification check "+ check.getPrimarykey());
-		Report report = check.getReport();
-		report.getData();
-		return report;
+		logger.debug("fetching report for verification check "+ check.getId());
+		return getEqualTo(new String[]{"steelVerificationCheckId"}, new Object[]{check.getId()});
 	}
 	
 }

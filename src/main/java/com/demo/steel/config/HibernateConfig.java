@@ -46,10 +46,15 @@ public class HibernateConfig {
 	}
 	
 	public String getUrl(){
-		String url = "jdbc:mysql://";
-		String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
-		String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
-		return url + host + ":" + port + "/steel";
+		if(env.getRequiredProperty("jdbc.env").equals("openshift")){
+			String url = "jdbc:mysql://";
+			String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
+			String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
+			return url + host + ":" + port + "/steel";
+		}else{
+			return env.getRequiredProperty("jdbc.url");
+		}
+		
 	}
 	
 	@Bean

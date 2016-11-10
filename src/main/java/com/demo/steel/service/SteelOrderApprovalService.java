@@ -32,15 +32,14 @@ public class SteelOrderApprovalService {
 		Integer key = steelOrderApprovalDao.save(approval);
 		approval.setId(key);
 		
-		order.setSteelOrderApproval(approval);
 		steelOrderDao.update(order);
 		logger.debug("approval report uploaded successfully.");
 	}
 
 	@Transactional
 	public SteelOrderApproval downloadReport(String orderId) {
-		SteelOrder order = steelOrderDao.load(orderId);
-		order.getSteelOrderApproval().getFilename();
-		return order.getSteelOrderApproval(); 
+		SteelOrderApproval approval = steelOrderApprovalDao.getOrderpprovalForOrder(orderId);
+		logger.debug("report downloaded "+ approval.getFilename()+" "+approval.getMimeType());
+		return approval;
 	}
 }

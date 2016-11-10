@@ -1,6 +1,5 @@
 package com.demo.steel.dto;
 
-import java.util.Arrays;
 
 public class SteelVerificationCheckDto{
 	
@@ -9,105 +8,56 @@ public class SteelVerificationCheckDto{
 	private String name;
 	private String status;
 	private String remark;
-	private byte[] attachment;
 	private String attachmentName;
 	private String testName;
-	private String mimeType;
-	
-	public SteelVerificationCheckDto(){
-		
-	}
-	
-	public SteelVerificationCheckDto(String requirement, String status,
-			String remark, byte[] attachment, String attachmentName) {
-		super();
-		this.name = requirement;
-		this.status = status;
-		this.remark = remark;
-		this.attachment = attachment;
-		this.attachmentName = attachmentName;
-	}
+	private String type;
 
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getStatus() {
 		return status;
 	}
-
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
 	public String getRemark() {
 		return remark;
 	}
-
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	public byte[] getAttachment() {
-		return attachment;
-	}
-
-	public void setAttachment(byte[] attachment) {
-		this.attachment = attachment;
-	}
-
 	public String getAttachmentName() {
 		return attachmentName;
 	}
-
 	public int getVerificationCheckId() {
 		return verificationCheckId;
 	}
-
 	public void setVerificationCheckId(int verificationCheckId) {
 		this.verificationCheckId = verificationCheckId;
 	}
-
 	public void setAttachmentName(String attachmentName) {
 		this.attachmentName = attachmentName;
 	}
-
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public String getTestName() {
 		return testName;
 	}
-
 	public void setTestName(String testName) {
 		this.testName = testName;
 	}
-
-	public String getMimeType() {
-		return mimeType;
-	}
-
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-	@Override
-	public String toString() {
-		return "SteelVerificationCheckDto [id=" + id + ", verificationCheckId="
-				+ verificationCheckId + ", name=" + name + ", status=" + status
-				+ ", remark=" + remark + ", attachment="
-				+ Arrays.toString(attachment) + ", attachmentName="
-				+ attachmentName + ", testName=" + testName + ", mimeType="
-				+ mimeType + "]";
-	}
-	
 }

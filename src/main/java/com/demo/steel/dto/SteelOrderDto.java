@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@JsonInclude(Include.NON_NULL)
 public class SteelOrderDto {
 	private final String DELIM_SUPPLIER_ID = "-";
 	
@@ -32,7 +35,7 @@ public class SteelOrderDto {
 	private String cilComment;
 	
 	private Set<SteelVerificationCheckDto> checkList = new HashSet<>(20);
-	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>();
+	private Set<PartManifacturingDetailsDto> partDetails = new HashSet<>(5);
 
 	//Deviation details
 	private int deviationId;
@@ -51,13 +54,6 @@ public class SteelOrderDto {
 	private String deviationType;
 	private String[] steelMills;
 	
-	public void addVerificationCheck(String req, String status, String remark, byte[] attachment, String attachmentName){
-		SteelVerificationCheckDto check = new SteelVerificationCheckDto(req,status,remark,attachment,attachmentName);
-		checkList.add(check);
-	}
-	public void addPartDetails(int number, float weight, float cutWeight, int noOfParts){
-		partDetails.add(new PartManifacturingDetailsDto(number, weight, cutWeight, noOfParts));
-	}
 	public String getOrderId() {
 		return orderId;
 	}

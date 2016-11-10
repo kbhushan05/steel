@@ -34,7 +34,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="org.springframework" level="ERROR" additivity="false">
+	<logger name="org.springframework" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE"/>
 	</logger>
@@ -44,7 +44,7 @@
 		<appender-ref ref="FILE"/>
 	</logger>
 
-	<logger name="com.demo.steel" level="ERROR" additivity="false">
+	<logger name="com.demo.steel" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE"/>
 	</logger>

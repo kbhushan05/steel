@@ -2,17 +2,22 @@ package com.demo.steel.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.EnumType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.demo.steel.domain.CilDetails;
+import com.demo.steel.domain.CourierDetails;
 import com.demo.steel.domain.Deviation;
-import com.demo.steel.domain.PartManifacturingDetails;
+import com.demo.steel.domain.PartManifacturingDetail;
 import com.demo.steel.domain.PartNoDetails;
 import com.demo.steel.domain.SteelMill;
 import com.demo.steel.domain.SteelOrder;
@@ -42,27 +47,35 @@ public class DtoDomainConvertor {
 		logger.debug("setting other attributes.");
 		orderDto.setPoNumber(order.getPoNumber());
 		orderDto.setSteelHeatNumber(order.getSteelHeatNumber());
-		orderDto.setStatus(order.getStatus().name());
+		orderDto.setStatus(order.getState().name());
 		orderDto.setOrderId(order.getId());
-		orderDto.setSteelMill(order.getSteelMill());
+		logger.debug("SteelMill "+ order.getMill());
+		if(order.getMill() != null){
+			
+			orderDto.setSteelMill(order.getMill().getName());
+		}
 		orderDto.setAlreadyAvailableSteelTonage(order.getAlreadyAvailableSteelTonage());
-		orderDto.setCilRemark(order.getCilRemark());
-		orderDto.setCilStatus(order.getCilStatus());
+		logger.debug("cil details " + order.getCilDetails());
+		if(order.getCilDetails() != null){
+			orderDto.setCilRemark(order.getCilDetails().getCilRemark());
+			orderDto.setCilStatus(order.getCilDetails().getCilStatus());
+			orderDto.setCilComment(order.getCilDetails().getCilComment());
+		}
+		
 		orderDto.setNewSteelToBuy(order.getNewSteelToBuy());
 		orderDto.setSteelTonage(order.getSteelTonage());
 		orderDto.setRefStandard(order.getRefStandard());
 		orderDto.setComment(order.getComments());
 		orderDto.setForgerSupplierCode(order.getForgerSupplierCode());
-		orderDto.setCourierCompany(order.getCourierCompany());
-		orderDto.setCourierReceiptName(order.getCourierReceiptName());
-		orderDto.setCourierDeliveryDate(order.getCourierDeliveryDate());
-		orderDto.setCilComment(order.getCilComment());
-
+		logger.debug("courier details " + order.getCourierDetails());
+		if(order.getCourierDetails() != null){
+			orderDto.setCourierCompany(order.getCourierDetails().getCourierCompany());
+			orderDto.setCourierReceiptName(order.getCourierDetails().getCourierReceiptName());
+			orderDto.setCourierDeliveryDate(order.getCourierDetails().getCourierDeliveryDate());
+		}
 		orderDto.setPartDetails(getPartManifacturingDetailsDto(order));
 		orderDto.setCheckList(getSteelVerificationCheckDto(order));
-		
-		if(order.getDeviation() != null && !order.getDeviation().isEmpty()){
-			Deviation dev = order.getDeviation().get(0);
+		Deviation dev = order.getDeviation();
 			if(dev != null){
 				logger.debug("setting deviation.");
 				orderDto.setDeviationType(dev.getType().toString());
@@ -79,7 +92,6 @@ public class DtoDomainConvertor {
 				orderDto.setPartDescription(dev.getPartDescription());
 				orderDto.setRequestDate(dev.getRequestDate());
 			}
-		}
 		logger.debug("conversion successful.");
 		return orderDto;
 	}
@@ -99,33 +111,45 @@ public class DtoDomainConvertor {
 		order.setPoNumber(orderDto.getPoNumber());
 		order.setId(orderDto.getOrderId());
 		order.setDate(orderDto.getDate());
-		order.setSteelMill(orderDto.getSteelMill());
 		order.setAlreadyAvailableSteelTonage(orderDto.getAlreadyAvailableSteelTonage());
-		order.setCilRemark(orderDto.getCilRemark());
-		order.setCilStatus(orderDto.getCilStatus());
+		
+		logger.debug("setting steelMill to " + orderDto.getSteelMill());
+		if(orderDto.getSteelMill() != null){
+			SteelMill mill = new SteelMill();
+			mill.setName(orderDto.getSteelMill());
+			order.setMill(mill);
+		}
+		
+		CilDetails details = new CilDetails();
+		details.setCilComment(orderDto.getCilComment());
+		details.setCilRemark(orderDto.getCilRemark());
+		details.setCilStatus(orderDto.getCilStatus());
+		order.setCilDetails(details);
+		
 		order.setNewSteelToBuy(orderDto.getNewSteelToBuy());
 		order.setSteelTonage(orderDto.getSteelTonage());
 		order.setRefStandard(orderDto.getRefStandard());
 		order.setComments(orderDto.getComment());
 		order.setForgerSupplierCode(orderDto.getForgerSupplierCode());
 		order.setSteelHeatNumber(orderDto.getSteelHeatNumber());
-		order.setCourierCompany(orderDto.getCourierCompany());
-		order.setCourierReceiptName(orderDto.getCourierReceiptName());
-		order.setCourierDeliveryDate(orderDto.getCourierDeliveryDate());
-		order.setCilComment(orderDto.getCilComment());
-		order.setStatus(Enum.valueOf(SteelOrder.Status.class,orderDto.getStatus()));
 		
-		Set<PartManifacturingDetails> partManifacturingDetailsSet = getPartManifacturingDetailsSet(orderDto,order);
+		CourierDetails courierDetails = new CourierDetails();
+		courierDetails.setCourierCompany(orderDto.getCourierCompany());
+		courierDetails.setCourierDeliveryDate(orderDto.getCourierDeliveryDate());
+		courierDetails.setCourierReceiptName(orderDto.getCourierReceiptName());
+		order.setCourierDetails(courierDetails);
+		
+		order.setStatus(Enum.valueOf(SteelOrder.State.class,orderDto.getStatus()));
+		
+		Set<PartManifacturingDetail> partManifacturingDetailsSet = getPartManifacturingDetailsSet(orderDto,order);
 		order.setPartManifacturingDetails(partManifacturingDetailsSet);
 		
 		Set<SteelVerificationCheck> checks = getSteelOrderveficationCheckSet(orderDto,order);
-		order.setVerificationCheck(checks);
+		order.setVerificationChecks(checks);
 		
-		List<Deviation> devs = new ArrayList<>();
 		Deviation dev = getDeviation(orderDto);
 		dev.setOrder(order);
-		devs.add(dev);
-		order.setDeviation(devs);
+		order.setDeviation(dev);
 		logger.debug("conversion successful.");
 		return order;
 	}
@@ -133,21 +157,21 @@ public class DtoDomainConvertor {
 	public SteelVerificationCheckDto convertFrom(SteelVerificationCheck check) {
 		logger.debug("converting "+ check.getClass()+" to "+ SteelOrderDto.class);
 		SteelVerificationCheckDto dto = new SteelVerificationCheckDto();
-		dto.setId(check.getPrimarykey());
+		dto.setId(check.getId());
 		dto.setName(check.getVerificationCheck().getName());
 		dto.setAttachmentName(check.getFilename());
-		dto.setMimeType(check.getMimeType());
 		dto.setRemark(check.getRemark());
 		dto.setStatus(check.getStatus().toString());
 		dto.setTestName(check.getVerificationCheck().getTestName());
 		dto.setVerificationCheckId(check.getVerificationCheck().getId());
+		dto.setType(check.getVerificationCheck().getType().toString());
 		return dto;
 	}
 
 	public SteelVerificationCheck convertFrom(SteelVerificationCheckDto dto) {
 		logger.debug("converting "+ dto.getClass()+" to "+ SteelVerificationCheck.class);
 		SteelVerificationCheck check = new SteelVerificationCheck();
-		check.setPrimarykey(dto.getId());
+		check.setId(dto.getId());
 		
 		VerificationCheck vc = new VerificationCheck();
 		vc.setName(dto.getName());
@@ -157,7 +181,6 @@ public class DtoDomainConvertor {
 		check.setRemark(dto.getRemark());
 		check.setStatus(Enum.valueOf(Status.class, dto.getStatus()));
 		check.setFilename(dto.getAttachmentName());
-		check.setMimeType(dto.getMimeType());
 		return check;
 	}
 
@@ -168,7 +191,7 @@ public class DtoDomainConvertor {
 		return dto;
 	}
 
-	public PartManifacturingDetailsDto convertFrom(PartManifacturingDetails part) {
+	public PartManifacturingDetailsDto convertFrom(PartManifacturingDetail part) {
 		logger.debug("converting "+ part.getClass()+" to "+ PartManifacturingDetailsDto.class);
 		PartManifacturingDetailsDto partDto = new PartManifacturingDetailsDto();
 		partDto.setPartId(part.getPrimaryKey());
@@ -180,9 +203,9 @@ public class DtoDomainConvertor {
 		return partDto;
 	}
 
-	public PartManifacturingDetails convertFrom(PartManifacturingDetailsDto dto) {
-		logger.debug("converting "+ dto.getClass()+" to "+ PartManifacturingDetails.class);
-		PartManifacturingDetails partManifacturingDetails  = new PartManifacturingDetails();
+	public PartManifacturingDetail convertFrom(PartManifacturingDetailsDto dto) {
+		logger.debug("converting "+ dto.getClass()+" to "+ PartManifacturingDetail.class);
+		PartManifacturingDetail partManifacturingDetails  = new PartManifacturingDetail();
 		PartNoDetails partNoDetails = new PartNoDetails();
 		partNoDetails.setPartNo(dto.getNumber());
 		partManifacturingDetails.setPrimaryKey(dto.getPartId());
@@ -190,7 +213,7 @@ public class DtoDomainConvertor {
 		partManifacturingDetails.setCutWeight(dto.getCutWeight());
 		partManifacturingDetails.setPartWeight(dto.getWeight());
 		partManifacturingDetails.setPartNo(dto.getNoOfParts());
-		partManifacturingDetails.setStatus(Enum.valueOf(PartManifacturingDetails.Status.class, dto.getStatus().toString()));
+		partManifacturingDetails.setStatus(Enum.valueOf(PartManifacturingDetail.Status.class, dto.getStatus().toString()));
 		return partManifacturingDetails;
 	}
 
@@ -212,44 +235,48 @@ public class DtoDomainConvertor {
 		return dtos;
 	}
 
-	private Set<SteelVerificationCheckDto> getSteelVerificationCheckDto(SteelOrder order){
+	private Set<SteelVerificationCheckDto> getSteelVerificationCheckDto(
+			SteelOrder order) {
 		logger.debug("setting SteelVerificationCheckDto.");
-		Set<SteelVerificationCheckDto> set = new HashSet<>();
-		
-		if(order.getVerificationCheck() == null || order.getVerificationCheck().isEmpty()){
-			Collections.emptySet();
+		SortedSet<SteelVerificationCheckDto> set = new TreeSet<>(
+				getSteelVerificationCheckOrder());
+
+		if (order.getVerificationChecks() == null
+				|| order.getVerificationChecks().isEmpty()) {
+			return Collections.emptySet();
 		}
-		
-		for(SteelVerificationCheck check : order.getVerificationCheck()){
+		for (SteelVerificationCheck check : order.getVerificationChecks()) {
 			SteelVerificationCheckDto dto = convertFrom(check);
 			set.add(dto);
 		}
-		
+
 		return set;
 	}
 
 	private Set<PartManifacturingDetailsDto> getPartManifacturingDetailsDto(SteelOrder order){
 		logger.debug("setting PartManifacturingDetailsDto.");
-		Set<PartManifacturingDetailsDto> set = new HashSet<>();
+		SortedSet<PartManifacturingDetailsDto> set = new TreeSet<>(getPartManifacturingDetailOrder());
 		
 		if(order.getPartManifacturingDetails()== null || order.getPartManifacturingDetails().isEmpty()){
 			return Collections.emptySet();
 		}
 		
-		for(PartManifacturingDetails part : order.getPartManifacturingDetails()){
+		int count = 0;
+		for(PartManifacturingDetail part : order.getPartManifacturingDetails()){
 			PartManifacturingDetailsDto partDto = convertFrom(part);
 			set.add(partDto);
+			count++;
 		}
-		
+		logger.debug(count + " PartManifacturingDetail covnverted to PartManifacturingDetailsDto.");
 		return set;
 	}
 
-	private Set<PartManifacturingDetails> getPartManifacturingDetailsSet(SteelOrderDto orderDto, SteelOrder order) {
+	private Set<PartManifacturingDetail> getPartManifacturingDetailsSet(SteelOrderDto orderDto, SteelOrder order) {
 		logger.debug("setting partmanifacturing details.");
-		Set<PartManifacturingDetails> partManifacturingDetailsSet = new HashSet<>();
+		Set<PartManifacturingDetail> partManifacturingDetailsSet = new HashSet<>();
 		
 		for(PartManifacturingDetailsDto dto : orderDto.getPartDetails()){
-			PartManifacturingDetails partManifacturingDetails = convertFrom(dto);
+			PartManifacturingDetail partManifacturingDetails = convertFrom(dto);
 			partManifacturingDetailsSet.add(partManifacturingDetails);
 			partManifacturingDetails.setOrder(order);
 		}
@@ -266,7 +293,6 @@ public class DtoDomainConvertor {
 			check.setOrder(order);
 			checkList.add(check);
 		}
-		
 		return checkList;
 	}
 
@@ -287,5 +313,29 @@ public class DtoDomainConvertor {
 		dev.setType(EnumType.valueOf(Deviation.Type.class, orderDto.getDeviationType()));
 		dev.setRequestDate(orderDto.getRequestDate());
 		return dev;
+	}
+	private Comparator<PartManifacturingDetailsDto> getPartManifacturingDetailOrder(){
+		Comparator<PartManifacturingDetailsDto> comp = new Comparator<PartManifacturingDetailsDto>() {
+			@Override
+			public int compare(PartManifacturingDetailsDto o1,
+					PartManifacturingDetailsDto o2) {
+				return o1.getNumber() - o2.getNumber();
+			}
+		};
+		
+		return comp;
+	}
+	
+	private Comparator<SteelVerificationCheckDto> getSteelVerificationCheckOrder(){
+		Comparator<SteelVerificationCheckDto> comp = new Comparator<SteelVerificationCheckDto>() {
+			
+			@Override
+			public int compare(SteelVerificationCheckDto o1,
+					SteelVerificationCheckDto o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		};
+		
+		return comp;
 	}
 }

@@ -41,7 +41,7 @@ public abstract class GenericDao <T, K extends Serializable> {
 	public T update(T t){
 		logger.debug("updating entity"+ getClazz()+" "+t);
 		Session session = getSessionFactory().getCurrentSession();
-		session.saveOrUpdate(t);
+		session.update(t);
 		return t;
 	}
 	
@@ -85,6 +85,27 @@ public abstract class GenericDao <T, K extends Serializable> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	protected List<T> getAllEqualTo(String[] columnNames, Object[] values,String...returnedColumns){
+		logger.debug("fetching for entity "+ getClazz()+" all entries for criteria "+ Arrays.toString(columnNames)+" values "+Arrays.toString(values));
+		ProjectionList projectionList = Projections.projectionList();
+		
+		for(String col : returnedColumns){
+			projectionList.add(Projections.property(col),col);
+		}
+		
+		Session session = getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(getClazz());
+		for(int i=0; i < columnNames.length; i++){
+			criteria.add(Restrictions.eq(columnNames[i], values[i]));	
+		}
+		criteria.setProjection(projectionList)
+		.setResultTransformer(Transformers.aliasToBean(getClazz()));
+		
+		List<T> list = (List<T>)criteria.list();
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<T> getAll(){
 		logger.debug("fetching all entries for entity "+ getClazz());
 		Session session = getSessionFactory().getCurrentSession();
@@ -111,7 +132,7 @@ public abstract class GenericDao <T, K extends Serializable> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T reattachEntity(T t){
+	public T merge(T t){
 		logger.debug("reattaching entity "+ getClazz());
 		Session session = getSessionFactory().getCurrentSession();
 		return (T)session.merge(t);

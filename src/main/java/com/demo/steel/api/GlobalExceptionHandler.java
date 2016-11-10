@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,20 +21,64 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(InvalidInputException.class)
 	public ResponseEntity<ApiError> handleInvalidInputException(InvalidInputException ex, Locale locale){
-		logger.error(ex.getLocalizedMessage(),ex);
+		logger.error(ex.getMessage(),ex);
 		ResponseEntity<ApiError> response = getResponseEntity(ex,locale);
 		logger.debug("error response generated.");
 		return response;
+	}
+	
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<ApiError> handleMysqlSyntaxException(RuntimeException ex, Locale locale){
+		logger.error(ex.getMessage(),ex);
+		ApiError error = getInternalServerError(ex, locale);
+		ResponseEntity<ApiError> response = getResponseEntity(error);
+		logger.debug("error response generated.");
+		return response;
+	}
+	
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public ResponseEntity<ApiError> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex, Locale locale){
+		logger.error(ex.getMessage(), ex);
+		ApiError error = new ApiError();
+		error.setApiErrorCode(ErrorCode.MISSING_REQ_PARAM)
+		.setDeveloperMessage(ex.getMessage())
+		.setHttpStatus(HttpStatus.BAD_REQUEST.value())
+		.setUserMessage(ex.getMessage());
+		ResponseEntity<ApiError> response = getResponseEntity(error);
+		logger.debug("error response generated.");
+		return response;
+	}
+	
+	private ResponseEntity<ApiError> getResponseEntity(ApiError error){
+		return ResponseEntity.status(error.getHttpStatus())
+				.body(error);
 	}
 	
 	private ResponseEntity<ApiError> getResponseEntity(ApiException ex, Locale locale){
 		ApiError error = new ApiError();
 		error.setApiErrorCode(ex.getErrorCode())
 		.setHttpStatus(ex.getErrorCode().getHttpStatus().value())
-		.setDeveloperMessage(ex.getLocalizedMessage())
-		.setUserMessage(messageSource.getMessage(ex.getErrorCode().getName(),null,locale));
+		.setDeveloperMessage(ex.getMessage());
 		
-		return ResponseEntity.status(ex.getErrorCode().getHttpStatus())
+		try {
+			error.setUserMessage(messageSource.getMessage(ex.getErrorCode().getName(),null,locale));
+		} catch (NoSuchMessageException e) {
+			logger.error(e.getMessage(),e);
+			error = getInternalServerError(e,locale);
+		}
+		
+		return ResponseEntity.status(error.getHttpStatus())
 				.body(error);
 	}
+	
+	private ApiError getInternalServerError(Exception e,Locale locale){
+		ApiError error = new ApiError();
+		error.setApiErrorCode(ErrorCode.INTERNAL_ERROR)
+		.setHttpStatus(ErrorCode.INTERNAL_ERROR.getHttpStatus().value())
+		.setDeveloperMessage(e.getMessage())
+		.setUserMessage(messageSource.getMessage(ErrorCode.INTERNAL_ERROR.getName(),null, locale));
+	
+		return error;
+	}
+	
 }
