@@ -16,7 +16,7 @@ public class Supplier {
 	private Integer code;
 	private String name;
 	private String email;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="supplier",fetch = FetchType.LAZY)
 	private Set<PartNoDetails> partNos;
 	
 	public int getCode() {
@@ -45,8 +45,7 @@ public class Supplier {
 	}
 	@Override
 	public String toString() {
-		return "Supplier [code=" + code + ", name=" + name + ", email=" + email
-				+ ", partNos=" + partNos + "]";
+		return "Supplier [code=" + code + ", name=" + name + ", email=" + email+"]";
 	}
 	
 }

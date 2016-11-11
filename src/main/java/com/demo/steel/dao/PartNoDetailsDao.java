@@ -1,8 +1,11 @@
 package com.demo.steel.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.demo.steel.domain.PartNoDetails;
+import com.demo.steel.domain.Supplier;
 
 @Repository
 public class PartNoDetailsDao extends GenericDao<PartNoDetails, Integer>{
@@ -12,7 +15,8 @@ public class PartNoDetailsDao extends GenericDao<PartNoDetails, Integer>{
 		return PartNoDetails.class;
 	}
 
-	public PartNoDetails getPartNoDetails(int heatNumber, String supplier){
-		return getEqualTo(new String[]{"heatNumber","supplier"}, new Object[]{heatNumber,supplier});
+	@SuppressWarnings("unchecked")
+	public List<PartNoDetails> filterBy(Supplier supplier){
+		return (List<PartNoDetails>)getEqualTo(new String[]{"supplier"}, new Object[]{supplier.getCode()});
 	}
 }
