@@ -175,6 +175,22 @@ public class SteelOrderApiService {
 		return steelOrderApprovalService.downloadReport(orderId);
 	}
 
+	public List<SteelOrderDto> getOrderPage(int page, int totalEntriesPerPage, String supplierName) {
+		logger.debug("starting pagination workflow.");
+		Supplier supplier = supplierService.getSupplier(supplierName);
+		if(supplier == null){
+			throw new InvalidInputException(ErrorCode.SUPPLIER_NOT_FOUND, "supplier does not exists.");
+		}
+		
+		if(page < 0 || totalEntriesPerPage < 0){
+			throw new InvalidInputException(ErrorCode.INVALID_PAGE, "invalid input passed for pagination.");
+		}
+		List<SteelOrder> orders = steelOrderService.getOrderPage(page,totalEntriesPerPage, supplier);
+		List<SteelOrderDto> dtos = conv.convertSteelOrders(orders);
+		logger.debug("returning "+dtos.size()+" orders.");
+		return dtos;
+	}
+
 	private String[] getSteelMills() {
 		List<SteelMill> mills = steelMillService.getAll();
 		String[] millsArry = new String[mills.size()];

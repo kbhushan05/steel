@@ -115,7 +115,7 @@ public abstract class GenericDao <T, K extends Serializable> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected List<T> getMinimalPresentation(String...columns){
+	protected List<T> getMinimalPresentation(int firstResult, int fetchSize, String...columns){
 		logger.debug("fetching proxy for entity "+ getClazz()+ "for values "+Arrays.toString(columns));
 		ProjectionList projectionList = Projections.projectionList();
 		for(String col : columns){
@@ -126,7 +126,10 @@ public abstract class GenericDao <T, K extends Serializable> {
 		Criteria criteria = session.createCriteria(getClazz());
 		criteria.setProjection(projectionList)
 		.setResultTransformer(Transformers.aliasToBean(getClazz()));
-		
+		if(firstResult >=0 && fetchSize > 0){
+			criteria.setFirstResult(firstResult)
+			.setFetchSize(fetchSize);
+		}
 		List<T> list = (List<T>)criteria.list();
 		return list;
 	}
@@ -143,5 +146,13 @@ public abstract class GenericDao <T, K extends Serializable> {
 		logger.debug("loading entity "+ getClazz()+" for key "+ key);
 		Session session = getSessionFactory().getCurrentSession();
 		return (T)session.load(getClazz(), key);
+	}
+	
+	public int getTotalCount(){
+		Session session = getSessionFactory().getCurrentSession();
+		ProjectionList list = Projections.projectionList();
+		Criteria criteria = session.createCriteria(getClazz());
+		criteria.setProjection(list.add(Projections.rowCount()));
+		return (int)criteria.uniqueResult();
 	}
 }

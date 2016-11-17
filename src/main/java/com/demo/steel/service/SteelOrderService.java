@@ -39,7 +39,7 @@ import com.demo.steel.util.StringUtil;
 public class SteelOrderService {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SteelOrderService.class);
-	
+	private final int MAX_LIMIT = 30;
 	private static final Random ORDER_ID_GENERATOR = new Random();
 	
 	@Autowired
@@ -232,6 +232,20 @@ public class SteelOrderService {
 	
 	private Supplier getSupplier(String name){
 		return supplierDao.get(name);
+	}
+
+	@Transactional
+	public List<SteelOrder> getOrderPage(int page, int limit,Supplier supplier) {
+		int total = limit;
+		if(limit > MAX_LIMIT || limit <=0){
+			total = MAX_LIMIT;
+		}
+		if(page <= 0){
+			page = 1;
+		}
+		int startIndex = (page -1)*total;
+		logger.debug("Pagination start index "+ startIndex +" total orders "+ limit);
+		return steelOrderDao.getAll(startIndex, total, supplier);
 	}
 }
 

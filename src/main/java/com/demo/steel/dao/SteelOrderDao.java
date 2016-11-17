@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -38,7 +40,11 @@ public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 	}
 
 	public List<SteelOrder> getOrderProxies() {
-		return getMinimalPresentation(PROXY_PRESENTATION);
+		return getMinimalPresentation(0,0,PROXY_PRESENTATION);
+	}
+	
+	public List<SteelOrder> getOrderProxies(int startResult, int total) {
+		return getMinimalPresentation(startResult,total,PROXY_PRESENTATION);
 	}
 
 	public List<SteelOrder> filterBy(State status) {
@@ -63,6 +69,32 @@ public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 
 	public List<SteelOrder> filterBy(Supplier supplier, State state) {
 		List<SteelOrder> orders= getAllEqualTo(new String[]{"supplier","state"}, new Object[]{supplier, state},PROXY_PRESENTATION);
+		return orders;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SteelOrder> getAll(int startIndex, int total, Supplier supplier) {
+		
+		ProjectionList projectionList = Projections.projectionList();
+		for(String col : PROXY_PRESENTATION){
+			projectionList.add(Projections.property(col),col);
+		}
+		
+		Session session = getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(getClazz());
+		criteria.setFirstResult(startIndex)
+		.setFetchSize(total)
+		.setMaxResults(total)
+		.addOrder(org.hibernate.criterion.Order.asc("id"))
+		.setProjection(projectionList)
+		.setResultTransformer(Transformers.aliasToBean(getClazz()));
+		
+		
+		Criteria c2 = criteria.createCriteria("supplier");
+		c2.add(Restrictions.eq("code",supplier.getCode()))
+		.setFetchSize(total);
+		
+		List<SteelOrder> orders = (List<SteelOrder>)criteria.list();
 		return orders;
 	}
 

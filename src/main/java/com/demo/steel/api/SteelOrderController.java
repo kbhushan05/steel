@@ -41,39 +41,20 @@ public class SteelOrderController {
 		return dto;
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,consumes="application/json")
-	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String state){
-		logger.debug("received request to all orders for supplier "+ supplierName + " and status "+state);
-		
-		if(!StringUtil.isEmpty(supplierName)&& !StringUtil.isEmpty(state)){
-			List<SteelOrderDto> dtos = service.getFilteredBy(supplierName, state);
-			logger.debug("response generated for filter supplier and state.");
-			return dtos;
-		}
-		
-		if(!StringUtil.isEmpty(supplierName)){
-			List<SteelOrderDto> dtos = service.getFilteredBySupplierName(supplierName);
-			logger.debug("response generated for filter supplier name.");
-			return dtos;
-		}
-		
-		if(!StringUtil.isEmpty(state)){
-			List<SteelOrderDto> dtos = service.getFilteredByStatus(state);
-			logger.debug("response generated for filter state.");
-			return dtos;
-		}
-		
-		List<SteelOrderDto> dtos = service.getAll();
-		logger.debug("response generated without filter.");
-		return dtos;
-	}
-
 	@RequestMapping(method=RequestMethod.PUT,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.OK)
 	public SteelOrderDto updateOrder(@RequestBody(required = true)SteelOrderDto orderDto){
 		logger.debug("received request to update order "+ orderDto.getOrderId());
 		SteelOrderDto dto = service.updateOrder(orderDto);
 		logger.debug("response generated successfully.");
+		return dto;
+	}
+
+	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
+	public SteelOrderDto get(@PathVariable String orderId){
+		logger.debug("received request to read order "+ orderId);
+		SteelOrderDto dto = service.getOrder(orderId);
+		logger.debug("response generated successfully");
 		return dto;
 	}
 
@@ -117,14 +98,41 @@ public class SteelOrderController {
 		return dto;
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
-	public SteelOrderDto get(@PathVariable String orderId){
-		logger.debug("received request to read order "+ orderId);
-		SteelOrderDto dto = service.getOrder(orderId);
-		logger.debug("response generated successfully");
-		return dto;
+	@RequestMapping(method=RequestMethod.GET,consumes="application/json")
+	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String state){
+		logger.debug("received request to all orders for supplier "+ supplierName + " and status "+state);
+		
+		if(!StringUtil.isEmpty(supplierName)&& !StringUtil.isEmpty(state)){
+			List<SteelOrderDto> dtos = service.getFilteredBy(supplierName, state);
+			logger.debug("response generated for filter supplier and state.");
+			return dtos;
+		}
+		
+		if(!StringUtil.isEmpty(supplierName)){
+			List<SteelOrderDto> dtos = service.getFilteredBySupplierName(supplierName);
+			logger.debug("response generated for filter supplier name.");
+			return dtos;
+		}
+		
+		if(!StringUtil.isEmpty(state)){
+			List<SteelOrderDto> dtos = service.getFilteredByStatus(state);
+			logger.debug("response generated for filter state.");
+			return dtos;
+		}
+		
+		List<SteelOrderDto> dtos = service.getAll();
+		logger.debug("response generated without filter.");
+		return dtos;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET,params={"page","limit","supplierName"})
+	public List<SteelOrderDto> getOrderPage(@RequestParam int page,@RequestParam("limit") int totalEntries,@RequestParam String supplierName){
+		logger.debug("received pagination request for page " + page +" limit "+totalEntries);
+		List<SteelOrderDto> dtos = service.getOrderPage(page, totalEntries,supplierName);
+		logger.debug("response generated successfully, returning "+ dtos.size()+" entries.");
+		return dtos;
+	}
+
 	@RequestMapping(method=RequestMethod.POST, consumes="multipart/form-data", path="/{orderId}/report")
 	public void uploadFile(@PathVariable String orderId, @RequestPart MultipartFile mFile){
 		logger.debug("received request to upload approval.");

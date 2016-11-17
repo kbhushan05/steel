@@ -14,7 +14,8 @@ public enum ErrorCode {
 	INVALID_ACTION("invalid_action",HttpStatus.BAD_REQUEST), 
 	INTERNAL_ERROR("internal_error",HttpStatus.INTERNAL_SERVER_ERROR), 
 	STEELMILL_NOT_FOUND("steelmill_not_found",HttpStatus.NOT_FOUND),
-	MISSING_REQ_PARAM("missing_req_param",HttpStatus.BAD_REQUEST);
+	MISSING_REQ_PARAM("missing_req_param",HttpStatus.BAD_REQUEST), 
+	INVALID_PAGE("invalid_page",HttpStatus.BAD_REQUEST);
 	
 	private String name;
 	private HttpStatus httpStatus;
