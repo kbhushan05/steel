@@ -89,10 +89,11 @@ public class SteelOrderDao extends GenericDao<SteelOrder, String> {
 		.setProjection(projectionList)
 		.setResultTransformer(Transformers.aliasToBean(getClazz()));
 		
-		
-		Criteria c2 = criteria.createCriteria("supplier");
-		c2.add(Restrictions.eq("code",supplier.getCode()))
-		.setFetchSize(total);
+		if(supplier != null){
+			Criteria c2 = criteria.createCriteria("supplier");
+			c2.add(Restrictions.eq("code",supplier.getCode()))
+			.setFetchSize(total);
+		}
 		
 		List<SteelOrder> orders = (List<SteelOrder>)criteria.list();
 		return orders;

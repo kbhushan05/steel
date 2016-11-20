@@ -1,6 +1,7 @@
 package com.demo.steel.api;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.demo.steel.domain.SteelOrderApproval;
 import com.demo.steel.dto.SteelOrderDto;
+import com.demo.steel.security.domain.User;
+import com.demo.steel.security.service.UserService;
 import com.demo.steel.util.StringUtil;
 
 @RestController
@@ -31,7 +37,10 @@ public class SteelOrderController {
 	
 	@Autowired
 	private SteelOrderApiService service;
+	@Autowired
+	private UserService userService;
 	
+	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public SteelOrderDto saveOrder(@RequestBody(required = true)SteelOrderDto orderDto){
@@ -41,8 +50,8 @@ public class SteelOrderController {
 		return dto;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.PUT,consumes="application/json")
-	@ResponseStatus(code = HttpStatus.OK)
 	public SteelOrderDto updateOrder(@RequestBody(required = true)SteelOrderDto orderDto){
 		logger.debug("received request to update order "+ orderDto.getOrderId());
 		SteelOrderDto dto = service.updateOrder(orderDto);
@@ -50,6 +59,7 @@ public class SteelOrderController {
 		return dto;
 	}
 
+	@PreAuthorize("hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}")
 	public SteelOrderDto get(@PathVariable String orderId){
 		logger.debug("received request to read order "+ orderId);
@@ -58,6 +68,7 @@ public class SteelOrderController {
 		return dto;
 	}
 
+	@PreAuthorize("hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.PUT,path="/{orderId}/{action}")
 	public SteelOrderDto executeAction(@PathVariable String orderId,
 			@PathVariable String action,
@@ -81,15 +92,16 @@ public class SteelOrderController {
 		return dto;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json",path="/new")
-	@ResponseStatus(code = HttpStatus.OK)
-	public SteelOrderDto createNewOrder(@RequestParam String supplierName){
+	public SteelOrderDto createNewOrder(){
 		logger.debug("received request to create new order.");
-		SteelOrderDto dto = service.createNewOrder(supplierName);
+		SteelOrderDto dto = service.createNewOrder(getSupplierName(""));
 		logger.debug("response generated successfully.");
 		return dto;
 	}
 
+	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json",path="/new/{orderId}")
 	public SteelOrderDto createNewFhtOrder(@PathVariable String orderId){
 		logger.debug("received request to create FHT order.");
@@ -98,9 +110,11 @@ public class SteelOrderController {
 		return dto;
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,consumes="application/json")
-	public List<SteelOrderDto> getAll(@RequestParam(required = false) String supplierName, @RequestParam(required = false) String state){
-		logger.debug("received request to all orders for supplier "+ supplierName + " and status "+state);
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(method=RequestMethod.GET,consumes="application/json", params={"supplierName"})
+	public List<SteelOrderDto> getAll(@RequestParam(name="supplierName",required = false) String supplierNameParam, @RequestParam(required = false) String state){
+		logger.debug("received request to all orders for supplier "+ supplierNameParam + " and status "+state);
+		String supplierName = getSupplierName(supplierNameParam);
 		
 		if(!StringUtil.isEmpty(supplierName)&& !StringUtil.isEmpty(state)){
 			List<SteelOrderDto> dtos = service.getFilteredBy(supplierName, state);
@@ -125,14 +139,36 @@ public class SteelOrderController {
 		return dtos;
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')")
+	@RequestMapping(method=RequestMethod.GET,consumes="application/json")
+	public List<SteelOrderDto> getAll(@RequestParam(required = false) String state){
+		return getAll("",state);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.GET,params={"page","limit","supplierName"})
-	public List<SteelOrderDto> getOrderPage(@RequestParam int page,@RequestParam("limit") int totalEntries,@RequestParam String supplierName){
+	public List<SteelOrderDto> getOrderPage(@RequestParam int page,@RequestParam("limit") int totalEntries, @RequestParam(name="supplierName",required = false,defaultValue="ALL")String supplierNameParam){
 		logger.debug("received pagination request for page " + page +" limit "+totalEntries);
-		List<SteelOrderDto> dtos = service.getOrderPage(page, totalEntries,supplierName);
+		String supplierName = getSupplierName(supplierNameParam);
+		
+		List<SteelOrderDto> dtos = Collections.emptyList();
+		if(!StringUtil.isEmpty(supplierName)){
+			dtos = service.getOrderPage(page, totalEntries,supplierName);
+		}else{
+			dtos = service.getOrderPage(page, totalEntries);
+		}
+		
 		logger.debug("response generated successfully, returning "+ dtos.size()+" entries.");
 		return dtos;
 	}
-
+	
+	@PreAuthorize("hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')")
+	@RequestMapping(method = RequestMethod.GET,params={"page","limit"})
+	public List<SteelOrderDto> getOrderPage(@RequestParam int page,@RequestParam("limit") int totalEntries){
+		return getOrderPage(page, totalEntries,"");
+	}
+	
+	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.POST, consumes="multipart/form-data", path="/{orderId}/report")
 	public void uploadFile(@PathVariable String orderId, @RequestPart MultipartFile mFile){
 		logger.debug("received request to upload approval.");
@@ -143,6 +179,7 @@ public class SteelOrderController {
 		}
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_SUPPLIER','ROLE_ADMIN')")
 	@RequestMapping(method=RequestMethod.GET,path="/{orderId}/report")
 	public ResponseEntity<byte[]> downloadReport(@PathVariable String orderId) throws IOException{
 		SteelOrderApproval approval = service.downloadApprovalReport(orderId);
@@ -155,4 +192,15 @@ public class SteelOrderController {
 				.body(data);
 	}
 
+	private String getSupplierName(String supplierNameParam){
+		if(!StringUtil.isEmpty(supplierNameParam)){
+			return supplierNameParam;
+		}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		logger.debug("obtained authentication ");
+		String username = (String)auth.getPrincipal();
+		User user = userService.get(username);
+		logger.debug("fetched logged in user successfully." + user);
+		return user.getSupplierName();
+	}
 }

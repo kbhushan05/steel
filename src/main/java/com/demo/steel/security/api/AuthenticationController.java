@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.steel.api.ErrorCode;
+import com.demo.steel.api.InvalidInputException;
 import com.demo.steel.security.domain.Session;
 import com.demo.steel.security.domain.User;
 import com.demo.steel.security.service.SessionService;
@@ -48,6 +50,9 @@ public class AuthenticationController {
 	public void logout(@RequestParam String username){
 		logger.debug("logging out user "+ username);
 		User user = userService.get(username);
+		if(user == null){
+			throw new InvalidInputException(ErrorCode.NO_USER_FOUND,"User does not exists");
+		}
 		user.setPassword("");
 		getSessionService().remove(user);
 		logger.debug("existing session removed successfully for user "+ username);

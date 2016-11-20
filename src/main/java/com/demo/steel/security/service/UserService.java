@@ -18,15 +18,5 @@ public class UserService {
 	public User get(String username){
 		return userDao.get(username);
 	}
-	
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-	
-	
 
 }

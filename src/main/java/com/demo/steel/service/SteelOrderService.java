@@ -247,6 +247,11 @@ public class SteelOrderService {
 		logger.debug("Pagination start index "+ startIndex +" total orders "+ limit);
 		return steelOrderDao.getAll(startIndex, total, supplier);
 	}
+	
+	@Transactional
+	public List<SteelOrder> getOrderPage(int page, int limit) {
+		return getOrderPage(page, limit, null);
+	}
 }
 
 /*	private boolean isValidNewSteelToBuy(SteelOrder order){

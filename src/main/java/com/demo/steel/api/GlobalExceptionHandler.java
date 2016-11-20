@@ -9,6 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,9 +31,17 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<ApiError> handleMysqlSyntaxException(RuntimeException ex, Locale locale){
 		logger.error(ex.getMessage(),ex);
-		ApiError error = getInternalServerError(ex, locale);
+		ApiError error = getApiError(ErrorCode.INTERNAL_ERROR,ex, locale);
 		ResponseEntity<ApiError> response = getResponseEntity(error);
 		logger.debug("error response generated.");
+		return response;
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException ex, Locale locale){
+		logger.error(ex.getMessage(),ex);
+		ApiError error = getApiError(ErrorCode.ACCESS_DENIED, ex, locale);
+		ResponseEntity<ApiError> response = getResponseEntity(error);
 		return response;
 	}
 	
@@ -64,19 +73,19 @@ public class GlobalExceptionHandler {
 			error.setUserMessage(messageSource.getMessage(ex.getErrorCode().getName(),null,locale));
 		} catch (NoSuchMessageException e) {
 			logger.error(e.getMessage(),e);
-			error = getInternalServerError(e,locale);
+			error = getApiError(ErrorCode.INTERNAL_ERROR,e,locale);
 		}
 		
 		return ResponseEntity.status(error.getHttpStatus())
 				.body(error);
 	}
 	
-	private ApiError getInternalServerError(Exception e,Locale locale){
+	private ApiError getApiError(ErrorCode code,Exception e,Locale locale){
 		ApiError error = new ApiError();
-		error.setApiErrorCode(ErrorCode.INTERNAL_ERROR)
-		.setHttpStatus(ErrorCode.INTERNAL_ERROR.getHttpStatus().value())
+		error.setApiErrorCode(code)
+		.setHttpStatus(code.getHttpStatus().value())
 		.setDeveloperMessage(e.getMessage())
-		.setUserMessage(messageSource.getMessage(ErrorCode.INTERNAL_ERROR.getName(),null, locale));
+		.setUserMessage(messageSource.getMessage(code.getName(),null, locale));
 	
 		return error;
 	}
