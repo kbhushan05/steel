@@ -1,0 +1,33 @@
+"name";"testName";"type";"id"
+"Authentic Steel Mill Certificate ";"";"FHT";1
+"Approved Steel Mill List Rev.No.14";"Steel from Approved CIL Source";"FHT";2
+"Forger test report";"";"FHT";3
+"Heat treatment test certificate";"";"FHT";4
+"Third party inspection test certificate ";"";"FHT";5
+"Chemical analysis report including";"Spectrscopy";"FHT";6
+"Inclusion rating";"ASTM-E45";"FHT";7
+"ASTM E112:1982";"Grain size";"FHT";8
+"Jominy hardneability as per RMQP";"ASTM A255";"FHT";9
+"Macroetching";"ASTM E381";"FHT";10
+"Step down test (10/10 Ton)";"ME/F/20";"FHT";11
+"Ultrasonic test";"Ultrasonic Std.SA 388 Bottom echo of 2 mm FBH";"FHT";12
+"Magnetic partical inspection";"ASTM E1444/ASTM";"FHT";13
+"Mechanical properties test";"As per RMQP";"FHT";14
+"Authentic Steel mill T.C";"";"BASIC";15
+"Steel from our approved CIL source";"";"BASIC";16
+"Chemical Composition";"";"BASIC";17
+"RCS DIA- MM";"";"BASIC";18
+"Steel making route:(EAF-LRF-VD-CC/INGOT-EMS)";"";"BASIC";19
+"Reduction Ratio";"";"BASIC";20
+"Grain size ( ASTM 5-8)";"";"BASIC";22
+"Step down test";"";"BASIC";24
+"Decarb Layer";"";"BASIC";25
+"Jominy values";"";"BASIC";26
+"Surfacehardness of steel (should not exceed 241 BHN)";"";"BASIC";27
+"Ultrasonic Inspection TEST";"";"BASIC";28
+"Magnetic Particle Inspection";"";"BASIC";29
+"Gas content in ppm N2=90ppm, O2=20ppm,H2=2ppm";"";"BASIC";30
+"Blue Fracture Test reports";"";"BASIC";31
+"HT PROCESS";"";"BASIC";32
+"Hardness";"";"BASIC";33
+"MECHANICAL PROPERTIES";"";"BASIC";34

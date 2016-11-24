@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd" logicalFilePath="classpath:/liquibase/changelog-eval.xml">
+
+	<changeSet author="Bhushan" id="create_all_tables_1" failOnError="true">
+		<createTable tableName="deviation">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="attachment" type="LONGBLOB" />
+			<column name="attachmentName" type="VARCHAR(255)" />
+			<column name="cilDevitionNumber" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="delivaryAffected" type="VARCHAR(255)" />
+			<column name="description" type="VARCHAR(255)" />
+			<column name="partDescription" type="VARCHAR(255)" />
+			<column name="quantityForDeviation" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="requestDate" type="datetime(6)" />
+			<column name="requesterName" type="VARCHAR(255)" />
+			<column name="rmGarde" type="VARCHAR(255)" />
+			<column name="rmSection" type="VARCHAR(255)" />
+			<column name="type" type="VARCHAR(255)" />
+			<column name="order_id" type="VARCHAR(255)" />
+		</createTable>
+
+		<createTable tableName="partmanifacturingdetails">
+			<column autoIncrement="true" name="primaryKey" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="cutWeight" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="partNo" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="partWeight" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="INT" />
+			<column name="order_id" type="VARCHAR(255)" />
+			<column name="partDetails_partNo" type="INT" />
+		</createTable>
+
+		<createTable tableName="partnodetails">
+			<column name="partNo" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="supplier_code" type="INT" />
+		</createTable>
+		<createTable tableName="report">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="data" type="LONGBLOB" />
+			<column name="filename" type="VARCHAR(255)" />
+			<column name="mimeType" type="VARCHAR(255)" />
+			<column name="steelVerificationCheckId" type="INT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable tableName="session">
+			<column autoIncrement="true" name="primaryKey" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="token" type="LONGTEXT" />
+			<column name="user_username" type="VARCHAR(255)" />
+		</createTable>
+
+		<createTable tableName="steelheatno">
+			<column name="heatNo" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="tonnage" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="steelmill">
+			<column name="name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="id" type="INT" />
+		</createTable>
+		<createTable tableName="steelorder">
+			<column name="id" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="alreadyAvailableSteelTonage" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="cilComment" type="LONGTEXT" />
+			<column name="cilRemark" type="LONGTEXT" />
+			<column name="cilStatus" type="VARCHAR(255)" />
+			<column name="comments" type="VARCHAR(255)" />
+			<column name="courierCompany" type="VARCHAR(255)" />
+			<column name="courierDeliveryDate" type="datetime(6)" />
+			<column name="courierReceiptName" type="VARCHAR(255)" />
+			<column name="date" type="datetime(6)" />
+			<column name="forgerSupplierCode" type="VARCHAR(255)" />
+			<column name="newSteelToBuy" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="poNumber" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="refStandard" type="VARCHAR(255)" />
+			<column name="remark" type="VARCHAR(255)" />
+			<column name="state" type="VARCHAR(255)" />
+			<column name="steelHeatNumber" type="VARCHAR(255)" />
+			<column name="steelTonage" type="FLOAT(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="type" type="VARCHAR(255)" />
+			<column name="mill_name" type="VARCHAR(255)" />
+			<column name="parentOrder_id" type="VARCHAR(255)" />
+			<column name="supplier_code" type="INT" />
+		</createTable>
+
+		<createTable tableName="steelorderapproval">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="data" type="LONGBLOB" />
+			<column name="filename" type="VARCHAR(255)" />
+			<column name="mimeType" type="VARCHAR(255)" />
+			<column name="orderId" type="VARCHAR(255)" />
+		</createTable>
+		<createTable tableName="steelverificationcheck">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="filename" type="VARCHAR(255)" />
+			<column name="remark" type="VARCHAR(255)" />
+			<column name="status" type="VARCHAR(255)" />
+			<column name="order_id" type="VARCHAR(255)" />
+			<column name="verificationCheck_id" type="INT" />
+		</createTable>
+		<createTable tableName="supplier">
+			<column name="code" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="email" type="VARCHAR(255)" />
+			<column name="name" type="VARCHAR(255)" />
+		</createTable>
+		<createTable tableName="user">
+			<column name="username" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="password" type="VARCHAR(255)" />
+			<column name="role" type="VARCHAR(255)" />
+			<column name="supplierName" type="VARCHAR(255)" />
+		</createTable>
+		<createTable tableName="verificationcheck">
+			<column name="name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="testName" type="VARCHAR(255)" />
+			<column name="type" type="VARCHAR(255)" />
+			<column name="id" type="INT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey columnNames="partNo" constraintName="PRIMARY"
+			tableName="partnodetails" />
+		<addPrimaryKey columnNames="heatNo" constraintName="PRIMARY"
+			tableName="steelheatno" />
+		<addPrimaryKey columnNames="name" constraintName="PRIMARY"
+			tableName="steelmill" />
+		<addPrimaryKey columnNames="id" constraintName="PRIMARY"
+			tableName="steelorder" />
+		<addPrimaryKey columnNames="code" constraintName="PRIMARY"
+			tableName="supplier" />
+		<addPrimaryKey columnNames="username" constraintName="PRIMARY"
+			tableName="user" />
+		<addPrimaryKey columnNames="id" constraintName="PRIMARY"
+			tableName="verificationcheck" />
+		<addUniqueConstraint columnNames="name"
+			constraintName="UK_a8txda93nltnslk7auv5jf2pr" tableName="verificationcheck" />
+		<addUniqueConstraint columnNames="order_id, partDetails_partNo"
+			constraintName="UK_jq77xof7a88tdtoy9wjms5os9" tableName="partmanifacturingdetails" />
+		<createIndex indexName="FK_4e767bnjdxg63eke0emh94hb8"
+			tableName="partnodetails">
+			<column name="supplier_code" />
+		</createIndex>
+		<createIndex indexName="FK_59gyywqj1bfaar04ev9wfhwq3"
+			tableName="steelorder">
+			<column name="parentOrder_id" />
+		</createIndex>
+		<createIndex indexName="FK_67igdc3imsi74d3hqs8gfa3f"
+			tableName="steelverificationcheck">
+			<column name="verificationCheck_id" />
+		</createIndex>
+		<createIndex indexName="FK_6fj7b969ncrr3kjchqq8qr04q"
+			tableName="steelorder">
+			<column name="supplier_code" />
+		</createIndex>
+		<createIndex indexName="FK_av2cg3c1dpd9y7e74s3b4wk8p"
+			tableName="steelorder">
+			<column name="mill_name" />
+		</createIndex>
+		<createIndex indexName="FK_df6uckk4h46ca2k72eyg3ng7s"
+			tableName="partmanifacturingdetails">
+			<column name="partDetails_partNo" />
+		</createIndex>
+		<createIndex indexName="FK_fpw0kvrwdurbaiuej5dhjsj62"
+			tableName="session">
+			<column name="user_username" />
+		</createIndex>
+		<createIndex indexName="FK_i0e5l9kaq40yuc471pmeo0ckj"
+			tableName="steelverificationcheck">
+			<column name="order_id" />
+		</createIndex>
+		<createIndex indexName="FK_immpjsx1y40tej22qgjbr6xi3"
+			tableName="deviation">
+			<column name="order_id" />
+		</createIndex>
+		<addForeignKeyConstraint baseColumnNames="supplier_code"
+			baseTableName="partnodetails" constraintName="FK_4e767bnjdxg63eke0emh94hb8"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="code"
+			referencedTableName="supplier" />
+		<addForeignKeyConstraint baseColumnNames="parentOrder_id"
+			baseTableName="steelorder" constraintName="FK_59gyywqj1bfaar04ev9wfhwq3"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="steelorder" />
+		<addForeignKeyConstraint baseColumnNames="verificationCheck_id"
+			baseTableName="steelverificationcheck" constraintName="FK_67igdc3imsi74d3hqs8gfa3f"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="verificationcheck" />
+		<addForeignKeyConstraint baseColumnNames="supplier_code"
+			baseTableName="steelorder" constraintName="FK_6fj7b969ncrr3kjchqq8qr04q"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="code"
+			referencedTableName="supplier" />
+		<addForeignKeyConstraint baseColumnNames="mill_name"
+			baseTableName="steelorder" constraintName="FK_av2cg3c1dpd9y7e74s3b4wk8p"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="name"
+			referencedTableName="steelmill" />
+		<addForeignKeyConstraint baseColumnNames="partDetails_partNo"
+			baseTableName="partmanifacturingdetails" constraintName="FK_df6uckk4h46ca2k72eyg3ng7s"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="partNo"
+			referencedTableName="partnodetails" />
+		<addForeignKeyConstraint baseColumnNames="user_username"
+			baseTableName="session" constraintName="FK_fpw0kvrwdurbaiuej5dhjsj62"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="username"
+			referencedTableName="user" />
+		<addForeignKeyConstraint baseColumnNames="order_id"
+			baseTableName="steelverificationcheck" constraintName="FK_i0e5l9kaq40yuc471pmeo0ckj"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="steelorder" />
+		<addForeignKeyConstraint baseColumnNames="order_id"
+			baseTableName="partmanifacturingdetails" constraintName="FK_i7cjc5rkrk786x7vdhfpe36pn"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="steelorder" />
+		<addForeignKeyConstraint baseColumnNames="order_id"
+			baseTableName="deviation" constraintName="FK_immpjsx1y40tej22qgjbr6xi3"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="steelorder" />
+	</changeSet>
+	
+	<changeSet author="Bhushan" id="load_basic_data_2" context="dev,test">
+		<loadData tableName="steelmill" file="liquibase/steelmill.csv" separator=";" ></loadData>
+		<loadData tableName="supplier" file="liquibase/supplier.csv" separator=";"></loadData>
+		<loadData tableName="verificationcheck" file="liquibase/verificationcheck.csv" separator=";"></loadData>
+		<loadData tableName="user" file="liquibase/user.csv" separator=";"></loadData>
+		<loadData tableName="partnodetails" file="liquibase/partnodetails.csv" separator=";"></loadData>
+	</changeSet>
+	
+</databaseChangeLog>

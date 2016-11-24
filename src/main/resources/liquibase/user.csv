@@ -1,0 +1,5 @@
+"username";"password";"role";"supplierName"
+"admin";"test";"ROLE_ADMIN";""
+"supplier10";"12345";"ROLE_SUPPLIER";"Arihant CNC  Private Limited"
+"supplier7";"test";"ROLE_SUPPLIER";"Supplier1"
+"supplier8";"test";"ROLE_SUPPLIER";"Supplier2"
