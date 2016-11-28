@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class SteelOrderController {
 	@PreAuthorize("hasRole('ROLE_SUPPLIER')")
 	@RequestMapping(method=RequestMethod.POST,consumes="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public SteelOrderDto saveOrder(@RequestBody(required = true)SteelOrderDto orderDto){
+	public SteelOrderDto saveOrder(@Valid @RequestBody SteelOrderDto orderDto){
 		logger.debug("received request to save order "+ orderDto.getOrderId());
 		SteelOrderDto dto = service.saveOrder(orderDto);
 		logger.debug("response generated successfully.");

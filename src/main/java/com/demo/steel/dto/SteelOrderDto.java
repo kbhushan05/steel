@@ -6,18 +6,21 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
 public class SteelOrderDto {
 	private final String DELIM_SUPPLIER_ID = "-";
-	
+	@NotBlank
 	private String orderId;
 	private String supplierId;
 	private String supplierName;
 	private int supplierCode;
 	private int poNumber;
+	@NotBlank(message="steel mill is empty/null.")
 	private String steelMill;
 	private String steelHeatNumber;
 	private float alreadyAvailableSteelTonage;

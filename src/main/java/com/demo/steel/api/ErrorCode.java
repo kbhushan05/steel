@@ -17,7 +17,8 @@ public enum ErrorCode {
 	MISSING_REQ_PARAM("missing_req_param",HttpStatus.BAD_REQUEST), 
 	INVALID_PAGE("invalid_page",HttpStatus.BAD_REQUEST),
 	ACCESS_DENIED("access_denied",HttpStatus.FORBIDDEN), 
-	NO_USER_FOUND("no_user_found",HttpStatus.BAD_REQUEST);
+	NO_USER_FOUND("no_user_found",HttpStatus.BAD_REQUEST), 
+	BAD_INPUT("bad_input",HttpStatus.BAD_REQUEST);
 	
 	private String name;
 	private HttpStatus httpStatus;
