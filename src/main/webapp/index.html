@@ -1,44 +1,62 @@
 <!DOCTYPE html>
-<html ng-app="vi-app">
+<html ng-app="steel.app">
 <head>
-<meta charset="UTF-8">
-<title>-------</title>
-<link rel="stylesheet" href="libs/bs/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="app.css"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumino - Dashboard</title>
 
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
 
-<style>
-.maxHeight
-{
-    max-height: 100%;
-}
-body,html{
-	height: 100%;
-}
-</style>
+<!--Icons-->
+<script src="js/lumino.glyphs.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
 </head>
-<!-- <button class="btn btn-default navbar-btn">new form</button> -->
+
 <body>
-			<div class="maxHeight" ui-view></div>
-			<div  id="loader-wrapper" ng-show="showLoader">
-			  <div id="loader"></div>
-		    </div>
+	<h1> Hello world</h1>
+	
+	<div ng-view></div>
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.min.js"></script>
+	<script src="components/app/app.js"></script>
+	<script src="components/app/app-config.js"></script>
+	<script src="components/authentication/authentication.mod.js" ></script>
+	<script src="components/authentication/authentication-service.js" ></script>
+	<script src="components/dashboard/dashboard.js" ></script>
+	<script src="components/core/core.js" ></script>
+	<script>
+		$('#calendar').datepicker({
+		});
+
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){          
+		        $(this).find('em:first').toggleClass("glyphicon-minus");      
+		    }); 
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>	
 </body>
 
 </html>
-
-<script  src="libs/angular.min.js"></script></script>
-<script  src="libs/angular-ui-router.min.js"></script>
-<script  src="libs/angular-cookies.min.js"></script>
-<script  src="libs/ui-bootstrap-tpls-2.2.0.min.js"></script>
-<script  src="libs/FileSaver.js"></script>
-<script  src="app.js"></script>
-<script  src="config.js"></script>
-<script  src="filehandler.js"></script>
-<script  src="modules/auth/auth.js"></script>
-<script  src="modules/home/home.js"></script>
-<script  src="modules/form/form.js"></script>
-<script  src="modules/home/details.js"></script>
-<script  src="modules/records/records.js"></script>
-
-
