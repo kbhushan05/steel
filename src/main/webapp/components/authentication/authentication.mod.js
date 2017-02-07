@@ -4,7 +4,7 @@
 * Description
 */
 'use strict';
-angular.module('steel.authentication', ['steel.core'])
+angular.module('steel.authentication', ['steel.core','ngStorage'])
 
 .config(['$httpProvider',function($httpProvider) {
 	$httpProvider.interceptors.push('httpInterceptor');
@@ -23,18 +23,18 @@ angular.module('steel.authentication', ['steel.core'])
 
 .component('authentication',{
 	templateUrl : './components/authentication/authentication-view.html',
-	controller : ['AuthenticationService','$location','User',function AuthenticationController(authenticationService,$location,User){
+	controller : ['AuthenticationService','$location','User','SessionService',function AuthenticationController(authenticationService,$location,User,sessionService){
 		var self = this;
 		self.user = new User();
 		self.message;
-		self.uauthorized = false;
+		self.unauthorized = false;
 
 		self.authenticate = function(user){
 
 			authenticationService.authenticate(user).
 			then(
 				function(loggedInUser){
-					user = loggedInUser;
+					user = sessionService.currentUser();
 					$location.path('/dashboard');
 			},
 				function(error){
@@ -58,7 +58,7 @@ angular.module('steel.authentication', ['steel.core'])
 					alert("hello world !!");
 				},
 				function(error){
-					alert("Error");
+					alert("Error" + error);
 			});
 		}
 	}]

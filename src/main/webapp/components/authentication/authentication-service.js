@@ -34,40 +34,44 @@ angular.module('steel.authentication')
 	}
 
 	this.logout = function(user){
-		var deferred = $q.defer;
+		var deferred = $q.defer();
 		return $http.delete(Api.baseUrl+'/auth/logout?username='+user.username)
 		.then(
 			function(response){
 				//success
+				sessionService.clear();
 				deferred.resolve(response);
 				return deferred.promise;
 			},
 			function(response){
 				//error
-				deferred.resolve(response);
+				deferred.reject(response.status);
 				return deferred.promise;
 			});
 	}
 
 }])
 
-.service('SessionService', ['User', function(User){
+.service('SessionService', ['$sessionStorage','User', function($sessionStorage,User){
 	this.user;
 	this.authTokenValue;
 
 	this.currentUser = function (user){
 		if(typeof user === "undefined")
-		return this.user;
+		return $sessionStorage.user;
 
-		this.user = user;
+		$sessionStorage.user = user;
 	}
 
 	this.authToken = function(token){
-		if(typeof token === 'undefine')
-			return this.authTokenValue;
+		if(typeof token === 'undefined')
+			return $sessionStorage.authTokenValue;
 
-		this.authTokenValue = token;
+		$sessionStorage.authTokenValue = token;
 	}
 
+	this.clear = function(){
+		$sessionStorage.$reset();
+	}
 
 }]);
